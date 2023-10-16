@@ -3,8 +3,8 @@ import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
 interface IUserGlobalStore {
-  user: IAuthenticatedUser | null;
-  updateUser: (user: IAuthenticatedUser | null) => void;
+  user: IAuthUser | null;
+  updateUser: (user: IAuthUser | null) => void;
 }
 
 const useUserGlobalStore = create<IUserGlobalStore>()(
