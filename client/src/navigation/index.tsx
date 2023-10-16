@@ -1,13 +1,16 @@
 import { NavigationContainer } from "@react-navigation/native";
 import React from "react";
 import AuthNavigation from "./authnavigation";
-import Login from "@/screens/Login";
+import Login from "@/screens/loginscreen";
+import AppNavigation from "./appnavigation";
+import useUserGlobalStore from "@/store/useUserGlobalStore";
 
 const Navigation = () => {
-  const user = false;
+  const { user } = useUserGlobalStore();
+  console.log(user);
   return (
     <NavigationContainer>
-      {user ? <AuthNavigation /> : <Login />}
+      {user ? <AppNavigation /> : <AuthNavigation />}
     </NavigationContainer>
   );
 };
