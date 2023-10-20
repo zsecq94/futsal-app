@@ -1,7 +1,7 @@
 import Button from "@/components/shared/button";
 import SafeAreaWrapper from "@/components/shared/safe-area-wrapper";
 import useUserGlobalStore from "@/store/useUserGlobalStore";
-import { Box, Text } from "@/utils/theme";
+import { Text } from "@/utils/theme";
 import React from "react";
 import { Pressable } from "react-native";
 

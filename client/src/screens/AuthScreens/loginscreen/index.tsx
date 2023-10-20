@@ -1,7 +1,7 @@
-import React, { useState } from "react";
 import theme, { Box, Text } from "@/utils/theme";
-import { Pressable, FlatList, Image } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import React from "react";
+import { Image, Pressable } from "react-native";
 
 const LoginScreen = () => {
   const navigate = useNavigation();
@@ -26,7 +26,7 @@ const LoginScreen = () => {
             width: 60,
             height: 60,
           }}
-          source={require(`../../../assets/1.png`)}
+          source={require("../../../../assets/images/1.png")}
         />
       </Pressable>
     </Box>

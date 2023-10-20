@@ -1,6 +1,5 @@
-import HomeScreen from "@/screens/homescreen";
-import KakaoLogin from "@/screens/kakaologinscreen";
-import LoginScreen from "@/screens/loginscreen";
+import KakaoLogin from "@/screens/AuthScreens/kakaologinscreen";
+import LoginScreen from "@/screens/AuthScreens/loginscreen";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import React from "react";
 

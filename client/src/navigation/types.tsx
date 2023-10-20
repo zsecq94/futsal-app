@@ -9,3 +9,8 @@ export type RootBottomTabParamList = {
   Team: undefined;
   Reservation: undefined;
 };
+
+export type AppNavigationTypes = {
+  tabBarOptions: any;
+  name: string;
+};

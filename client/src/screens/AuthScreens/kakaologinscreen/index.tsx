@@ -5,7 +5,7 @@ import axios, { AxiosResponse } from "axios";
 import useUserGlobalStore from "@/store/useUserGlobalStore";
 
 const REST_API_KEY = "1ff96c0aa43f9b0c4db00ccaf3e6da4b";
-const REDIRECT_URI = "http://192.168.219.100:19006/Home";
+const REDIRECT_URI = "http://192.168.219.101:19006/Home";
 
 const INJECTED_JAVASCRIPT = `window.ReactNativeWebView.postMessage('message from webView')`;
 
@@ -74,8 +74,8 @@ const KakaoLogin = () => {
         source={{
           uri: `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}`,
         }}
-        domStorageEnabled={true} // 이 줄 추가
-        useWebKit={true} // 이 줄 추가
+        domStorageEnabled={true}
+        useWebKit={true}
         injectedJavaScript={INJECTED_JAVASCRIPT}
         javaScriptEnabled
         onMessage={(event) => {
