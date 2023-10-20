@@ -6,10 +6,10 @@ import AuthNavigation from "./authnavigation";
 
 const Navigation = () => {
   const { user } = useUserGlobalStore();
-
+  console.log(user);
   return (
     <NavigationContainer>
-      {user ? <AppNavigation /> : <AuthNavigation />}
+      {user?.id ? <AppNavigation /> : <AuthNavigation />}
     </NavigationContainer>
   );
 };

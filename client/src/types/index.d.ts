@@ -1,4 +1,7 @@
 interface IAuthUser {
+  id: number;
   name: string;
-  thum: string;
+  thumb: string;
+  num: number;
+  team: string;
 }

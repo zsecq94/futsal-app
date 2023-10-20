@@ -3,9 +3,8 @@ import React from "react";
 import WebView from "react-native-webview";
 import axios, { AxiosResponse } from "axios";
 import useUserGlobalStore from "@/store/useUserGlobalStore";
-
-const REST_API_KEY = "1ff96c0aa43f9b0c4db00ccaf3e6da4b";
-const REDIRECT_URI = "http://192.168.219.101:19006/Home";
+import { REDIRECT_URI, REST_API_KEY, axiosInstance } from "@/services/config";
+import { userInfo } from "@/services/api";
 
 const INJECTED_JAVASCRIPT = `window.ReactNativeWebView.postMessage('message from webView')`;
 
@@ -54,10 +53,18 @@ const KakaoLogin = () => {
         }
       );
 
-      const userInfo = response.data.kakao_account.profile;
+      const user = response.data.kakao_account.profile;
+      const res = await userInfo({
+        id: response.data.id,
+        name: user.nickname,
+        thumb: user.thumbnail_image_url,
+      });
       updateUser({
-        name: userInfo.nickname,
-        thum: userInfo.thumbnail_image_url,
+        id: res.user.id,
+        name: res.user.name,
+        thumb: res.user.thumb,
+        num: res.user.num,
+        team: res.user.team,
       });
     } catch (error) {
       console.error("Error in getUserInfo:", error);
