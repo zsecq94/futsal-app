@@ -14,11 +14,12 @@ const LoginScreen = () => {
           color: theme.colors.green900,
         }}
       >
-        나주 빛가람 풋살
+        빛가람 풋살장
       </Text>
       <Text mt="10" variant="textLg">
         소셜 계정으로 간편하게 이용하세요.
       </Text>
+      <Text variant="textLg">소셜 계정으로 간편하게 이용하세요.</Text>
       <Pressable onPress={() => navigate.navigate("KakaoLogin" as never)}>
         <Image
           style={{

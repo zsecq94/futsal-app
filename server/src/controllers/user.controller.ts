@@ -9,17 +9,16 @@ export const userInfo = async (req: Request, res: Response) => {
       return res
         .status(201)
         .send({ user: existingUser, message: "이미 가입됨" });
+    } else {
+      const user = await User.create({
+        id,
+        name,
+        thumb,
+        num: 0,
+        team: null,
+      });
+      return res.status(201).send({ user: user, message: "가입 완료" });
     }
-
-    const user = await User.create({
-      id,
-      name,
-      thumb,
-      num: 0,
-      team: null,
-    });
-
-    return res.status(201).send({ user: user, message: "가입 완료" });
   } catch (error) {
     console.log("error in createUser", error);
     throw error;

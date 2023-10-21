@@ -1,24 +1,102 @@
-import Button from "@/components/shared/button";
+import Content from "@/components/Content";
 import SafeAreaWrapper from "@/components/shared/safe-area-wrapper";
-import { REDIRECT_URI, REST_API_KEY } from "@/services/config";
 import useUserGlobalStore from "@/store/useUserGlobalStore";
-import { Text } from "@/utils/theme";
+import { Box, Text } from "@/utils/theme";
 import React from "react";
-import { Pressable } from "react-native";
+import { FlatList } from "react-native";
 
-const URL = `https://kauth.kakao.com/oauth/logout?client_id=${REST_API_KEY}&logout_redirect_uri=${REDIRECT_URI}`;
 const HomeScreen = () => {
   const { updateUser } = useUserGlobalStore();
+
+  const renderItem = ({ item }: any) => <Content data={item} />;
+  const data = [
+    {
+      A: [
+        {
+          place: "A구장",
+          time: "2023.10.22 16:00 ~ 18:00",
+          team: ["FCFC", "CFCF"],
+          id: "12ce1o2mdckl1wmkd",
+        },
+        {
+          place: "A구장",
+          time: "2023.10.22 16:00 ~ 18:00",
+          team: ["FCFC", "CFCF"],
+          id: "12ce1o2mdckl1wmkd",
+        },
+        {
+          place: "A구장",
+          time: "2023.10.22 16:00 ~ 18:00",
+          team: ["FCFC", "CFCF"],
+          id: "12ce1o2mdckl1wmkd",
+        },
+        {
+          place: "A구장",
+          time: "2023.10.22 16:00 ~ 18:00",
+          team: ["FCFC", "CFCF"],
+          id: "12ce1o2mdckl1wmkd",
+        },
+      ],
+      B: [
+        {
+          place: "B구장",
+          time: "2023.10.22 16:00 ~ 18:00",
+          team: ["FCFC", "CFCF"],
+          id: "12ce1o2mdckl1wmkd",
+        },
+        {
+          place: "B구장",
+          time: "2023.10.22 16:00 ~ 18:00",
+          team: ["FCFC", "CFCF"],
+          id: "12ce11234d",
+        },
+        {
+          place: "B구장",
+          time: "2023.10.22 16:00 ~ 18:00",
+          team: ["FCFC", "CFCF"],
+          id: "552531wmkd",
+        },
+      ],
+      C: [
+        {
+          place: "C구장",
+          time: "2023.10.22 16:00 ~ 18:00",
+          team: ["FCFC", "CFCF"],
+          id: "12ce1o2mdckl1wmkd",
+        },
+        {
+          place: "C구장",
+          time: "2023.10.22 16:00 ~ 18:00",
+          team: ["FCFC", "CFCF"],
+          id: "12ce11234d",
+        },
+        {
+          place: "C구장",
+          time: "2023.10.22 16:00 ~ 18:00",
+          team: ["FCFC", "CFCF"],
+          id: "552531wmkd",
+        },
+        {
+          place: "C구장",
+          time: "2023.10.22 16:00 ~ 18:00",
+          team: ["FCFC", "CFCF"],
+          id: "552531wmkd",
+        },
+      ],
+    },
+  ];
+
   return (
     <SafeAreaWrapper>
-      <Text>Home</Text>
-      <Pressable
-        onPress={() => {
-          updateUser(null);
-        }}
-      >
-        <Button label="Logout" />
-      </Pressable>
+      <Text variant="textLg" fontWeight="700" ml="5">
+        오늘의 구장 현황
+      </Text>
+      <FlatList
+        data={data}
+        renderItem={renderItem}
+        ItemSeparatorComponent={() => <Box height={16} />}
+        // keyExtractor={(item) => item.id}
+      />
     </SafeAreaWrapper>
   );
 };

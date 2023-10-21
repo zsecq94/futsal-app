@@ -3,7 +3,7 @@ import React from "react";
 import WebView from "react-native-webview";
 import axios, { AxiosResponse } from "axios";
 import useUserGlobalStore from "@/store/useUserGlobalStore";
-import { REDIRECT_URI, REST_API_KEY, axiosInstance } from "@/services/config";
+import { REDIRECT_URI, REST_API_KEY } from "@/services/config";
 import { userInfo } from "@/services/api";
 
 const INJECTED_JAVASCRIPT = `window.ReactNativeWebView.postMessage('message from webView')`;
@@ -59,6 +59,7 @@ const KakaoLogin = () => {
         name: user.nickname,
         thumb: user.thumbnail_image_url,
       });
+
       updateUser({
         id: res.user.id,
         name: res.user.name,

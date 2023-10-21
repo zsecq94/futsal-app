@@ -11,5 +11,6 @@ export const userInfo = async ({ id, name, thumb }: any) => {
     return res.data;
   } catch (error) {
     console.log("error in userInfo");
+    throw error;
   }
 };
