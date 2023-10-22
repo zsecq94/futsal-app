@@ -1,79 +1,84 @@
-import { Box, Text } from "@/utils/theme";
-import React, { useState } from "react";
-import { Button, TextInput } from "react-native";
-import { Calendar, LocaleConfig } from "react-native-calendars";
-import TimePicker from "./timepicker";
+import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import moment from "moment";
+import "moment/locale/ko";
+import theme from "@/utils/theme";
 
-LocaleConfig.locales["ko"] = {
-  monthNames: [
-    "1월",
-    "2월",
-    "3월",
-    "4월",
-    "5월",
-    "6월",
-    "7월",
-    "8월",
-    "9월",
-    "10월",
-    "11월",
-    "12월",
-  ],
-  dayNames: [
-    "일요일",
-    "월요일",
-    "화요일",
-    "수요일",
-    "목요일",
-    "금요일",
-    "토요일",
-  ],
-  dayNamesShort: ["일", "월", "화", "수", "목", "금", "토"],
-  today: "오늘",
-};
+const DatePicker = ({ date, onSelectDate, selected }: any) => {
+  moment.locale("ko");
 
-LocaleConfig.defaultLocale = "ko";
+  const formattedDate = moment(date).format("YYYY-MM-DD");
 
-type DataPickerProps = {
-  selected: string;
-  setSelected: React.Dispatch<React.SetStateAction<string>>;
-  setCheckDataPicker: React.Dispatch<React.SetStateAction<boolean>>;
-};
+  const isToday = moment().isSame(date, "day");
+  const dayOfWeek = moment(date).format("dddd"); // 요일 이름 가져오기
 
-const DatePicker = ({
-  selected,
-  setSelected,
-  setCheckDataPicker,
-}: DataPickerProps) => {
+  let textColor = "black"; // 기본 텍스트 색상
+
+  if (dayOfWeek === "토요일") {
+    textColor = theme.colors.blue600; // 토요일일 경우 파란색
+  } else if (dayOfWeek === "일요일") {
+    textColor = theme.colors.rose500;
+  }
+
   return (
-    <Box position="absolute" zIndex={99} width={"100%"}>
-      <Calendar
-        minDate={new Date().toISOString().split("T")[0]}
-        onDayPress={(day) => {
-          setSelected(day.dateString);
-          setCheckDataPicker(false);
-        }}
-        markedDates={{
-          [selected]: {
-            selected: true,
-            disableTouchEvent: false,
-            selectedColor: "orange",
+    <TouchableOpacity
+      onPress={() => onSelectDate(formattedDate)}
+      style={[
+        styles.card,
+        selected === formattedDate && {
+          backgroundColor: theme.colors.green700,
+        },
+      ]}
+    >
+      <Text
+        style={[
+          styles.big,
+          {
+            color: textColor, // 요일에 따라 텍스트 색상 설정
           },
-        }}
-        renderHeader={(date) => {
-          const newHeader = date.toISOString().split("T")[0];
-          const year = newHeader.slice(0, 4);
-          const month = newHeader.slice(5, 7);
-          return (
-            <Text
-              style={{ fontSize: 20, fontWeight: "bold" }}
-            >{`${year}년 ${month}월`}</Text>
-          );
-        }}
-      />
-      <TimePicker />
-    </Box>
+          selected === formattedDate && { color: "#fff" },
+        ]}
+      >
+        {isToday ? "오늘" : moment(date).format("ddd")}
+      </Text>
+      <View style={{ height: 10 }} />
+      <Text
+        style={[
+          styles.medium,
+          selected === formattedDate && {
+            color: "#fff",
+            fontWeight: "bold",
+            fontSize: 24,
+          },
+        ]}
+      >
+        {moment(date).format("D")}
+      </Text>
+    </TouchableOpacity>
   );
 };
-
 export default DatePicker;
+
+const styles = StyleSheet.create({
+  card: {
+    shadowColor: "rgba(0, 0, 0, 0.5)",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.5,
+    shadowRadius: 2,
+    elevation: 5,
+    backgroundColor: "#eee",
+    borderRadius: 10,
+    borderColor: "#ddd",
+    padding: 10,
+    alignItems: "center",
+    height: 90,
+    width: 80,
+    marginHorizontal: 5,
+  },
+  big: {
+    fontWeight: "bold",
+    fontSize: 20,
+  },
+  medium: {
+    fontSize: 16,
+  },
+});

@@ -1,7 +1,7 @@
 import { Box, Text } from "@/utils/theme";
 import React from "react";
 
-const TeamScreen = () => {
+const TeamSearchScreen = () => {
   return (
     <Box>
       <Text>팀 스크린 입니다.</Text>
@@ -9,4 +9,4 @@ const TeamScreen = () => {
   );
 };
 
-export default TeamScreen;
+export default TeamSearchScreen;

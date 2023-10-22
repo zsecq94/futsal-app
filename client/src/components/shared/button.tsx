@@ -10,9 +10,10 @@ const Button = ({ label }: ButtonProps) => {
     <Box
       borderRadius="rounded-2xl"
       p="2"
+      mx="5"
       alignItems="center"
       style={{
-        backgroundColor: theme.colors.white,
+        backgroundColor: theme.colors.green700,
         shadowColor: "#000",
         shadowOffset: {
           width: 0,
@@ -23,7 +24,13 @@ const Button = ({ label }: ButtonProps) => {
         elevation: 5,
       }}
     >
-      <Text variant="text2Xl" fontWeight="700">
+      <Text
+        variant="text2Xl"
+        fontWeight="700"
+        style={{
+          color: "white",
+        }}
+      >
         {label}
       </Text>
     </Box>

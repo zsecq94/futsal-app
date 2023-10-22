@@ -10,14 +10,7 @@ const Navigation = () => {
   console.log(user);
   return (
     <NavigationContainer>
-      {user?.id ? (
-        <>
-          <Header />
-          <AppNavigation />
-        </>
-      ) : (
-        <AuthNavigation />
-      )}
+      {user?.id ? <AppNavigation /> : <AuthNavigation />}
     </NavigationContainer>
   );
 };

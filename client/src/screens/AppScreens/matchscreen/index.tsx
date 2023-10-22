@@ -1,66 +1,71 @@
-import Button from "@/components/shared/button";
-import DatePicker from "@/components/shared/datepicker";
 import theme, { Box, Text } from "@/utils/theme";
-import { useNavigation } from "@react-navigation/native";
-import React, { useEffect, useState } from "react";
-import { Pressable } from "react-native";
+import React, { useState } from "react";
+import MatchMatchingScreen from "../match-matching-screen";
+import MatchMercenaryScreen from "../match-mercenary-screen";
+import MatchReservationScreen from "../match-reservation-screen";
+import Calendar from "@/components/shared/calender";
+import moment from "moment";
+import HrTag from "@/components/shared/hrtag";
+
+const formattedDate = moment().format("YYYY-MM-DD");
 
 const MatchScreen = () => {
-  const [checkDataPicker, setCheckDataPicker] = useState(false);
-  const [selected, setSelected] = useState(
-    new Date().toISOString().split("T")[0]
-  );
-
-  const navigate = useNavigation();
-
-  const [matchData, setMatchData] = useState([]);
-
-  useEffect(() => {
-    console.log("change");
-  }, [selected]);
-
+  const [check, setCheck] = useState(0);
+  const [selectedDate, setSelectedDate] = useState(formattedDate);
   return (
     <Box>
-      {checkDataPicker && (
-        <DatePicker
-          setCheckDataPicker={setCheckDataPicker}
-          selected={selected}
-          setSelected={setSelected}
-        />
-      )}
-      <Box
-        mt="5"
-        flexDirection="row"
-        alignItems="center"
-        justifyContent="center"
-        style={{ gap: 20 }}
-      >
-        <Box
-          p="2"
+      <Box flexDirection="row">
+        <Text
+          onPress={() => setCheck(0)}
+          variant="textLg"
+          fontWeight="700"
+          p="3"
           style={{
-            backgroundColor: theme.colors.white,
-            borderRadius: 10,
-            shadowColor: "#000",
-            shadowOffset: {
-              width: 0,
-              height: 2,
-            },
-            shadowOpacity: 0.25,
-            shadowRadius: 3.84,
-            elevation: 5,
+            textAlign: "center",
+            width: "33%",
+            color: check === 0 ? theme.colors.green700 : "black",
+            borderBottomWidth: check === 0 ? 2 : 0,
+            borderBottomColor: check === 0 ? theme.colors.green700 : "black",
           }}
         >
-          <Pressable
-            onPress={() => {
-              setCheckDataPicker(!checkDataPicker);
-            }}
-          >
-            <Text variant="text2Xl" fontWeight="700">
-              {selected}
-            </Text>
-          </Pressable>
-        </Box>
+          매칭
+        </Text>
+        <Text
+          onPress={() => setCheck(1)}
+          variant="textLg"
+          fontWeight="700"
+          p="3"
+          style={{
+            textAlign: "center",
+            width: "34%",
+            color: check === 1 ? theme.colors.green700 : "black",
+            borderBottomWidth: check === 1 ? 2 : 0,
+            borderBottomColor: check === 1 ? theme.colors.green700 : "black",
+          }}
+        >
+          예약
+        </Text>
+        <Text
+          onPress={() => setCheck(2)}
+          variant="textLg"
+          fontWeight="700"
+          p="3"
+          style={{
+            textAlign: "center",
+            width: "33%",
+            color: check === 2 ? theme.colors.green700 : "black",
+            borderBottomWidth: check === 2 ? 2 : 0,
+            borderBottomColor: check === 2 ? theme.colors.green700 : "black",
+          }}
+        >
+          용병
+        </Text>
       </Box>
+      <Calendar onSelectDate={setSelectedDate} selected={selectedDate} />
+      <HrTag />
+      {check === 0 && <MatchMatchingScreen selectedDate={selectedDate} />}
+      {check === 1 && <MatchReservationScreen selectedDate={selectedDate} />}
+      {check === 2 && <MatchMercenaryScreen selectedDate={selectedDate} />}
     </Box>
   );
 };
