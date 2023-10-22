@@ -66,6 +66,7 @@ const KakaoLogin = () => {
         thumb: res.user.thumb,
         num: res.user.num,
         team: res.user.team,
+        level: res.user.level,
       });
     } catch (error) {
       console.error("Error in getUserInfo:", error);

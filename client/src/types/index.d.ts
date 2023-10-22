@@ -4,4 +4,5 @@ interface IAuthUser {
   thumb: string;
   num: number;
   team: string;
+  level: number;
 }

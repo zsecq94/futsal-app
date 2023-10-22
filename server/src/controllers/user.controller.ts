@@ -16,6 +16,7 @@ export const userInfo = async (req: Request, res: Response) => {
         thumb,
         num: 0,
         team: null,
+        level: 0,
       });
       return res.status(201).send({ user: user, message: "가입 완료" });
     }

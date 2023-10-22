@@ -8,16 +8,24 @@ type ButtonProps = {
 const Button = ({ label }: ButtonProps) => {
   return (
     <Box
-      mt="5"
       borderRadius="rounded-2xl"
-      p="3"
-      width={"50%"}
+      p="2"
       alignItems="center"
       style={{
-        backgroundColor: theme.colors.blue400,
+        backgroundColor: theme.colors.white,
+        shadowColor: "#000",
+        shadowOffset: {
+          width: 0,
+          height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
       }}
     >
-      <Text>{label}</Text>
+      <Text variant="text2Xl" fontWeight="700">
+        {label}
+      </Text>
     </Box>
   );
 };

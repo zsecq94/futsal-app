@@ -1,9 +1,9 @@
+import Header from "@/layout/header";
 import useUserGlobalStore from "@/store/useUserGlobalStore";
 import { NavigationContainer } from "@react-navigation/native";
 import React from "react";
 import AppNavigation from "./appnavigation";
 import AuthNavigation from "./authnavigation";
-import Header from "@/layout/header";
 
 const Navigation = () => {
   const { user } = useUserGlobalStore();

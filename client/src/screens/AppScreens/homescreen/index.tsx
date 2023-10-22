@@ -1,103 +1,132 @@
-import Content from "@/components/Content";
-import SafeAreaWrapper from "@/components/shared/safe-area-wrapper";
-import useUserGlobalStore from "@/store/useUserGlobalStore";
+import Content from "@/components/shared/content";
 import { Box, Text } from "@/utils/theme";
 import React from "react";
-import { FlatList } from "react-native";
+import { ScrollView } from "react-native";
 
 const HomeScreen = () => {
-  const { updateUser } = useUserGlobalStore();
-
-  const renderItem = ({ item }: any) => <Content data={item} />;
   const data = [
     {
-      A: [
-        {
-          place: "A구장",
-          time: "2023.10.22 16:00 ~ 18:00",
-          team: ["FCFC", "CFCF"],
-          id: "12ce1o2mdckl1wmkd",
-        },
-        {
-          place: "A구장",
-          time: "2023.10.22 16:00 ~ 18:00",
-          team: ["FCFC", "CFCF"],
-          id: "12ce1o2mdckl1wmkd",
-        },
-        {
-          place: "A구장",
-          time: "2023.10.22 16:00 ~ 18:00",
-          team: ["FCFC", "CFCF"],
-          id: "12ce1o2mdckl1wmkd",
-        },
-        {
-          place: "A구장",
-          time: "2023.10.22 16:00 ~ 18:00",
-          team: ["FCFC", "CFCF"],
-          id: "12ce1o2mdckl1wmkd",
-        },
-      ],
-      B: [
-        {
-          place: "B구장",
-          time: "2023.10.22 16:00 ~ 18:00",
-          team: ["FCFC", "CFCF"],
-          id: "12ce1o2mdckl1wmkd",
-        },
-        {
-          place: "B구장",
-          time: "2023.10.22 16:00 ~ 18:00",
-          team: ["FCFC", "CFCF"],
-          id: "12ce11234d",
-        },
-        {
-          place: "B구장",
-          time: "2023.10.22 16:00 ~ 18:00",
-          team: ["FCFC", "CFCF"],
-          id: "552531wmkd",
-        },
-      ],
-      C: [
-        {
-          place: "C구장",
-          time: "2023.10.22 16:00 ~ 18:00",
-          team: ["FCFC", "CFCF"],
-          id: "12ce1o2mdckl1wmkd",
-        },
-        {
-          place: "C구장",
-          time: "2023.10.22 16:00 ~ 18:00",
-          team: ["FCFC", "CFCF"],
-          id: "12ce11234d",
-        },
-        {
-          place: "C구장",
-          time: "2023.10.22 16:00 ~ 18:00",
-          team: ["FCFC", "CFCF"],
-          id: "552531wmkd",
-        },
-        {
-          place: "C구장",
-          time: "2023.10.22 16:00 ~ 18:00",
-          team: ["FCFC", "CFCF"],
-          id: "552531wmkd",
-        },
-      ],
+      place: "A구장",
+      time: "16:00 ~ 18:00",
+      team: ["FCFC", "CFCF"],
+      id: "12ce1o2mdckl1wmkda",
+    },
+    {
+      place: "A구장",
+      time: "16:00 ~ 18:00",
+      team: ["FCFC", "CFCF"],
+      id: "12ce1o2mdckl1wmkdb",
+    },
+    {
+      place: "A구장",
+      time: "16:00 ~ 18:00",
+      team: ["FCFC", "CFCF"],
+      id: "12ce1o2mdckl1wmkdc",
+    },
+    {
+      place: "A구장",
+      time: "16:00 ~ 18:00",
+      team: ["FCFC", "CFCF"],
+      id: "12ce1o2mdckl1wmkdd",
+    },
+    {
+      place: "B구장",
+      time: "16:00 ~ 18:00",
+      team: ["FCFC", "CFCF"],
+      id: "12ce1o2mdckl1wmkde",
+    },
+    {
+      place: "B구장",
+      time: "16:00 ~ 18:00",
+      team: ["FCFC", "CFCF"],
+      id: "12ce11234df",
+    },
+    {
+      place: "B구장",
+      time: "16:00 ~ 18:00",
+      team: ["FCFC", "CFCF"],
+      id: "552531wmkdg",
+    },
+    {
+      place: "C구장",
+      time: "16:00 ~ 18:00",
+      team: ["FCFC", "CFCF"],
+      id: "12ce1o2mdckl1wmkdh",
+    },
+    {
+      place: "C구장",
+      time: "16:00 ~ 18:00",
+      team: ["FCFC", "CFCF"],
+      id: "12ce11234di",
+    },
+    {
+      place: "C구장",
+      time: "16:00 ~ 18:00",
+      team: ["FCFC", "CFCF"],
+      id: "552531wmkdk",
+    },
+    {
+      place: "C구장",
+      time: "16:00 ~ 18:00",
+      team: ["FCFC", "CFCF"],
+      id: "552531wmkdj4",
+    },
+    {
+      place: "C구장",
+      time: "16:00 ~ 18:00",
+      team: ["FCFC", "CFCF"],
+      id: "552531wmkd2j",
+    },
+    {
+      place: "C구장",
+      time: "16:00 ~ 18:00",
+      team: ["FCFC", "CFCF"],
+      id: "5525361wmkdj",
+    },
+    {
+      place: "C구장",
+      time: "16:00 ~ 18:00",
+      team: ["FCFC", "CFCF"],
+      id: "552531w1mkdj",
+    },
+    {
+      place: "C구장",
+      time: "16:00 ~ 18:00",
+      team: ["FCFC", "CFCF"],
+      id: "5522531wmkdj",
+    },
+    {
+      place: "C구장",
+      time: "16:00 ~ 18:00",
+      team: ["FCFC", "CFCF"],
+      id: "5572531wmkdj",
+    },
+    {
+      place: "C구장",
+      time: "16:00 ~ 18:00",
+      team: ["FCFC", "CFCF"],
+      id: "5502531wmkdj",
+    },
+    {
+      place: "C구장",
+      time: "16:00 ~ 18:00",
+      team: ["FCFC", "CFCF"],
+      id: "552531967gwmkdj",
     },
   ];
-
   return (
-    <SafeAreaWrapper>
-      <Text variant="textLg" fontWeight="700" ml="5">
+    <ScrollView showsVerticalScrollIndicator={false}>
+      <Text variant="textLg" fontWeight="700" ml="5" my="5">
         오늘의 구장 현황
       </Text>
-      <FlatList
-        data={data}
-        renderItem={renderItem}
-        ItemSeparatorComponent={() => <Box height={16} />}
-        // keyExtractor={(item) => item.id}
-      />
-    </SafeAreaWrapper>
+
+      {data.map((V) => (
+        <Box key={V.id}>
+          <Content data={V} />
+          <Box height={16} />
+        </Box>
+      ))}
+    </ScrollView>
   );
 };
 

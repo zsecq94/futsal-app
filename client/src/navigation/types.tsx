@@ -1,16 +1,19 @@
-export type AuthStackParamList = {
-  Welcome: undefined;
-  LogIn: undefined;
-  SignUp: undefined;
-};
+import { NavigatorScreenParams } from "@react-navigation/native";
 
 export type RootBottomTabParamList = {
-  Home: undefined;
+  Home: NavigatorScreenParams<HomeStackParamList>;
   Team: undefined;
   Reservation: undefined;
+  Rank: undefined;
+  Message: undefined;
 };
 
-export type AppNavigationTypes = {
-  tabBarOptions: any;
-  name: string;
+export type HomeStackParamList = {
+  navigate: any;
+  Home: undefined;
+  EditTask: undefined;
+};
+
+export type AppStackParamList = {
+  Root: NavigatorScreenParams<RootBottomTabParamList>;
 };
