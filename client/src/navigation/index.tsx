@@ -7,7 +7,9 @@ import AuthNavigation from "./authnavigation";
 
 const Navigation = () => {
   const { user } = useUserGlobalStore();
-  console.log(user);
+  // const user = {
+  //   id: true,
+  // };
   return (
     <NavigationContainer>
       {user?.id ? <AppNavigation /> : <AuthNavigation />}

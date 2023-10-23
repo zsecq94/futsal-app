@@ -1,18 +1,22 @@
 import theme, { Box, Text } from "@/utils/theme";
 import React from "react";
+import { TouchableOpacity } from "react-native";
 
 type ButtonProps = {
   label: string;
+  onPress: () => void;
 };
 
-const Button = ({ label }: ButtonProps) => {
+const Button = ({ label, onPress }: ButtonProps) => {
   return (
-    <Box
-      borderRadius="rounded-2xl"
-      p="2"
-      mx="5"
-      alignItems="center"
+    <TouchableOpacity
+      activeOpacity={0.5}
+      onPress={onPress}
       style={{
+        borderRadius: 10,
+        padding: 5,
+        marginHorizontal: 16,
+        alignItems: "center",
         backgroundColor: theme.colors.green700,
         shadowColor: "#000",
         shadowOffset: {
@@ -33,7 +37,7 @@ const Button = ({ label }: ButtonProps) => {
       >
         {label}
       </Text>
-    </Box>
+    </TouchableOpacity>
   );
 };
 
