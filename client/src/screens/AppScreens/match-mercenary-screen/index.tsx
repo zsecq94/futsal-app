@@ -2,10 +2,10 @@ import Button from "@/components/shared/button";
 import { Box, Text } from "@/utils/theme";
 import React from "react";
 
-const MatchMercenaryScreen = ({ selectedDate }: any) => {
+const MatchMercenaryScreen = () => {
   return (
     <Box>
-      <Button label="용병 신청하기" />
+      <Text>용병</Text>
     </Box>
   );
 };

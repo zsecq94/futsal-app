@@ -1,18 +1,17 @@
+import Calendar from "@/components/match/calender";
 import TimePicker from "@/components/match/timepicker";
 import { Box, Text } from "@/utils/theme";
 import { useRoute } from "@react-navigation/native";
-import React from "react";
+import moment from "moment";
+import React, { useState } from "react";
 
 const SignInScreen = () => {
-  const route = useRoute<any>();
-  const { date } = route.params;
-
+  const formattedDate = moment().format("YYYY-MM-DD");
+  const [selectedDate, setSelectedDate] = useState(formattedDate);
   return (
     <Box py="5">
       <Box>
-        <Text textAlign="center" variant="text2Xl">
-          선택 날짜 : {date}
-        </Text>
+        <Calendar onSelectDate={setSelectedDate} selected={selectedDate} />
         <TimePicker />
       </Box>
     </Box>
