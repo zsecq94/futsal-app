@@ -1,3 +1,4 @@
+import moment from "moment";
 import { axiosInstance } from "./config";
 
 export const userInfo = async ({ id, name, thumb }: any) => {
@@ -41,8 +42,20 @@ export const matchSign = async ({
 export const getFalseMatch = async () => {
   try {
     const res = await axiosInstance.get("./matchs/getfalsematch");
+    return res.data;
+  } catch (error) {
+    console.log("error in getFalseMatch(CLIENT)");
+    throw error;
+  }
+};
 
-    return res.data.response;
+export const getDateAndCount = async () => {
+  const todayDate = moment().format("YYYY-MM-DD");
+  try {
+    const res = await axiosInstance.post("./matchs/getdate", {
+      todayDate,
+    });
+    return res.data;
   } catch (error) {
     console.log("error in getFalseMatch(CLIENT)");
     throw error;

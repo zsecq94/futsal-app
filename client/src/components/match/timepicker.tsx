@@ -26,6 +26,7 @@ const TimePicker = ({
   selectedTimes,
   selectedDate,
   Date,
+  dateList,
   setSelectedTimes,
 }: any) => {
   // 선택 날짜가 오늘이면 현재시간부터 24시까지 아니면 6시부터 24시까지 times배열생성
@@ -33,6 +34,10 @@ const TimePicker = ({
   if (Date.todayDate === selectedDate) {
     let minute = Number(Date.todayTime.todayMinute) < 30 ? 0.5 : 1;
     currHour = Number(Date.todayTime.todayHour) + minute;
+
+    if (currHour < 6) {
+      currHour = 6;
+    }
   }
   const times = Array.from(
     { length: (24 - currHour) * 2 + 1 },
@@ -74,6 +79,7 @@ const TimePicker = ({
             selectedTimes.length === 2 &&
             time >= Math.min(...selectedTimes) &&
             time <= Math.max(...selectedTimes);
+          const isReserved = dateList?.includes(time);
 
           return (
             <TouchableOpacity
@@ -97,6 +103,7 @@ const TimePicker = ({
                   setSelectedTimes([time]);
                 }
               }}
+              disabled={isReserved}
             >
               <View
                 style={[
@@ -107,6 +114,7 @@ const TimePicker = ({
 
                   index === 0 && styles.roundedLeftCorner,
                   index === times.length - 1 && styles.roundedRightCorner,
+                  isReserved && styles.disabledBar,
                 ]}
               >
                 <Text
@@ -115,6 +123,7 @@ const TimePicker = ({
 
                     // isSelected or isInRange 일 때 텍스트 색상 변경
                     (isSelected || isInRange) && styles.selectedTime,
+                    isReserved && styles.disabledTime,
                   ]}
                 >
                   {Math.floor(time)}:{time % 1 ? "30" : "00"}
@@ -137,7 +146,7 @@ const styles = StyleSheet.create({
     height: 50,
     marginHorizontal: 10,
 
-    backgroundColor: "lightgray",
+    backgroundColor: theme.colors.gray300,
     justifyContent: "center",
   },
   roundedLeftCorner: {
@@ -160,6 +169,13 @@ const styles = StyleSheet.create({
 
   selectedTime: {
     color: "white",
+    fontWeight: "bold",
+  },
+  disabledBar: {
+    backgroundColor: theme.colors.gray500, // 투명도가 적용된 색상
+  },
+  disabledTime: {
+    color: "white", // 투명도가 적용된 텍스트 색상
     fontWeight: "bold",
   },
 });

@@ -3,7 +3,7 @@ import React from "react";
 import { Box, Text } from "@/utils/theme";
 
 const MatchCard = ({ data, onPress }: any) => {
-  console.log(data);
+  // console.log(data);
   return (
     <TouchableOpacity
       onPress={onPress}

@@ -12,15 +12,10 @@ const Level = ({ level, V, onPress }: any) => {
         padding: 5,
         marginHorizontal: 16,
         alignItems: "center",
-        backgroundColor:
-          level === V ? theme.colors.green700 : theme.colors.gray200,
-        shadowColor: "#000",
-        shadowOffset: {
-          width: 0,
-          height: 2,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
+        backgroundColor: level === V ? theme.colors.green700 : "#eee",
+        shadowColor: "rgba(0, 0, 0, 0.5)",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.5,
         elevation: 5,
       }}
     >

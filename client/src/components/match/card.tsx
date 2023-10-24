@@ -4,14 +4,12 @@ import { TouchableOpacity } from "react-native";
 import TimePickerPreview from "./timepicker-preview";
 import CardCategory from "./cardcategory";
 
-const Card = ({ V, onPress }: any) => {
-  const date = [
-    7, 7.5, 8, 8.5, 8.9, 9, 9.5, 10, 10.5, 10.9, 15, 15.5, 16, 16.5, 17, 17.5,
-    17.9, 20, 20.5, 21, 21.5, 22,
-  ];
+const Card = ({ V, index, onPress }: any) => {
+  const newId = index === 0 ? "A" : index === 1 ? "B" : "C";
+
   return (
     <TouchableOpacity
-      onPress={onPress}
+      onPress={() => onPress(newId)}
       style={{
         alignItems: "center",
       }}
@@ -37,8 +35,8 @@ const Card = ({ V, onPress }: any) => {
         }}
       >
         <Box flexDirection="row" justifyContent="space-between">
-          <Text variant="textBase">{V[0]}구장</Text>
-          <Text variant="textBase">{V[1]}경기</Text>
+          <Text variant="textBase">{newId} 구장</Text>
+          <Text variant="textBase">{V?.count} 경기</Text>
         </Box>
         <Box
           flexDirection="row"
@@ -46,10 +44,10 @@ const Card = ({ V, onPress }: any) => {
             gap: 10,
           }}
         >
-          <CardCategory V={V[0]} />
+          <CardCategory V={newId} />
         </Box>
         <Box height={5} />
-        <TimePickerPreview date={date} />
+        <TimePickerPreview date={V?.times} />
       </Box>
     </TouchableOpacity>
   );

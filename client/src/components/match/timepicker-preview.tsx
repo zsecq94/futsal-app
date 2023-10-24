@@ -3,7 +3,12 @@ import React from "react";
 
 const TimePickerPreview = ({ date }: any) => {
   // 새벽 6시부터 밤 12시까지의 모든 시간 (30분 단위)
-  const times = Array.from({ length: (24 - 6) * 2 + 1 }, (_, i) => i * 0.5 + 6);
+  const timess = Array.from(
+    { length: (24 - 6) * 2 + 1 },
+    (_, i) => i * 0.5 + 6
+  );
+  const times = timess.slice(0, -1);
+  const timeText = ["6", "9", "12", "15", "18", "21", "24"];
 
   return (
     <Box>
@@ -11,6 +16,7 @@ const TimePickerPreview = ({ date }: any) => {
         flexDirection="row"
         width={"100%"}
         style={{
+          justifyContent: "center",
           marginLeft: 1,
           padding: 0,
         }}
@@ -22,7 +28,7 @@ const TimePickerPreview = ({ date }: any) => {
                 height={15}
                 width={"70%"}
                 style={{
-                  backgroundColor: date.includes(time)
+                  backgroundColor: date?.includes(time)
                     ? theme.colors.green700
                     : "lightgray",
                 }}
@@ -31,31 +37,20 @@ const TimePickerPreview = ({ date }: any) => {
           );
         })}
       </Box>
-      <Box
-        flexDirection="row"
-        justifyContent="space-between"
-        width={"100%"}
-        style={{
-          margin: 0,
-          padding: 0,
-        }}
-      >
-        {times.map((time, index) => {
-          const isHourMarked = time % 3 === 0;
+      <Box flexDirection="row" justifyContent="space-between" width={"100%"}>
+        {timeText.map((time, index) => {
           return (
             <Box key={index} alignItems="center">
-              {isHourMarked && (
-                <Box>
-                  <Box height={5} />
-                  <Text
-                    style={{
-                      fontSize: 10,
-                    }}
-                  >
-                    {Math.floor(time)}
-                  </Text>
-                </Box>
-              )}
+              <Box>
+                <Box height={5} px="1" />
+                <Text
+                  style={{
+                    fontSize: 8,
+                  }}
+                >
+                  {time}
+                </Text>
+              </Box>
             </Box>
           );
         })}

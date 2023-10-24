@@ -1,14 +1,19 @@
 import Card from "@/components/match/card";
 import MatchCard from "@/components/match/matchcard";
 import HrTag from "@/components/shared/hrtag";
-import { getFalseMatch } from "@/services/api";
+import { getDateAndCount, getFalseMatch } from "@/services/api";
 import theme, { Box, Text } from "@/utils/theme";
 import { useNavigation } from "@react-navigation/native";
+import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { ScrollView } from "react-native";
 
 const MatchMatchingScreen = () => {
   const navigate = useNavigation();
+  const [matchData, setMatchData] = useState([]);
+  const [todayDate, setTodayDate] = useState([]);
+  const [refresh, setRefresh] = useState(false);
+
   const goSignIn = (name: any) => {
     navigate.navigate("SignIn", name);
   };
@@ -17,25 +22,40 @@ const MatchMatchingScreen = () => {
     console.log("눌림");
   };
 
-  const [matchData, setMatchData] = useState([]);
-  const data = [
-    ["A", 0],
-    ["B", 0],
-    ["C", 0],
-  ];
+  const data = ["A", "B", "C"];
+
+  useEffect(() => {
+    const unsubscribe = navigate.addListener("focus", () => {
+      setRefresh((prev) => !prev);
+    });
+
+    return unsubscribe;
+  }, [navigate]);
 
   useEffect(() => {
     const getMatch = async () => {
       try {
         const res = await getFalseMatch();
-        setMatchData(res);
+        setMatchData(res.response);
       } catch (error) {
         console.log("error in getMatch");
         throw error;
       }
     };
+
+    const getDate = async () => {
+      try {
+        const res = await getDateAndCount();
+        setTodayDate(res);
+      } catch (error) {
+        console.log("error in getCount");
+        throw error;
+      }
+    };
     getMatch();
-  }, []);
+    getDate();
+  }, [refresh]);
+
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
@@ -51,12 +71,12 @@ const MatchMatchingScreen = () => {
           color: theme.colors.green700,
         }}
       >
-        구장 현황
+        오늘의 구장 현황
       </Text>
       <HrTag />
       {data.map((V, index) => (
         <Box key={index}>
-          <Card V={V} onPress={() => goSignIn(V[0])} />
+          <Card V={todayDate[index]} index={index} onPress={goSignIn} />
           <Box height={10} />
         </Box>
       ))}
@@ -71,8 +91,8 @@ const MatchMatchingScreen = () => {
         매칭 대기중
       </Text>
       <HrTag />
-      {matchData.map((V) => (
-        <Box key={V._id}>
+      {matchData.map((V, index) => (
+        <Box key={index}>
           <MatchCard data={V} onPress={goMatchDetail} />
           <Box height={10} />
         </Box>

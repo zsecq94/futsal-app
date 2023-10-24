@@ -3,19 +3,32 @@ import Level from "@/components/match/level";
 import TimePicker from "@/components/match/timepicker";
 import Button from "@/components/shared/button";
 import HrTag from "@/components/shared/hrtag";
-import { matchSign } from "@/services/api";
-import { axiosInstance } from "@/services/config";
+import { getDateAndCount, matchSign } from "@/services/api";
 import useUserGlobalStore from "@/store/useUserGlobalStore";
 import theme, { Box, Text } from "@/utils/theme";
-import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import moment from "moment";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const SignInScreen = () => {
   const navigate = useNavigation();
   const todayDate = moment().format("YYYY-MM-DD");
   const todayHour = moment().format("HH");
   const todayMinute = moment().format("mm");
+
+  const [selectedDate, setSelectedDate] = useState(todayDate);
+  const [selectedTimes, setSelectedTimes] = useState([]);
+  const [level, setLevel] = useState("");
+  const [getDate, setGetDate] = useState([]);
+  const [dateList, setDateList] = useState([]);
+
+  const route = useRoute();
+  const name = route.params;
+  const { user } = useUserGlobalStore();
+  const userTeam = user?.team;
+
+  const levelData = ["하", "중하", "중", "중상", "상"];
+  const index = name === "A" ? 0 : name === "B" ? 1 : 2;
 
   const Date = {
     todayDate: todayDate,
@@ -25,15 +38,20 @@ const SignInScreen = () => {
     },
   };
 
-  const [selectedDate, setSelectedDate] = useState(todayDate);
-  const [selectedTimes, setSelectedTimes] = useState([]);
-  const [level, setLevel] = useState("");
-  const levelData = ["하", "중하", "중", "중상", "상"];
-  const route = useRoute();
-  const name = route.params;
+  useEffect(() => {
+    const getDate = async () => {
+      try {
+        const res = await getDateAndCount();
+        setGetDate(res);
+      } catch (error) {
+        console.log("err in getDate(SignInScreen)");
+        throw error;
+      }
+    };
+    getDate();
+  }, []);
 
-  const { user } = useUserGlobalStore();
-  const userTeam = user?.team;
+  // 1025일 2:43 서버에서 getDateInSignIn 컨트롤러를 새로 만들어 SignInScreen에서만 호출하는 API를 만들생각임
 
   const handleSubmit = async () => {
     try {
@@ -85,6 +103,7 @@ const SignInScreen = () => {
         selectedDate={selectedDate}
         Date={Date}
         setSelectedTimes={setSelectedTimes}
+        dateList={dateList}
       />
       <HrTag />
       <Text
@@ -97,7 +116,7 @@ const SignInScreen = () => {
       >
         실력 선택
       </Text>
-      <Box px="10" flexDirection="row" justifyContent="space-between">
+      <Box px="10" py="3" flexDirection="row" justifyContent="space-between">
         {levelData.map((V, index) => (
           <Level level={level} key={index} V={V} onPress={handleLevel} />
         ))}
