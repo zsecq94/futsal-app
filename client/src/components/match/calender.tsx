@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { StyleSheet, Text, View, ScrollView } from "react-native";
 import moment, { Moment } from "moment";
 import DatePicker from "./datepicker";
+import HrTag from "../shared/hrtag";
 
 const Calendar = ({ onSelectDate, selected }: any) => {
   const [dates, setDates] = useState<Moment[]>([]);
@@ -11,7 +12,7 @@ const Calendar = ({ onSelectDate, selected }: any) => {
   // get the dates from today to 10 days from now, format them as strings and store them in state
   const getDates = () => {
     const _dates = [];
-    for (let i = 0; i < 30; i++) {
+    for (let i = 0; i < 21; i++) {
       const date = moment().add(i, "days");
       _dates.push(date);
     }
@@ -27,6 +28,7 @@ const Calendar = ({ onSelectDate, selected }: any) => {
       <View style={styles.centered}>
         <Text style={styles.title}>{selected?.slice(5, 7)}월</Text>
       </View>
+      <HrTag />
       <View style={styles.dateSection}>
         <View style={styles.scroll}>
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>

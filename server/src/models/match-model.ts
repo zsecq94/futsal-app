@@ -3,20 +3,32 @@ import mongoose from "mongoose";
 const matchSchema = new mongoose.Schema(
   {
     id: {
-      type: Number,
+      type: String,
       required: true,
       unique: true,
     },
-    team: {
-      type: [],
+    team1: {
+      type: String,
       required: true,
+    },
+    level: {
+      type: String,
+      required: true,
+    },
+    team2: {
+      type: String,
+      required: false,
+    },
+    state: {
+      type: Boolean,
+      require: true,
     },
     place: {
       type: String,
       required: true,
     },
-    time: {
-      type: String,
+    date: {
+      type: Object,
       required: true,
     },
   },
@@ -25,6 +37,6 @@ const matchSchema = new mongoose.Schema(
   }
 );
 
-const Match = mongoose.model("User", matchSchema);
+const Match = mongoose.model("Match", matchSchema);
 
 export default Match;

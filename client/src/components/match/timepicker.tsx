@@ -1,4 +1,6 @@
+import theme, { Box } from "@/utils/theme";
 import React, { useState } from "react";
+
 import {
   ScrollView,
   TouchableOpacity,
@@ -7,60 +9,128 @@ import {
   StyleSheet,
 } from "react-native";
 
-const TimePicker = () => {
-  const [selectedTimes, setSelectedTimes] = useState([]);
+// type TimePickerProps = {
+//   selectedTimes: number[];
+//   selectedDate: string;
+//   Date: {
+//     todayDate: string;
+//     todayTime: {
+//       todayHour: string;
+//       todayMinute: string;
+//     };
+//   };
+//   setSelectedTimes: React.Dispatch<React.SetStateAction<number[]>>;
+// };
 
-  // 새벽 6시부터 밤 12시까지의 모든 시간 (30분 단위)
-  const times = Array.from({ length: (24 - 6) * 2 + 1 }, (_, i) => i * 0.5 + 6);
+const TimePicker = ({
+  selectedTimes,
+  selectedDate,
+  Date,
+  setSelectedTimes,
+}: any) => {
+  // 선택 날짜가 오늘이면 현재시간부터 24시까지 아니면 6시부터 24시까지 times배열생성
+  let currHour = 6;
+  if (Date.todayDate === selectedDate) {
+    let minute = Number(Date.todayTime.todayMinute) < 30 ? 0.5 : 1;
+    currHour = Number(Date.todayTime.todayHour) + minute;
+  }
+  const times = Array.from(
+    { length: (24 - currHour) * 2 + 1 },
+    (_, i) => i * 0.5 + currHour
+  );
+
+  // 시간을 포맷하는 함수
+  const formatTime = (time: any) => {
+    let hours = Math.floor(time);
+    let minutes = time % 1 > 0 ? "30" : "00";
+    return `${hours}:${minutes}`;
+  };
 
   return (
-    <ScrollView
-      horizontal
-      showsHorizontalScrollIndicator={false}
-      style={styles.container}
-    >
-      {times.map((time, index) => {
-        const isSelected = selectedTimes.includes(time);
-        const isInRange =
-          selectedTimes.length === 2 &&
-          time >= Math.min(...selectedTimes) &&
-          time <= Math.max(...selectedTimes);
+    <Box>
+      <Text
+        style={{
+          paddingBottom: 10,
+          textAlign: "center",
+          fontSize: 18,
+          fontWeight: "bold",
+        }}
+      >
+        {selectedTimes.length === 0
+          ? "시간선택"
+          : selectedTimes.length === 1
+          ? `${formatTime(selectedTimes[0])} ~ 00:00`
+          : `${formatTime(selectedTimes[0])} ~ ${formatTime(selectedTimes[1])}`}
+      </Text>
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        style={styles.container}
+        contentContainerStyle={{ paddingRight: 20 }}
+      >
+        {times.map((time, index) => {
+          const isSelected = selectedTimes.includes(time);
+          const isInRange =
+            selectedTimes.length === 2 &&
+            time >= Math.min(...selectedTimes) &&
+            time <= Math.max(...selectedTimes);
 
-        return (
-          <TouchableOpacity
-            key={time}
-            onPress={() => {
-              if (selectedTimes.length < 2) {
-                setSelectedTimes([...selectedTimes, time]);
-              } else {
-                setSelectedTimes([time]);
-              }
-            }}
-          >
-            <View
-              style={[
-                styles.timeBar,
-                isInRange && styles.selectedBar,
-                index === 0 && styles.roundedLeftCorner, // 첫 번째 아이템(6시)
-                index === times.length - 1 && styles.roundedRightCorner, // 마지막 아이템(24시)
-              ]}
+          return (
+            <TouchableOpacity
+              key={time}
+              onPress={() => {
+                if (selectedTimes.length < 2) {
+                  if (
+                    time - selectedTimes[0] > 3 ||
+                    selectedTimes[0] - time > 3
+                  ) {
+                    alert("최대 신청 시간은 3시간 입니다.");
+                    setSelectedTimes([]);
+                    return;
+                  }
+                  if (selectedTimes.length === 1 && time < selectedTimes[0]) {
+                    setSelectedTimes([time, ...selectedTimes]);
+                  } else {
+                    setSelectedTimes([...selectedTimes, time]);
+                  }
+                } else {
+                  setSelectedTimes([time]);
+                }
+              }}
             >
-              <Text
-                style={[styles.timeText, isSelected && styles.selectedTime]}
+              <View
+                style={[
+                  styles.timeBar,
+
+                  // isSelected or isInRange 일 때 배경색 변경
+                  (isSelected || isInRange) && styles.selectedBar,
+
+                  index === 0 && styles.roundedLeftCorner,
+                  index === times.length - 1 && styles.roundedRightCorner,
+                ]}
               >
-                {Math.floor(time)}:{time % 1 ? "30" : "00"}
-              </Text>
-            </View>
-          </TouchableOpacity>
-        );
-      })}
-    </ScrollView>
+                <Text
+                  style={[
+                    styles.timeText,
+
+                    // isSelected or isInRange 일 때 텍스트 색상 변경
+                    (isSelected || isInRange) && styles.selectedTime,
+                  ]}
+                >
+                  {Math.floor(time)}:{time % 1 ? "30" : "00"}
+                </Text>
+              </View>
+            </TouchableOpacity>
+          );
+        })}
+      </ScrollView>
+    </Box>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    height: 80,
+    height: 60,
   },
   timeBar: {
     width: "100%",
@@ -68,18 +138,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
 
     backgroundColor: "lightgray",
-    justifyContent: "center", // 텍스트를 중앙으로 배치
-
-    //그림자 효과 추가
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-
-    // borderRadius: 10, // 기본적으로 모서리 둥글게 설정
+    justifyContent: "center",
   },
   roundedLeftCorner: {
     borderTopLeftRadius: 10,
@@ -90,18 +149,17 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 10,
   },
 
-  // text style inside the bar
   timeText: {
     fontSize: 16,
     textAlign: "center",
   },
 
   selectedBar: {
-    backgroundColor: "red",
+    backgroundColor: theme.colors.green700,
   },
 
   selectedTime: {
-    color: "blue",
+    color: "white",
     fontWeight: "bold",
   },
 });

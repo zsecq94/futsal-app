@@ -1,10 +1,10 @@
 import { NavigatorScreenParams } from "@react-navigation/native";
 
 export type RootBottomTabParamList = {
-  Home: NavigatorScreenParams<HomeStackParamList>;
-  Team: undefined;
-  Reservation: undefined;
+  Match: NavigatorScreenParams<HomeStackParamList>;
   Rank: undefined;
+  TeamSearch: undefined;
+  TeamInfo: undefined;
   Message: undefined;
 };
 

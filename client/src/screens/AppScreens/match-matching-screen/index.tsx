@@ -1,18 +1,44 @@
-import TimePickerPreview from "@/components/match/timepicker-preview";
+import Card from "@/components/match/card";
+import MatchCard from "@/components/match/matchcard";
 import HrTag from "@/components/shared/hrtag";
+import { getFalseMatch } from "@/services/api";
 import theme, { Box, Text } from "@/utils/theme";
 import { useNavigation } from "@react-navigation/native";
-import React from "react";
-import { TouchableOpacity } from "react-native";
+import React, { useEffect, useState } from "react";
 import { ScrollView } from "react-native";
 
 const MatchMatchingScreen = () => {
   const navigate = useNavigation();
-  const onPress = () => {
-    navigate.navigate("SignIn");
+  const goSignIn = (name: any) => {
+    navigate.navigate("SignIn", name);
   };
+
+  const goMatchDetail = () => {
+    console.log("눌림");
+  };
+
+  const [matchData, setMatchData] = useState([]);
+  const data = [
+    ["A", 0],
+    ["B", 0],
+    ["C", 0],
+  ];
+
+  useEffect(() => {
+    const getMatch = async () => {
+      try {
+        const res = await getFalseMatch();
+        setMatchData(res);
+      } catch (error) {
+        console.log("error in getMatch");
+        throw error;
+      }
+    };
+    getMatch();
+  }, []);
   return (
     <ScrollView
+      showsVerticalScrollIndicator={false}
       style={{
         padding: 8,
       }}
@@ -28,99 +54,12 @@ const MatchMatchingScreen = () => {
         구장 현황
       </Text>
       <HrTag />
-      <TouchableOpacity
-        onPress={onPress}
-        style={{
-          alignItems: "center",
-        }}
-      >
-        <Box
-          mt="2"
-          py="2"
-          px="5"
-          style={{
-            width: "90%",
-            height: 100,
-            backgroundColor: "white",
-            borderRadius: 10,
-            shadowColor: "#000",
-            shadowOffset: {
-              width: 0,
-              height: 2,
-            },
-            shadowOpacity: 0.25,
-            shadowRadius: 3.84,
-            elevation: 5,
-          }}
-        >
-          <Box flexDirection="row" justifyContent="space-between">
-            <Text variant="textBase">A구장</Text>
-            <Text variant="textBase">5경기</Text>
-          </Box>
+      {data.map((V, index) => (
+        <Box key={index}>
+          <Card V={V} onPress={() => goSignIn(V[0])} />
+          <Box height={10} />
         </Box>
-      </TouchableOpacity>
-      <TouchableOpacity
-        onPress={onPress}
-        style={{
-          alignItems: "center",
-        }}
-      >
-        <Box
-          mt="5"
-          py="2"
-          px="5"
-          style={{
-            width: "90%",
-            height: 100,
-            backgroundColor: "white",
-            borderRadius: 10,
-            shadowColor: "#000",
-            shadowOffset: {
-              width: 0,
-              height: 2,
-            },
-            shadowOpacity: 0.25,
-            shadowRadius: 3.84,
-            elevation: 5,
-          }}
-        >
-          <Box flexDirection="row" justifyContent="space-between">
-            <Text variant="textBase">B구장</Text>
-            <Text variant="textBase">5경기</Text>
-          </Box>
-        </Box>
-      </TouchableOpacity>
-      <TouchableOpacity
-        onPress={onPress}
-        style={{
-          alignItems: "center",
-        }}
-      >
-        <Box
-          my="5"
-          py="2"
-          px="5"
-          style={{
-            width: "90%",
-            height: 100,
-            backgroundColor: "white",
-            borderRadius: 10,
-            shadowColor: "#000",
-            shadowOffset: {
-              width: 0,
-              height: 2,
-            },
-            shadowOpacity: 0.25,
-            shadowRadius: 3.84,
-            elevation: 5,
-          }}
-        >
-          <Box flexDirection="row" justifyContent="space-between">
-            <Text variant="textBase">C구장</Text>
-            <Text variant="textBase">5경기</Text>
-          </Box>
-        </Box>
-      </TouchableOpacity>
+      ))}
       <Text
         ml="5"
         variant="text2Xl"
@@ -129,9 +68,16 @@ const MatchMatchingScreen = () => {
           color: theme.colors.green700,
         }}
       >
-        매칭 대기중...
+        매칭 대기중
       </Text>
       <HrTag />
+      {matchData.map((V) => (
+        <Box key={V._id}>
+          <MatchCard data={V} onPress={goMatchDetail} />
+          <Box height={10} />
+        </Box>
+      ))}
+      <Box height={80} />
     </ScrollView>
   );
 };

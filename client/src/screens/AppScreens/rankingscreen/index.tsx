@@ -1,10 +1,16 @@
+import Button from "@/components/shared/button";
+import useUserGlobalStore from "@/store/useUserGlobalStore";
 import { Box, Text } from "@/utils/theme";
 import React from "react";
 
 const RankingScreen = () => {
+  const { user, updateUser } = useUserGlobalStore();
+  const logout = () => {
+    updateUser(null);
+  };
   return (
     <Box>
-      <Text>랭킹 스크린 입니다.</Text>
+      <Button label="로그아웃" onPress={logout} />
     </Box>
   );
 };
