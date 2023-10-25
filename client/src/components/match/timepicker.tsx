@@ -1,12 +1,13 @@
+import { getTodayDate } from "@/services/api";
 import theme, { Box } from "@/utils/theme";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import {
   ScrollView,
+  StyleSheet,
+  Text,
   TouchableOpacity,
   View,
-  Text,
-  StyleSheet,
 } from "react-native";
 
 // type TimePickerProps = {
@@ -25,15 +26,15 @@ import {
 const TimePicker = ({
   selectedTimes,
   selectedDate,
-  Date,
-  dateList,
+  date,
+  newName,
   setSelectedTimes,
 }: any) => {
   // 선택 날짜가 오늘이면 현재시간부터 24시까지 아니면 6시부터 24시까지 times배열생성
   let currHour = 6;
-  if (Date.todayDate === selectedDate) {
-    let minute = Number(Date.todayTime.todayMinute) < 30 ? 0.5 : 1;
-    currHour = Number(Date.todayTime.todayHour) + minute;
+  if (date.todayDate === selectedDate) {
+    let minute = Number(date.todayTime.todayMinute) < 30 ? 0.5 : 1;
+    currHour = Number(date.todayTime.todayHour) + minute;
 
     if (currHour < 6) {
       currHour = 6;
@@ -51,6 +52,20 @@ const TimePicker = ({
     return `${hours}:${minutes}`;
   };
 
+  const [dateList, setDateList] = useState([]);
+  useEffect(() => {
+    const getTodayTime = async () => {
+      try {
+        const res = await getTodayDate({ newName, state: false });
+        setDateList(res);
+      } catch (error) {
+        console.log("error in getTodayTime");
+        throw error;
+      }
+    };
+    getTodayTime();
+  }, [selectedDate]);
+
   return (
     <Box>
       <Text
@@ -67,6 +82,7 @@ const TimePicker = ({
           ? `${formatTime(selectedTimes[0])} ~ 00:00`
           : `${formatTime(selectedTimes[0])} ~ ${formatTime(selectedTimes[1])}`}
       </Text>
+
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}

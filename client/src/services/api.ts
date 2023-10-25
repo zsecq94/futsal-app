@@ -44,20 +44,20 @@ export const getFalseMatch = async () => {
     const res = await axiosInstance.get("./matchs/getfalsematch");
     return res.data;
   } catch (error) {
-    console.log("error in getFalseMatch(CLIENT)");
+    console.log("error in getFalseMatch");
     throw error;
   }
 };
 
-export const getDateAndCount = async () => {
-  const todayDate = moment().format("YYYY-MM-DD");
+export const getTodayDate = async ({ newName, state }: any) => {
   try {
-    const res = await axiosInstance.post("./matchs/getdate", {
-      todayDate,
+    const res = await axiosInstance.post("./matchs/gettodaydate", {
+      id: newName,
+      state,
     });
     return res.data;
   } catch (error) {
-    console.log("error in getFalseMatch(CLIENT)");
+    console.log("error in getFalseMatch");
     throw error;
   }
 };

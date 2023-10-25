@@ -1,18 +1,17 @@
 import Card from "@/components/match/card";
 import MatchCard from "@/components/match/matchcard";
 import HrTag from "@/components/shared/hrtag";
-import { getDateAndCount, getFalseMatch } from "@/services/api";
+import { getFalseMatch, getTodayDate } from "@/services/api";
 import theme, { Box, Text } from "@/utils/theme";
 import { useNavigation } from "@react-navigation/native";
-import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { ScrollView } from "react-native";
 
 const MatchMatchingScreen = () => {
   const navigate = useNavigation();
   const [matchData, setMatchData] = useState([]);
-  const [todayDate, setTodayDate] = useState([]);
   const [refresh, setRefresh] = useState(false);
+  const data = ["A", "B", "C"];
 
   const goSignIn = (name: any) => {
     navigate.navigate("SignIn", name);
@@ -21,8 +20,6 @@ const MatchMatchingScreen = () => {
   const goMatchDetail = () => {
     console.log("눌림");
   };
-
-  const data = ["A", "B", "C"];
 
   useEffect(() => {
     const unsubscribe = navigate.addListener("focus", () => {
@@ -43,17 +40,7 @@ const MatchMatchingScreen = () => {
       }
     };
 
-    const getDate = async () => {
-      try {
-        const res = await getDateAndCount();
-        setTodayDate(res);
-      } catch (error) {
-        console.log("error in getCount");
-        throw error;
-      }
-    };
     getMatch();
-    getDate();
   }, [refresh]);
 
   return (
@@ -76,7 +63,7 @@ const MatchMatchingScreen = () => {
       <HrTag />
       {data.map((V, index) => (
         <Box key={index}>
-          <Card V={todayDate[index]} index={index} onPress={goSignIn} />
+          <Card V={V} onPress={goSignIn} />
           <Box height={10} />
         </Box>
       ))}

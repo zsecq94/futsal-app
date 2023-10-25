@@ -3,12 +3,12 @@ import Level from "@/components/match/level";
 import TimePicker from "@/components/match/timepicker";
 import Button from "@/components/shared/button";
 import HrTag from "@/components/shared/hrtag";
-import { getDateAndCount, matchSign } from "@/services/api";
+import { matchSign } from "@/services/api";
 import useUserGlobalStore from "@/store/useUserGlobalStore";
 import theme, { Box, Text } from "@/utils/theme";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import moment from "moment";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 const SignInScreen = () => {
   const navigate = useNavigation();
@@ -19,8 +19,6 @@ const SignInScreen = () => {
   const [selectedDate, setSelectedDate] = useState(todayDate);
   const [selectedTimes, setSelectedTimes] = useState([]);
   const [level, setLevel] = useState("");
-  const [getDate, setGetDate] = useState([]);
-  const [dateList, setDateList] = useState([]);
 
   const route = useRoute();
   const name = route.params;
@@ -28,28 +26,15 @@ const SignInScreen = () => {
   const userTeam = user?.team;
 
   const levelData = ["하", "중하", "중", "중상", "상"];
-  const index = name === "A" ? 0 : name === "B" ? 1 : 2;
+  const newName = name + selectedDate;
 
-  const Date = {
+  const date = {
     todayDate: todayDate,
     todayTime: {
       todayHour: todayHour,
       todayMinute: todayMinute,
     },
   };
-
-  useEffect(() => {
-    const getDate = async () => {
-      try {
-        const res = await getDateAndCount();
-        setGetDate(res);
-      } catch (error) {
-        console.log("err in getDate(SignInScreen)");
-        throw error;
-      }
-    };
-    getDate();
-  }, []);
 
   // 1025일 2:43 서버에서 getDateInSignIn 컨트롤러를 새로 만들어 SignInScreen에서만 호출하는 API를 만들생각임
 
@@ -101,9 +86,9 @@ const SignInScreen = () => {
       <TimePicker
         selectedTimes={selectedTimes}
         selectedDate={selectedDate}
-        Date={Date}
+        date={date}
         setSelectedTimes={setSelectedTimes}
-        dateList={dateList}
+        newName={newName}
       />
       <HrTag />
       <Text

@@ -71,34 +71,34 @@ export const getFalseMatch = async (req: Request, res: Response) => {
   }
 };
 
-export const getTodayCount = async (req: Request, res: Response) => {
-  const checkNum = 23.5;
+export const getTodayDate = async (req: Request, res: Response) => {
+  const { id, state } = req.body;
   try {
-    const { todayDate } = req.body;
+    const checkNum = 23.5;
+    if (state === true) {
+      const response = await MatchDate.findOne({
+        id,
+      });
 
-    const responseA = await MatchDate.findOne({
-      id: `A${todayDate}`,
-    });
+      return res.status(201).send(response);
+    } else {
+      const { id } = req.body;
+      const response = await MatchDate.findOne({
+        id,
+      });
+      if (response) {
+        const add24IfNecessary = (response: any) => {
+          if (response.times.includes(checkNum)) {
+            response.times.push(24);
+          }
+        };
 
-    const responseB = await MatchDate.findOne({
-      id: `B${todayDate}`,
-    });
-    const responseC = await MatchDate.findOne({
-      id: `C${todayDate}`,
-    });
-
-    const add24IfNecessary = (response: any) => {
-      if (response.times.includes(checkNum)) {
-        response.times.push(24);
+        add24IfNecessary(response);
+        return res.send(response.times);
+      } else {
+        return res.send([]);
       }
-    };
-
-    add24IfNecessary(responseA);
-    add24IfNecessary(responseB);
-    add24IfNecessary(responseC);
-
-    const response = [responseA, responseB, responseC];
-    return res.status(201).send(response);
+    }
   } catch (error) {
     console.log("error in createUser", error);
     throw error;

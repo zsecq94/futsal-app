@@ -1,15 +1,33 @@
 import theme, { Box, Text } from "@/utils/theme";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { TouchableOpacity } from "react-native";
 import TimePickerPreview from "./timepicker-preview";
 import CardCategory from "./cardcategory";
+import moment from "moment";
+import { getTodayDate } from "@/services/api";
 
-const Card = ({ V, index, onPress }: any) => {
-  const newId = index === 0 ? "A" : index === 1 ? "B" : "C";
+const Card = ({ V, onPress }: any) => {
+  const [todayDates, setTodayDates] = useState([]);
+  const todayDate = moment().format("YYYY-MM-DD");
+
+  useEffect(() => {
+    const getDate = async () => {
+      try {
+        const newName = V + todayDate;
+        const res = await getTodayDate({ newName, state: true });
+
+        setTodayDates(res);
+      } catch (error) {
+        console.log("error in getCount");
+        throw error;
+      }
+    };
+    getDate();
+  }, []);
 
   return (
     <TouchableOpacity
-      onPress={() => onPress(newId)}
+      onPress={() => onPress(V)}
       style={{
         alignItems: "center",
       }}
@@ -35,8 +53,8 @@ const Card = ({ V, index, onPress }: any) => {
         }}
       >
         <Box flexDirection="row" justifyContent="space-between">
-          <Text variant="textBase">{newId} 구장</Text>
-          <Text variant="textBase">{V?.count} 경기</Text>
+          <Text variant="textBase">{V} 구장</Text>
+          <Text variant="textBase">{todayDates.count} 경기</Text>
         </Box>
         <Box
           flexDirection="row"
@@ -44,10 +62,10 @@ const Card = ({ V, index, onPress }: any) => {
             gap: 10,
           }}
         >
-          <CardCategory V={newId} />
+          <CardCategory V={V} />
         </Box>
         <Box height={5} />
-        <TimePickerPreview date={V?.times} />
+        <TimePickerPreview date={todayDates?.times} />
       </Box>
     </TouchableOpacity>
   );
