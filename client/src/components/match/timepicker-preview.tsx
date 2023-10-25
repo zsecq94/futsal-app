@@ -17,7 +17,7 @@ const TimePickerPreview = ({ date }: any) => {
         width={"100%"}
         style={{
           justifyContent: "center",
-          marginLeft: 1,
+          marginLeft: 0,
           padding: 0,
         }}
       >

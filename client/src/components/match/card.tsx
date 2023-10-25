@@ -6,7 +6,7 @@ import CardCategory from "./cardcategory";
 import moment from "moment";
 import { getTodayDate } from "@/services/api";
 
-const Card = ({ V, onPress }: any) => {
+const Card = ({ V, refresh, onPress }: any) => {
   const [todayDates, setTodayDates] = useState([]);
   const todayDate = moment().format("YYYY-MM-DD");
 
@@ -23,7 +23,7 @@ const Card = ({ V, onPress }: any) => {
       }
     };
     getDate();
-  }, []);
+  }, [refresh]);
 
   return (
     <TouchableOpacity
@@ -54,7 +54,9 @@ const Card = ({ V, onPress }: any) => {
       >
         <Box flexDirection="row" justifyContent="space-between">
           <Text variant="textBase">{V} 구장</Text>
-          <Text variant="textBase">{todayDates.count} 경기</Text>
+          <Text variant="textBase">
+            {todayDates.count ? todayDates.count : 0} 경기
+          </Text>
         </Box>
         <Box
           flexDirection="row"

@@ -18,6 +18,9 @@ export const createMatch = async (req: Request, res: Response) => {
     });
 
     // timeBarPreview를 위해 새로운 시간 배열 생성
+
+    // !!!!!!!!! timebar 리팩토링 필요...
+    // 시작시간 까지 예약이 가능해야하고 끝 시간까지 예약이 가능해야 함... 흠...
     const [startTime, endTime] = time;
     let newTime = [];
     for (let t = startTime; t <= endTime - 0.5; t += 0.5) {

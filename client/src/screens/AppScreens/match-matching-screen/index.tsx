@@ -63,7 +63,7 @@ const MatchMatchingScreen = () => {
       <HrTag />
       {data.map((V, index) => (
         <Box key={index}>
-          <Card V={V} onPress={goSignIn} />
+          <Card V={V} refresh={refresh} onPress={goSignIn} />
           <Box height={10} />
         </Box>
       ))}
