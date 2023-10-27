@@ -1,33 +1,15 @@
-import theme, { Box, Text } from "@/utils/theme";
-import React, { useEffect, useState } from "react";
+import { Box, Text } from "@/utils/theme";
+import React from "react";
 import { TouchableOpacity } from "react-native";
-import TimePickerPreview from "./timepicker-preview";
 import CardCategory from "./cardcategory";
-import moment from "moment";
-import { getTodayDate } from "@/services/api";
+import TimePickerPreview from "./timepicker-preview";
 
-const Card = ({ V, refresh, onPress }: any) => {
-  const [todayDates, setTodayDates] = useState([]);
-  const todayDate = moment().format("YYYY-MM-DD");
-
-  useEffect(() => {
-    const getDate = async () => {
-      try {
-        const newName = V + todayDate;
-        const res = await getTodayDate({ newName, state: true });
-
-        setTodayDates(res);
-      } catch (error) {
-        console.log("error in getCount");
-        throw error;
-      }
-    };
-    getDate();
-  }, [refresh]);
+const Card = ({ data, idx, onPress }: any) => {
+  const name = idx === 0 ? "A" : idx === 1 ? "B" : "C";
 
   return (
     <TouchableOpacity
-      onPress={() => onPress(V)}
+      onPress={() => onPress({ name, data })}
       style={{
         alignItems: "center",
       }}
@@ -53,10 +35,8 @@ const Card = ({ V, refresh, onPress }: any) => {
         }}
       >
         <Box flexDirection="row" justifyContent="space-between">
-          <Text variant="textBase">{V} 구장</Text>
-          <Text variant="textBase">
-            {todayDates.count ? todayDates.count : 0} 경기
-          </Text>
+          <Text variant="textBase">{name} 구장</Text>
+          <Text variant="textBase">{data.count ? data.count : 0} 경기</Text>
         </Box>
         <Box
           flexDirection="row"
@@ -64,10 +44,10 @@ const Card = ({ V, refresh, onPress }: any) => {
             gap: 10,
           }}
         >
-          <CardCategory V={V} />
+          <CardCategory V={name} />
         </Box>
         <Box height={5} />
-        <TimePickerPreview date={todayDates?.times} />
+        <TimePickerPreview data={data.times} />
       </Box>
     </TouchableOpacity>
   );

@@ -1,7 +1,6 @@
 import Calendar from "@/components/match/calender";
 import Level from "@/components/match/level";
 import TimePicker from "@/components/match/timepicker";
-import TimePickerTest from "@/components/match/timepickertest";
 import Button from "@/components/shared/button";
 import HrTag from "@/components/shared/hrtag";
 import { matchSign } from "@/services/api";
@@ -16,13 +15,14 @@ const SignInScreen = () => {
   const todayDate = moment().format("YYYY-MM-DD");
   const todayHour = moment().format("HH");
   const todayMinute = moment().format("mm");
+  const second = moment().format("ss");
 
   const [selectedDate, setSelectedDate] = useState(todayDate);
   const [selectedTimes, setSelectedTimes] = useState([]);
   const [level, setLevel] = useState("");
 
   const route = useRoute();
-  const name = route.params;
+  const { name, data }: any = route.params;
   const { user } = useUserGlobalStore();
   const userTeam = user?.team;
 
@@ -48,6 +48,7 @@ const SignInScreen = () => {
           level,
           selectedDate,
           selectedTimes,
+          todayTime: todayHour + todayMinute + second,
         });
         alert(res.message);
         navigate.goBack();
@@ -84,18 +85,11 @@ const SignInScreen = () => {
       </Box>
       <Calendar onSelectDate={setSelectedDate} selected={selectedDate} />
       <HrTag />
-      {/* <TimePicker
+      <TimePicker
         selectedTimes={selectedTimes}
         selectedDate={selectedDate}
         date={date}
-        setSelectedTimes={setSelectedTimes}
-        newName={newName}
-      />
-      <HrTag /> */}
-      <TimePickerTest
-        selectedTimes={selectedTimes}
-        selectedDate={selectedDate}
-        date={date}
+        data={data.times}
         setSelectedTimes={setSelectedTimes}
         newName={newName}
       />

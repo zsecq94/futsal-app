@@ -22,6 +22,7 @@ export const matchSign = async ({
   level,
   selectedDate,
   selectedTimes,
+  todayTime,
 }: any) => {
   try {
     const res = await axiosInstance.post("/matchs/sign", {
@@ -30,6 +31,7 @@ export const matchSign = async ({
       date: selectedDate,
       time: selectedTimes,
       level,
+      todayTime,
     });
 
     return res.data;
@@ -49,11 +51,10 @@ export const getFalseMatch = async () => {
   }
 };
 
-export const getTodayDate = async ({ newName, state }: any) => {
+export const getTodayDate = async ({ id }: any) => {
   try {
     const res = await axiosInstance.post("./matchs/gettodaydate", {
-      id: newName,
-      state,
+      id,
     });
     return res.data;
   } catch (error) {

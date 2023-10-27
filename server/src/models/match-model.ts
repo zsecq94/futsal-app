@@ -11,13 +11,13 @@ const matchSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    level: {
-      type: String,
-      required: true,
-    },
     team2: {
       type: String,
       required: false,
+    },
+    level: {
+      type: String,
+      required: true,
     },
     state: {
       type: Boolean,
@@ -28,7 +28,11 @@ const matchSchema = new mongoose.Schema(
       required: true,
     },
     date: {
-      type: Object,
+      type: String,
+      required: true,
+    },
+    time: {
+      type: [],
       required: true,
     },
   },

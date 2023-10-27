@@ -6,13 +6,35 @@ const matchDateSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    times: {
-      type: [],
-      required: true,
+    A: {
+      count: {
+        type: Number,
+        required: true,
+      },
+      times: {
+        type: [],
+        required: true,
+      },
     },
-    count: {
-      type: Number,
-      required: true,
+    B: {
+      count: {
+        type: Number,
+        required: true,
+      },
+      times: {
+        type: [],
+        required: true,
+      },
+    },
+    C: {
+      count: {
+        type: Number,
+        required: true,
+      },
+      times: {
+        type: [],
+        required: true,
+      },
     },
   },
   {

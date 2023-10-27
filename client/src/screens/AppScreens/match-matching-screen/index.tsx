@@ -4,17 +4,20 @@ import HrTag from "@/components/shared/hrtag";
 import { getFalseMatch, getTodayDate } from "@/services/api";
 import theme, { Box, Text } from "@/utils/theme";
 import { useNavigation } from "@react-navigation/native";
+import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { ScrollView } from "react-native";
 
 const MatchMatchingScreen = () => {
   const navigate = useNavigation();
   const [matchData, setMatchData] = useState([]);
+  const [todayData, setTodayData] = useState([]);
+  const todayDate = moment().format("YYYY-MM-DD");
   const [refresh, setRefresh] = useState(false);
   const data = ["A", "B", "C"];
 
-  const goSignIn = (name: any) => {
-    navigate.navigate("SignIn", name);
+  const goSignIn = ({ name, data }: any) => {
+    navigate.navigate("SignIn", { name, data });
   };
 
   const goMatchDetail = () => {
@@ -39,10 +42,18 @@ const MatchMatchingScreen = () => {
         throw error;
       }
     };
-
+    const getDate = async () => {
+      try {
+        const res = await getTodayDate({ id: todayDate });
+        setTodayData(res);
+      } catch (error) {
+        console.log("error in getDate");
+        throw error;
+      }
+    };
+    getDate();
     getMatch();
   }, [refresh]);
-
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
@@ -61,9 +72,9 @@ const MatchMatchingScreen = () => {
         오늘의 구장 현황
       </Text>
       <HrTag />
-      {data.map((V, index) => (
+      {todayData.map((data, index) => (
         <Box key={index}>
-          <Card V={V} refresh={refresh} onPress={goSignIn} />
+          <Card data={data} idx={index} refresh={refresh} onPress={goSignIn} />
           <Box height={10} />
         </Box>
       ))}

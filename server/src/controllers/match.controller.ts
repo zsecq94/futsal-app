@@ -4,55 +4,41 @@ import MatchDate from "../models/matchdate.model";
 
 export const createMatch = async (req: Request, res: Response) => {
   try {
-    const { team, place, date, time, level } = req.body;
+    const { team, place, date, time, level, todayTime } = req.body;
+
     await Match.create({
-      id: new Date().toISOString() + team,
+      id: date + todayTime + team,
       team1: team,
       place,
       level,
-      date: {
-        date,
-        time,
-      },
+      date,
+      time,
       state: false,
     });
 
-    // timeBarPreview를 위해 새로운 시간 배열 생성
+    const fillGapsInTimes = (dates: number[][]) => {
+      let filledDates: number[][] = [];
+      for (let i = 0; i < dates.length - 1; i += 2) {
+        let start = dates[i][0];
+        let end = dates[i + 1][1];
 
-    // !!!!!!!!! timebar 리팩토링 필요...
-    // 시작시간 까지 예약이 가능해야하고 끝 시간까지 예약이 가능해야 함... 흠...
-    const [startTime, endTime] = time;
-    let newTime = [];
-    for (let t = startTime; t <= endTime - 0.5; t += 0.5) {
-      newTime.push(t);
-    }
-
-    const today = await MatchDate.findOne({
-      id: place + date,
-    });
-    if (today) {
-      await MatchDate.updateOne(
-        {
-          id: place + date,
-        },
-        {
-          $push: {
-            times: {
-              $each: newTime,
-            },
-          },
-          $inc: {
-            count: 1,
-          },
+        for (let j = start; j < end; j += 0.5) {
+          filledDates.push([j, j + 0.5]);
         }
-      );
-    } else {
-      await MatchDate.create({
-        id: place + date,
-        times: newTime,
-        count: 1,
-      });
-    }
+      }
+
+      return filledDates;
+    };
+    const newDateList = fillGapsInTimes(time);
+
+    await MatchDate.findOneAndUpdate(
+      { id: date },
+      {
+        $push: { [`${place}.times`]: { $each: newDateList } },
+        $inc: { [`${place}.count`]: 1 },
+      },
+      { upsert: true, new: true }
+    );
 
     return res.status(201).send({ message: "신청 완료" });
   } catch (error) {
@@ -66,8 +52,7 @@ export const getFalseMatch = async (req: Request, res: Response) => {
     const response = await Match.find({
       state: false,
     });
-
-    return res.status(201).send({ response });
+    return res.send({ response });
   } catch (error) {
     console.log("error in createUser", error);
     throw error;
@@ -75,33 +60,12 @@ export const getFalseMatch = async (req: Request, res: Response) => {
 };
 
 export const getTodayDate = async (req: Request, res: Response) => {
-  const { id, state } = req.body;
+  const { id } = req.body;
   try {
-    const checkNum = 23.5;
-    if (state === true) {
-      const response = await MatchDate.findOne({
-        id,
-      });
-
-      return res.status(201).send(response);
-    } else {
-      const { id } = req.body;
-      const response = await MatchDate.findOne({
-        id,
-      });
-      if (response) {
-        const add24IfNecessary = (response: any) => {
-          if (response.times.includes(checkNum)) {
-            response.times.push(24);
-          }
-        };
-
-        add24IfNecessary(response);
-        return res.send(response.times);
-      } else {
-        return res.send([]);
-      }
-    }
+    const response = await MatchDate.findOne({
+      id,
+    });
+    return res.send([response.A, response.B, response.C]);
   } catch (error) {
     console.log("error in createUser", error);
     throw error;

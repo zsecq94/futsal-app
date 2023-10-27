@@ -1,13 +1,12 @@
 import theme, { Box, Text } from "@/utils/theme";
 import React from "react";
 
-const TimePickerPreview = ({ date }: any) => {
+const TimePickerPreview = ({ data }: any) => {
   // 새벽 6시부터 밤 12시까지의 모든 시간 (30분 단위)
-  const timess = Array.from(
-    { length: (24 - 6) * 2 + 1 },
-    (_, i) => i * 0.5 + 6
-  );
-  const times = timess.slice(0, -1);
+  const times = Array.from({ length: (23.5 - 6) * 2 + 1 }, (_, i) => [
+    i * 0.5 + 6,
+    i * 0.5 + 6 + 0.5,
+  ]);
   const timeText = ["6", "9", "12", "15", "18", "21", "24"];
 
   return (
@@ -28,7 +27,9 @@ const TimePickerPreview = ({ date }: any) => {
                 height={15}
                 width={"70%"}
                 style={{
-                  backgroundColor: date?.includes(time)
+                  backgroundColor: data?.some(
+                    (d: any) => d[0] === time[0] && d[1] === time[1]
+                  )
                     ? theme.colors.green700
                     : "lightgray",
                 }}

@@ -10,24 +10,12 @@ import {
   View,
 } from "react-native";
 
-// type TimePickerProps = {
-//   selectedTimes: number[];
-//   selectedDate: string;
-//   Date: {
-//     todayDate: string;
-//     todayTime: {
-//       todayHour: string;
-//       todayMinute: string;
-//     };
-//   };
-//   setSelectedTimes: React.Dispatch<React.SetStateAction<number[]>>;
-// };
-
 const TimePicker = ({
   selectedTimes,
   selectedDate,
   date,
   newName,
+  data,
   setSelectedTimes,
 }: any) => {
   // 선택 날짜가 오늘이면 현재시간부터 24시까지 아니면 6시부터 24시까지 times배열생성
@@ -40,10 +28,11 @@ const TimePicker = ({
       currHour = 6;
     }
   }
-  const times = Array.from(
-    { length: (24 - currHour) * 2 + 1 },
-    (_, i) => i * 0.5 + currHour
-  );
+
+  const times = Array.from({ length: (23.5 - currHour) * 2 + 1 }, (_, i) => [
+    i * 0.5 + currHour,
+    i * 0.5 + currHour + 0.5,
+  ]);
 
   // 시간을 포맷하는 함수
   const formatTime = (time: any) => {
@@ -52,148 +41,96 @@ const TimePicker = ({
     return `${hours}:${minutes}`;
   };
 
-  const [dateList, setDateList] = useState([]);
-  useEffect(() => {
-    const getTodayTime = async () => {
-      try {
-        const res = await getTodayDate({ newName, state: false });
-        setDateList(res);
-      } catch (error) {
-        console.log("error in getTodayTime");
-        throw error;
+  const handlePress = (time: any) => {
+    if (selectedTimes.length < 2) {
+      if (selectedTimes.length === 1) {
+        const duration = Math.abs(time[0] - selectedTimes[0][0]);
+
+        if (duration > 2.5) {
+          alert("최대 신청 시간은 3시간 입니다.");
+          setSelectedTimes([]);
+        } else {
+          if (time[0] < selectedTimes[0][0]) {
+            setSelectedTimes([time, ...selectedTimes]);
+          } else {
+            setSelectedTimes([...selectedTimes, time]);
+          }
+        }
+      } else {
+        setSelectedTimes([time]);
       }
-    };
-    getTodayTime();
-  }, [selectedDate]);
+    } else {
+      setSelectedTimes([time]);
+    }
+  };
 
   return (
-    <Box>
-      <Text
-        style={{
-          paddingBottom: 10,
-          textAlign: "center",
-          fontSize: 18,
-          fontWeight: "bold",
-        }}
-      >
-        {selectedTimes.length === 0
-          ? "시간선택"
-          : selectedTimes.length === 1
-          ? `${formatTime(selectedTimes[0])} ~ 00:00`
-          : `${formatTime(selectedTimes[0])} ~ ${formatTime(selectedTimes[1])}`}
-      </Text>
-
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        style={styles.container}
-        contentContainerStyle={{ paddingRight: 20 }}
-      >
+    <Box style={{ padding: 20 }}>
+      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         {times.map((time, index) => {
-          const isSelected = selectedTimes.includes(time);
-          const isInRange =
-            selectedTimes.length === 2 &&
-            time >= Math.min(...selectedTimes) &&
-            time <= Math.max(...selectedTimes);
-          const isReserved = dateList?.includes(time);
+          let isSelected = false;
+          if (selectedTimes.length === 2) {
+            const start = Math.min(selectedTimes[0][0], selectedTimes[1][0]);
+            const end = Math.max(selectedTimes[0][0], selectedTimes[1][0]);
+            isSelected = time[0] >= start && time[0] <= end;
+          } else {
+            isSelected = selectedTimes.some(
+              (selectedTime: number[]) => selectedTime[0] === time[0]
+            );
+          }
 
           return (
-            <TouchableOpacity
-              key={time}
-              onPress={() => {
-                if (selectedTimes.length < 2) {
-                  if (
-                    time - selectedTimes[0] > 3 ||
-                    selectedTimes[0] - time > 3
-                  ) {
-                    alert("최대 신청 시간은 3시간 입니다.");
-                    setSelectedTimes([]);
-                    return;
-                  }
-                  if (selectedTimes.length === 1 && time < selectedTimes[0]) {
-                    setSelectedTimes([time, ...selectedTimes]);
-                  } else {
-                    setSelectedTimes([...selectedTimes, time]);
-                  }
-                } else {
-                  setSelectedTimes([time]);
-                }
-              }}
-              disabled={isReserved}
-            >
-              <View
-                style={[
-                  styles.timeBar,
-
-                  // isSelected or isInRange 일 때 배경색 변경
-                  (isSelected || isInRange) && styles.selectedBar,
-
-                  index === 0 && styles.roundedLeftCorner,
-                  index === times.length - 1 && styles.roundedRightCorner,
-                  isReserved && styles.disabledBar,
-                ]}
+            <Box key={index}>
+              <TouchableOpacity
+                onPress={() => handlePress(time)}
+                disabled={data?.some((d) => d[0] === time[0])}
               >
-                <Text
-                  style={[
-                    styles.timeText,
-
-                    // isSelected or isInRange 일 때 텍스트 색상 변경
-                    (isSelected || isInRange) && styles.selectedTime,
-                    isReserved && styles.disabledTime,
-                  ]}
-                >
-                  {Math.floor(time)}:{time % 1 ? "30" : "00"}
-                </Text>
-              </View>
-            </TouchableOpacity>
+                <Box
+                  height={30}
+                  width={60}
+                  style={{
+                    backgroundColor: data?.some(
+                      (d) => d[0] === time[0] && d[1] === time[1]
+                    )
+                      ? theme.colors.gray200
+                      : isSelected
+                      ? theme.colors.green700
+                      : "grey",
+                    borderLeftWidth: 1,
+                    borderColor: "white",
+                    borderTopLeftRadius: index === 0 ? 10 : 0,
+                    borderBottomLeftRadius: index === 0 ? 10 : 0,
+                    borderTopRightRadius: index === times.length - 1 ? 10 : 0,
+                    borderBottomRightRadius:
+                      index === times.length - 1 ? 10 : 0,
+                  }}
+                />
+              </TouchableOpacity>
+              <Box height={10} />
+              <Box
+                style={{
+                  marginLeft: -17,
+                }}
+              >
+                {index === times.length - 1 && (
+                  <Box justifyContent="space-between" flexDirection="row">
+                    <Text>{formatTime(time[0])}</Text>
+                    <Text>{time[1]}</Text>
+                  </Box>
+                )}
+                {index !== 0 && index !== times.length - 1 && (
+                  <Text>{formatTime(time[0])}</Text>
+                )}
+                {index === 0 && (
+                  <Text style={{ marginLeft: 17 }}>{formatTime(time[0])}</Text>
+                )}
+              </Box>
+            </Box>
           );
         })}
       </ScrollView>
     </Box>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    height: 60,
-  },
-  timeBar: {
-    width: "100%",
-    height: 50,
-    marginHorizontal: 10,
-
-    backgroundColor: theme.colors.gray300,
-    justifyContent: "center",
-  },
-  roundedLeftCorner: {
-    borderTopLeftRadius: 10,
-    borderBottomLeftRadius: 10,
-  },
-  roundedRightCorner: {
-    borderTopRightRadius: 10,
-    borderBottomRightRadius: 10,
-  },
-
-  timeText: {
-    fontSize: 16,
-    textAlign: "center",
-  },
-
-  selectedBar: {
-    backgroundColor: theme.colors.green700,
-  },
-
-  selectedTime: {
-    color: "white",
-    fontWeight: "bold",
-  },
-  disabledBar: {
-    backgroundColor: theme.colors.gray500, // 투명도가 적용된 색상
-  },
-  disabledTime: {
-    color: "white", // 투명도가 적용된 텍스트 색상
-    fontWeight: "bold",
-  },
-});
 
 export default TimePicker;

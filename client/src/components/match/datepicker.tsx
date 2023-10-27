@@ -18,7 +18,6 @@ const DatePicker = ({ date, onSelectDate, selected }: any) => {
   } else if (dayOfWeek === "일요일") {
     textColor = theme.colors.rose500;
   }
-
   return (
     <TouchableOpacity
       onPress={() => onSelectDate(formattedDate)}
