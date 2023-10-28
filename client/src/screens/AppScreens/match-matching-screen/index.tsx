@@ -65,7 +65,7 @@ const MatchMatchingScreen = () => {
     getDate();
     getMatch();
   }, [refresh]);
-  console.log(todayDate);
+
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
@@ -90,6 +90,7 @@ const MatchMatchingScreen = () => {
           <Box height={10} />
         </Box>
       ))}
+      <Box height={10} />
       <Text
         ml="5"
         variant="text2Xl"

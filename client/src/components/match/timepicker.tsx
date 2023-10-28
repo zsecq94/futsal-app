@@ -84,6 +84,10 @@ const TimePicker = ({
           alert("최대 신청 시간은 3시간 입니다 ❗");
           setSelectedTimes([]);
         } else {
+          if (time[0] === selectedTimes[0][0]) {
+            setSelectedTimes([]);
+            return;
+          }
           if (time[0] < selectedTimes[0][0]) {
             const check = validCheck(time, selectedTimes[0]);
             if (check) {
