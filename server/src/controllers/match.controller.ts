@@ -42,7 +42,7 @@ export const createMatch = async (req: Request, res: Response) => {
 
     return res.status(201).send({ message: "신청 완료" });
   } catch (error) {
-    console.log("error in createUser", error);
+    console.log("error in createMatch", error);
     throw error;
   }
 };
@@ -54,7 +54,7 @@ export const getFalseMatch = async (req: Request, res: Response) => {
     });
     return res.send({ response });
   } catch (error) {
-    console.log("error in createUser", error);
+    console.log("error in getFalseMatch", error);
     throw error;
   }
 };
@@ -65,9 +65,30 @@ export const getTodayDate = async (req: Request, res: Response) => {
     const response = await MatchDate.findOne({
       id,
     });
-    return res.send([response.A, response.B, response.C]);
+    if (response) {
+      return res.send([response.A, response.B, response.C]);
+    } else {
+      return res.send([]);
+    }
   } catch (error) {
-    console.log("error in createUser", error);
+    console.log("error in getTodayDate", error);
+    throw error;
+  }
+};
+
+export const getOnePlaceData = async (req: Request, res: Response) => {
+  const { id, name } = req.body;
+  try {
+    const response = await MatchDate.findOne({
+      id,
+    });
+    if (response) {
+      return res.send(response[name].times);
+    } else {
+      return res.send([]);
+    }
+  } catch (error) {
+    console.log("error in getOnePlaceData", error);
     throw error;
   }
 };

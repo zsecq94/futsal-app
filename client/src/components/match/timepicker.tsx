@@ -1,22 +1,15 @@
-import { getTodayDate } from "@/services/api";
+import { getOnePlaceData } from "@/services/api";
 import theme, { Box } from "@/utils/theme";
 import React, { useEffect, useState } from "react";
 
-import {
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { ScrollView, Text, TouchableOpacity } from "react-native";
 
 const TimePicker = ({
   selectedTimes,
   selectedDate,
   date,
-  newName,
-  data,
   setSelectedTimes,
+  name,
 }: any) => {
   // 선택 날짜가 오늘이면 현재시간부터 24시까지 아니면 6시부터 24시까지 times배열생성
   let currHour = 6;
@@ -34,7 +27,7 @@ const TimePicker = ({
     i * 0.5 + currHour + 0.5,
   ]);
 
-  // 시간을 포맷하는 함수
+  // 시간 포맷
   const formatTime = (time: any) => {
     let hours = Math.floor(time);
     let minutes = time % 1 > 0 ? "30" : "00";
@@ -64,6 +57,16 @@ const TimePicker = ({
     }
   };
 
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    const getOnePlace = async () => {
+      const res = await getOnePlaceData({ selectedDate, name });
+      setData(res);
+    };
+    getOnePlace();
+  }, [selectedDate]);
+
   return (
     <Box style={{ padding: 20 }}>
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
@@ -90,12 +93,12 @@ const TimePicker = ({
                   width={60}
                   style={{
                     backgroundColor: data?.some(
-                      (d) => d[0] === time[0] && d[1] === time[1]
+                      (d: any) => d[0] === time[0] && d[1] === time[1]
                     )
-                      ? theme.colors.gray200
+                      ? "grey"
                       : isSelected
                       ? theme.colors.green700
-                      : "grey",
+                      : theme.colors.gray200,
                     borderLeftWidth: 1,
                     borderColor: "white",
                     borderTopLeftRadius: index === 0 ? 10 : 0,

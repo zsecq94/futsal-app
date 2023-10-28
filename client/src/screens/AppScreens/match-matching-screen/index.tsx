@@ -11,13 +11,22 @@ import { ScrollView } from "react-native";
 const MatchMatchingScreen = () => {
   const navigate = useNavigation();
   const [matchData, setMatchData] = useState([]);
-  const [todayData, setTodayData] = useState([]);
+  const [todayData, setTodayData] = useState([
+    {
+      times: [],
+    },
+    {
+      times: [],
+    },
+    {
+      times: [],
+    },
+  ]);
   const todayDate = moment().format("YYYY-MM-DD");
   const [refresh, setRefresh] = useState(false);
-  const data = ["A", "B", "C"];
 
-  const goSignIn = ({ name, data }: any) => {
-    navigate.navigate("SignIn", { name, data });
+  const goSignIn = ({ name }: any) => {
+    navigate.navigate("SignIn", { name });
   };
 
   const goMatchDetail = () => {
@@ -45,7 +54,9 @@ const MatchMatchingScreen = () => {
     const getDate = async () => {
       try {
         const res = await getTodayDate({ id: todayDate });
-        setTodayData(res);
+        if (res.length > 0) {
+          setTodayData(res);
+        }
       } catch (error) {
         console.log("error in getDate");
         throw error;
@@ -54,6 +65,7 @@ const MatchMatchingScreen = () => {
     getDate();
     getMatch();
   }, [refresh]);
+
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}

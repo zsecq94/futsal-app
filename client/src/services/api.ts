@@ -62,3 +62,16 @@ export const getTodayDate = async ({ id }: any) => {
     throw error;
   }
 };
+
+export const getOnePlaceData = async ({ selectedDate, name }: any) => {
+  try {
+    const res = await axiosInstance.post("./matchs/getoneplace", {
+      id: selectedDate,
+      name,
+    });
+    return res.data;
+  } catch (error) {
+    console.log("error in getFalseMatch");
+    throw error;
+  }
+};

@@ -8,7 +8,7 @@ import useUserGlobalStore from "@/store/useUserGlobalStore";
 import theme, { Box, Text } from "@/utils/theme";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import moment from "moment";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const SignInScreen = () => {
   const navigate = useNavigation();
@@ -22,12 +22,12 @@ const SignInScreen = () => {
   const [level, setLevel] = useState("");
 
   const route = useRoute();
-  const { name, data }: any = route.params;
+  const { name }: any = route.params;
+
   const { user } = useUserGlobalStore();
   const userTeam = user?.team;
 
   const levelData = ["하", "중하", "중", "중상", "상"];
-  const newName = name + selectedDate;
 
   const date = {
     todayDate: todayDate,
@@ -36,8 +36,6 @@ const SignInScreen = () => {
       todayMinute: todayMinute,
     },
   };
-
-  // 1025일 2:43 서버에서 getDateInSignIn 컨트롤러를 새로 만들어 SignInScreen에서만 호출하는 API를 만들생각임
 
   const handleSubmit = async () => {
     try {
@@ -89,9 +87,8 @@ const SignInScreen = () => {
         selectedTimes={selectedTimes}
         selectedDate={selectedDate}
         date={date}
-        data={data.times}
         setSelectedTimes={setSelectedTimes}
-        newName={newName}
+        name={name}
       />
       <HrTag />
       <Text

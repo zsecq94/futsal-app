@@ -9,7 +9,7 @@ const Card = ({ data, idx, onPress }: any) => {
 
   return (
     <TouchableOpacity
-      onPress={() => onPress({ name, data })}
+      onPress={() => onPress({ name })}
       style={{
         alignItems: "center",
       }}
