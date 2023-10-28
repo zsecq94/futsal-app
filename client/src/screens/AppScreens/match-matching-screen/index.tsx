@@ -10,7 +10,9 @@ import { ScrollView } from "react-native";
 
 const MatchMatchingScreen = () => {
   const navigate = useNavigation();
+  const todayDate = moment().format("YYYY-MM-DD");
   const [matchData, setMatchData] = useState([]);
+  const [refresh, setRefresh] = useState(false);
   const [todayData, setTodayData] = useState([
     {
       times: [],
@@ -22,8 +24,6 @@ const MatchMatchingScreen = () => {
       times: [],
     },
   ]);
-  const todayDate = moment().format("YYYY-MM-DD");
-  const [refresh, setRefresh] = useState(false);
 
   const goSignIn = ({ name }: any) => {
     navigate.navigate("SignIn", { name });
@@ -65,7 +65,7 @@ const MatchMatchingScreen = () => {
     getDate();
     getMatch();
   }, [refresh]);
-
+  console.log(todayDate);
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}

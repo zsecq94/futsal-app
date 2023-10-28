@@ -106,7 +106,7 @@ const SignInScreen = () => {
           <Level level={level} key={index} V={V} onPress={handleLevel} />
         ))}
       </Box>
-      <HrTag />
+      <Box height={20} />
       <Button label="매칭 신청하기" onPress={handleSubmit} />
     </Box>
   );
