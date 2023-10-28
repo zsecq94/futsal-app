@@ -3,12 +3,11 @@ import { Box } from "@/utils/theme";
 import React, { useState } from "react";
 import MatchMatchingScreen from "../match-matching-screen";
 import MatchMercenaryScreen from "../match-mercenary-screen";
-import MatchReservationScreen from "../match-reservation-screen";
 
 const MatchScreen = () => {
   const [check, setCheck] = useState(0);
 
-  const data = ["매칭", "예약", "용병"];
+  const data = ["매칭 / 예약", "용병"];
 
   return (
     <Box>
@@ -23,9 +22,8 @@ const MatchScreen = () => {
           />
         ))}
       </Box>
-      {check === 0 && <MatchMatchingScreen data={data} />}
-      {check === 1 && <MatchReservationScreen />}
-      {check === 2 && <MatchMercenaryScreen />}
+      {check === 0 && <MatchMatchingScreen />}
+      {check === 1 && <MatchMercenaryScreen />}
     </Box>
   );
 };

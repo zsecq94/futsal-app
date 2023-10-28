@@ -14,7 +14,7 @@ const MatchCategory = ({ label, setCheck, check, num }: MatchCategoryProps) => {
     <TouchableOpacity
       onPress={() => setCheck(num)}
       style={{
-        width: "33%",
+        width: "50%",
         borderBottomWidth: check === num ? 2 : 0,
         borderBottomColor: check === num ? theme.colors.green700 : "black",
       }}

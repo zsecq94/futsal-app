@@ -1,5 +1,5 @@
-import MatchScreen from "@/screens/AppScreens/matchscreen";
-import SignInScreen from "@/screens/AppScreens/signinscreen";
+import MatchScreen from "@/screens/AppScreens/Match/matchscreen";
+import SignInScreen from "@/screens/AppScreens/Match/signinscreen";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import React from "react";
 

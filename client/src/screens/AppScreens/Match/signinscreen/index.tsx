@@ -8,7 +8,8 @@ import useUserGlobalStore from "@/store/useUserGlobalStore";
 import theme, { Box, Text } from "@/utils/theme";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import moment from "moment";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
+import Toast from "react-native-toast-message";
 
 const SignInScreen = () => {
   const navigate = useNavigation();
@@ -48,10 +49,22 @@ const SignInScreen = () => {
           selectedTimes,
           todayTime: todayHour + todayMinute + second,
         });
-        alert(res.message);
+        let type;
+        if (res.message === "신청 완료") {
+          type = "success";
+        } else {
+          type = "error";
+        }
+        Toast.show({
+          type: type,
+          text1: `👍 ${res.message}`,
+        });
         navigate.goBack();
       } else {
-        alert("선택사항을 모두 선택해주세요");
+        Toast.show({
+          type: "error",
+          text1: "선택사항을 모두 선택해주세요",
+        });
       }
     } catch (error) {
       console.log("error in handleSubmit");

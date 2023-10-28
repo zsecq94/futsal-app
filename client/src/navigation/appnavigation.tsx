@@ -1,12 +1,13 @@
-import MessageScreen from "@/screens/AppScreens/messagescreen";
-import RankingScreen from "@/screens/AppScreens/rankingscreen";
-import TeamInfoScreen from "@/screens/AppScreens/teaminfoscreen";
-import TeamSearchScreen from "@/screens/AppScreens/teamsearchscreen";
+import MessageScreen from "@/screens/AppScreens/Message/messagescreen";
+import RankingScreen from "@/screens/AppScreens/Rank/rankingscreen";
+import TeamInfoScreen from "@/screens/AppScreens/Team/teaminfoscreen";
+import TeamSearchScreen from "@/screens/AppScreens/Team/teamsearchscreen";
 import useUserGlobalStore from "@/store/useUserGlobalStore";
 import theme from "@/utils/theme";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Icon from "react-native-vector-icons/Ionicons";
 import MatchNavigation from "./matchnavigation";
+import TeamNavigation from "./teamnavigation";
 
 const Tab = createBottomTabNavigator();
 
@@ -37,7 +38,7 @@ const AppNavigation = () => {
         }}
       />
       <Tab.Screen
-        name="Rank"
+        name="RankStack"
         component={RankingScreen}
         options={{
           headerShown: false,
@@ -47,34 +48,19 @@ const AppNavigation = () => {
           ),
         }}
       />
-      {user?.team === null ? (
-        <Tab.Screen
-          name="TeamSearch"
-          component={TeamSearchScreen}
-          options={{
-            headerShown: false,
-            title: "팀 찾기",
-            tabBarIcon: ({ color, size }) => (
-              <Icon name="people" size={size} color={color} />
-            ),
-          }}
-        />
-      ) : (
-        <Tab.Screen
-          name="TeamInfo"
-          component={TeamInfoScreen}
-          options={{
-            headerShown: false,
-            title: "팀 보기",
-            tabBarIcon: ({ color, size }) => (
-              <Icon name="people" size={size} color={color} />
-            ),
-          }}
-        />
-      )}
-
       <Tab.Screen
-        name="Message"
+        name="TeamStack"
+        component={TeamNavigation}
+        options={{
+          headerShown: false,
+          title: user?.team === null ? "팀 찾기" : "팀 보기",
+          tabBarIcon: ({ color, size }) => (
+            <Icon name="people" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="MessageStack"
         component={MessageScreen}
         options={{
           headerShown: false,
@@ -85,7 +71,7 @@ const AppNavigation = () => {
         }}
       />
       <Tab.Screen
-        name="My"
+        name="ProfileStack"
         component={MessageScreen}
         options={{
           headerShown: false,

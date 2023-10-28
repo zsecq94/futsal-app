@@ -1,6 +1,7 @@
 import { getOnePlaceData } from "@/services/api";
 import theme, { Box, Text } from "@/utils/theme";
 import React, { useEffect, useState } from "react";
+import Toast from "react-native-toast-message";
 
 import { ScrollView, TouchableOpacity } from "react-native";
 
@@ -74,6 +75,17 @@ const TimePicker = ({
     return check;
   };
 
+  const option1 = {
+    type: "error",
+    text1: "최대 신청 시간은 3시간 입니다 ❗",
+    visibilityTime: 3000,
+  };
+  const option2 = {
+    type: "error",
+    text1: "시간을 다시 선택해주세요 ❗",
+    visibilityTime: 3000,
+  };
+
   // 시간 상태 관리
   const handlePress = (time: any) => {
     if (selectedTimes.length < 2) {
@@ -81,7 +93,7 @@ const TimePicker = ({
         const duration = Math.abs(time[0] - selectedTimes[0][0]);
 
         if (duration > 2.5) {
-          alert("최대 신청 시간은 3시간 입니다 ❗");
+          Toast.show(option1);
           setSelectedTimes([]);
         } else {
           if (time[0] === selectedTimes[0][0]) {
@@ -93,7 +105,7 @@ const TimePicker = ({
             if (check) {
               setSelectedTimes([time, ...selectedTimes]);
             } else {
-              alert("시간을 다시 선택해주세요 ❗");
+              Toast.show(option2);
               setSelectedTimes([]);
             }
           } else {
@@ -101,7 +113,7 @@ const TimePicker = ({
             if (check) {
               setSelectedTimes([...selectedTimes, time]);
             } else {
-              alert("시간을 다시 선택해주세요 ❗");
+              Toast.show(option2);
               setSelectedTimes([]);
             }
           }

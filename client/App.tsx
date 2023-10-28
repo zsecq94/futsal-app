@@ -4,6 +4,7 @@ import theme from "@/utils/theme";
 import { ThemeProvider } from "@shopify/restyle";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import Toast from "react-native-toast-message";
 
 const App = () => {
   return (
@@ -14,6 +15,7 @@ const App = () => {
           <StatusBar style="auto" />
         </SafeAreaWrapper>
       </SafeAreaProvider>
+      <Toast />
     </ThemeProvider>
   );
 };
