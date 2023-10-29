@@ -1,44 +1,139 @@
 import Button from "@/components/shared/button";
+import { createApplyTeam } from "@/services/api";
+import useUserGlobalStore from "@/store/useUserGlobalStore";
 import { Box, Text } from "@/utils/theme";
-import { useRoute } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import React from "react";
+import { Image } from "react-native";
+import Toast from "react-native-toast-message";
 
 const TeamDetailScreen = () => {
   const route = useRoute();
+  const navigation = useNavigation();
   const { team }: any = route.params;
-  console.log(team);
+  const { user } = useUserGlobalStore();
 
-  const applyTeam = () => {
-    console.log("신청");
+  const calculateWinRate = (team: any) => {
+    const { win, draw, lose } = team;
+    const totalGames = win + draw + lose;
+
+    if (totalGames === 0) {
+      return 0;
+    }
+
+    const winRate = ((win + draw * 0.5) / totalGames) * 100;
+    return winRate;
+  };
+
+  const winRate = calculateWinRate(team);
+
+  const applyTeam = async () => {
+    try {
+      const res = await createApplyTeam({ user, team });
+      if (res.state) {
+        Toast.show({
+          type: "success",
+          text1: res.message,
+        });
+        navigation.goBack();
+      } else {
+        Toast.show({
+          type: "error",
+          text1: res.message,
+        });
+        navigation.goBack();
+      }
+    } catch (error) {
+      console.log("error in applyTeam", error);
+      throw error;
+    }
   };
   return (
-    <Box>
-      <Box alignItems="center" style={{ gap: 10 }}>
-        <Box alignItems="center">
-          <Text fontWeight="700" variant="text2Xl">
-            팀 이름
-          </Text>
-          <Text fontWeight="700" variant="textBase">
-            {team.teamName}
-          </Text>
+    <Box flex={1} justifyContent="center">
+      <Box
+        alignItems="center"
+        p="5"
+        marginHorizontal="10"
+        style={{
+          borderRadius: 20,
+          gap: 10,
+          backgroundColor: "white",
+          shadowColor: "#000",
+          shadowOffset: {
+            width: 0,
+            height: 2,
+          },
+          shadowOpacity: 0.25,
+          shadowRadius: 3.84,
+          elevation: 5,
+        }}
+      >
+        <Box
+          p="1"
+          style={{
+            backgroundColor: "white",
+            borderRadius: 50,
+          }}
+        >
+          <Image
+            source={{ uri: team.teamImg }}
+            width={100}
+            height={100}
+            style={{
+              borderRadius: 50,
+            }}
+          />
         </Box>
-        <Box alignItems="center">
-          <Text fontWeight="700" variant="text2Xl">
-            팀장
-          </Text>
+        <Text fontWeight="700" variant="text2Xl">
+          {team.teamName}
+        </Text>
+        <Box
+          flexDirection="row"
+          style={{
+            gap: 10,
+          }}
+        >
+          <Text variant="textBase">팀장</Text>
           <Text fontWeight="700" variant="textBase">
             {team.leader}
           </Text>
         </Box>
-        <Box alignItems="center">
-          <Text fontWeight="700" variant="text2Xl">
-            팀원 수
-          </Text>
+        <Box
+          flexDirection="row"
+          style={{
+            gap: 10,
+          }}
+        >
+          <Text variant="textBase">팀원 수</Text>
           <Text fontWeight="700" variant="textBase">
             {team.count}명
           </Text>
         </Box>
+        <Box
+          flexDirection="row"
+          style={{
+            gap: 10,
+          }}
+        >
+          <Text variant="textBase">팀 레이팅</Text>
+          <Text fontWeight="700" variant="textBase">
+            {team.score}점
+          </Text>
+        </Box>
+        <Box
+          flexDirection="row"
+          style={{
+            gap: 10,
+          }}
+        >
+          <Text variant="textBase">승률</Text>
+          <Text fontWeight="700" variant="textBase">
+            {winRate.toFixed(1)}% (
+            {`${team.win}승/${team.draw}무/${team.lose}패`})
+          </Text>
+        </Box>
       </Box>
+      <Box height={30} />
       <Box px="20">
         <Button label="팀 신청" onPress={applyTeam} />
       </Box>

@@ -41,15 +41,15 @@ const TeamCreateScreen = () => {
     try {
       if (validCheck) {
         const res = await createTeam({ teamData, user });
-        updateUser({
-          id: user.id,
-          name: user.name,
-          thumb: user.thumb,
-          num: user.num,
-          team: res.res2.user.team,
-          level: user.level,
-        });
         if (res.res1.state) {
+          updateUser({
+            id: user.id,
+            name: user.name,
+            thumb: user.thumb,
+            num: user.num,
+            team: res.res2.user.team,
+            level: user.level,
+          });
           Toast.show({
             type: "success",
             text1: res.res1.message,

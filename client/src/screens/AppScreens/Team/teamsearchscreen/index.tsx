@@ -29,6 +29,8 @@ const TeamSearchScreen = () => {
   const handlePress = () => {
     if (inputRef.current) {
       inputRef.current.blur();
+
+      setFocusCheck(false);
     }
   };
 
@@ -64,6 +66,7 @@ const TeamSearchScreen = () => {
   };
 
   const resetSelectedFilter = () => {
+    setFocusCheck(true);
     setSelectedFilter("");
   };
 
