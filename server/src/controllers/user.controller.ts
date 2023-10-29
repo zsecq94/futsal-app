@@ -25,3 +25,21 @@ export const userInfo = async (req: Request, res: Response) => {
     throw error;
   }
 };
+
+export const userUpdate = async (req: Request, res: Response) => {
+  try {
+    const { id, teamData } = req.body;
+    const user = await User.findOne({ id });
+
+    if (user) {
+      user.team = teamData.teamName;
+      await user.save();
+      return res.send({ user });
+    } else {
+      return;
+    }
+  } catch (error) {
+    console.log("error in userUpdate", error);
+    throw error;
+  }
+};

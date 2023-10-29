@@ -3,6 +3,7 @@ import Filter from "@/components/team/filter";
 import Input from "@/components/team/input";
 import TeamCard from "@/components/team/team-card";
 import { getAllTeam } from "@/services/api";
+import useUserGlobalStore from "@/store/useUserGlobalStore";
 import theme, { Box, Text } from "@/utils/theme";
 import { useNavigation } from "@react-navigation/native";
 import React, { useEffect, useRef, useState } from "react";
@@ -19,6 +20,7 @@ const TeamSearchScreen = () => {
   const [selectedFilter, setSelectedFilter] = useState("");
   const [searchTeam, setSearchTeam] = useState("");
   const [allTeams, setAllTeams] = useState([]);
+  const [defaultData, setDefaultData] = useState([]);
   const [focusCheck, setFocusCheck] = useState(false);
   const [refresh, setRefresh] = useState(false);
   const navigation = useNavigation();
@@ -39,6 +41,24 @@ const TeamSearchScreen = () => {
     }
   };
 
+  useEffect(() => {
+    let sortedTeams = [...allTeams];
+    if (selectedFilter === "점수순") {
+      sortedTeams.sort((a: any, b: any) => b.score - a.score);
+    } else if (selectedFilter === "인원순") {
+      sortedTeams.sort((a: any, b: any) => b.count - a.count);
+    } else if (selectedFilter === "실력순") {
+      const skillOrder = ["하", "중하", "중", "중상", "상"];
+      sortedTeams.sort(
+        (a: any, b: any) =>
+          skillOrder.indexOf(b.teamLevel) - skillOrder.indexOf(a.teamLevel)
+      );
+    } else {
+      sortedTeams = defaultData;
+    }
+    setAllTeams(sortedTeams);
+  }, [selectedFilter]);
+
   const goCreateTeam = () => {
     navigation.navigate("TeamCreate");
   };
@@ -56,10 +76,13 @@ const TeamSearchScreen = () => {
   }, [navigation]);
 
   useEffect(() => {
+    setSelectedFilter("");
+    setSearchTeam("");
     const getTeams = async () => {
       try {
         const res = await getAllTeam();
         if (res) {
+          setDefaultData(res);
           setAllTeams(res);
         }
       } catch (error) {
@@ -148,11 +171,13 @@ const TeamSearchScreen = () => {
               gap: 10,
             }}
           >
-            {allTeams?.map((team) => {
-              return <TeamCard key={team?._id} team={team} />;
-            })}
+            {allTeams
+              ?.filter((team) => team.teamName.includes(searchTeam))
+              .map((team) => {
+                return <TeamCard key={team?._id} team={team} />;
+              })}
           </Box>
-          <Box height={20} />
+          <Box height={80} />
         </ScrollView>
       </Box>
     </TouchableWithoutFeedback>

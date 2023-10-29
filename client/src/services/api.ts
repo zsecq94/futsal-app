@@ -75,15 +75,20 @@ export const getOnePlaceData = async ({ selectedDate, name }: any) => {
   }
 };
 
-export const createTeam = async (teamData: any) => {
+export const createTeam = async ({ teamData, user }: any) => {
   try {
     const res = await axiosInstance.post("./teams/create", {
       teamData,
+      leader: user.name,
+    });
+    const ress = await axiosInstance.put("./users/update", {
+      id: user.id,
+      teamData,
     });
 
-    return res.data;
+    return { res1: res.data, res2: ress.data };
   } catch (error) {
-    console.log("error in createTeam");
+    console.log("error in createTeam", error);
     throw error;
   }
 };

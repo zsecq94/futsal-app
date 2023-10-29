@@ -1,4 +1,5 @@
 import TeamCreateScreen from "@/screens/AppScreens/Team/teamcreatescreen";
+import TeamDetailScreen from "@/screens/AppScreens/Team/teamdetailscreen";
 import TeamInfoScreen from "@/screens/AppScreens/Team/teaminfoscreen";
 import TeamSearchScreen from "@/screens/AppScreens/Team/teamsearchscreen";
 import useUserGlobalStore from "@/store/useUserGlobalStore";
@@ -21,6 +22,13 @@ const TeamNavigation = () => {
       <Stack.Screen
         name="TeamCreate"
         component={TeamCreateScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="TeamDetail"
+        component={TeamDetailScreen}
         options={{
           headerShown: false,
         }}
