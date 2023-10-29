@@ -1,4 +1,3 @@
-import moment from "moment";
 import { axiosInstance } from "./config";
 
 export const userInfo = async ({ id, name, thumb }: any) => {
@@ -72,6 +71,29 @@ export const getOnePlaceData = async ({ selectedDate, name }: any) => {
     return res.data;
   } catch (error) {
     console.log("error in getFalseMatch");
+    throw error;
+  }
+};
+
+export const createTeam = async (teamData: any) => {
+  try {
+    const res = await axiosInstance.post("./teams/create", {
+      teamData,
+    });
+
+    return res.data;
+  } catch (error) {
+    console.log("error in createTeam");
+    throw error;
+  }
+};
+
+export const getAllTeam = async () => {
+  try {
+    const res = await axiosInstance.get("./teams/getallteam");
+    return res.data;
+  } catch (error) {
+    console.log("error in getTeam");
     throw error;
   }
 };

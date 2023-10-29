@@ -1,7 +1,8 @@
-import express, { Request, Response } from "express";
+import express from "express";
 import connectToDatabase from "./db";
-import userRoutes from "./routes/user.routes";
 import matchRoutes from "./routes/match.routes";
+import teamRoutes from "./routes/team.routes";
+import userRoutes from "./routes/user.routes";
 
 const app = express();
 app.use(express.json());
@@ -10,6 +11,7 @@ connectToDatabase();
 
 app.use("/users", userRoutes);
 app.use("/matchs", matchRoutes);
+app.use("/teams", teamRoutes);
 
 app.listen(PORT, () => {
   console.log("Server up and running");

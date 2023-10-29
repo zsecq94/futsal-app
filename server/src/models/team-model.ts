@@ -2,13 +2,16 @@ import mongoose from "mongoose";
 
 const teamSchema = new mongoose.Schema(
   {
-    id: {
-      type: Number,
+    teamName: {
+      type: String,
       required: true,
-      unique: true,
     },
-    member: {
-      type: [],
+    teamImg: {
+      type: String,
+      required: true,
+    },
+    teamLevel: {
+      type: String,
       required: true,
     },
   },
@@ -17,6 +20,6 @@ const teamSchema = new mongoose.Schema(
   }
 );
 
-const Team = mongoose.model("User", teamSchema);
+const Team = mongoose.model("Team", teamSchema);
 
 export default Team;
