@@ -1,44 +1,61 @@
 import HrTag from "@/components/shared/hrtag";
+import Loader from "@/components/shared/loader";
 import ApplyCard from "@/components/team/applycard";
-import { getApplyData, getApplyUser, userTeamUpdate } from "@/services/api";
+import { applyTeamUpdateRequest, userTeamUpdateRequest } from "@/services/api";
+import { fetcher } from "@/services/config";
 import useUserGlobalStore from "@/store/useUserGlobalStore";
 import theme, { Box, Text } from "@/utils/theme";
-import React, { useEffect, useState } from "react";
+import React from "react";
+import useSWR from "swr";
+import useSWRMutation from "swr/mutation";
 
 const TeamInfoScreen = () => {
   const { user } = useUserGlobalStore();
-  const [applyUser, setApplyUser] = useState([]);
 
-  const getApply = async () => {
-    const res = await getApplyData({ name: user?.team });
-    if (res.teamData.apply) {
-      let users: [] = [];
-      for (let id of res.teamData.apply) {
-        const applyUser = await getApplyUser({ id });
-        users.push(applyUser);
-      }
-      setApplyUser(users);
+  const name = user?.team;
+  const { data: teamData, isLoading } = useSWR(
+    `teams/getteam/${name}`,
+    fetcher,
+    {
+      refreshInterval: 1000,
     }
-  };
-  useEffect(() => {
-    getApply();
-  }, []);
+  );
+
+  const { trigger: userTeamUpdate } = useSWRMutation(
+    `users/update`,
+    userTeamUpdateRequest
+  );
+
+  const { trigger: applyTeamUpdate } = useSWRMutation(
+    `teams/update-team-apply`,
+    applyTeamUpdateRequest
+  );
 
   const handleApply = async ({ state, id }: any) => {
+    const data2 = {
+      user: id,
+      team: teamData,
+      state: false,
+    };
     try {
       if (state) {
-        const res = await userTeamUpdate({ id, team: user?.team });
-        if (res.state) {
-          getApply();
-        }
+        const data = {
+          id,
+          teamData: teamData.name,
+        };
+        await userTeamUpdate({ ...data });
+        await applyTeamUpdate({ ...data2 });
       } else {
+        await applyTeamUpdate({ ...data2 });
       }
     } catch (error) {
       console.log("error in handleApply", error);
       throw error;
     }
   };
-
+  if (!teamData || isLoading) {
+    return <Loader />;
+  }
   return (
     <Box>
       <Box>
@@ -56,8 +73,8 @@ const TeamInfoScreen = () => {
           <HrTag />
         </Box>
         <Box alignItems="center" style={{ gap: 10 }}>
-          {applyUser.length > 0 &&
-            applyUser.map((user, idx) => {
+          {teamData?.apply.length > 0 &&
+            teamData.apply.map((user: any, idx: number) => {
               return <ApplyCard key={idx} onPress={handleApply} user={user} />;
             })}
         </Box>

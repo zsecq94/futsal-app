@@ -4,7 +4,7 @@ import { createJSONStorage, persist } from "zustand/middleware";
 
 interface IUserGlobalStore {
   user: IAuthUser | null;
-  updateUser: (user: IAuthUser | null) => void;
+  updateUser: (user: IAuthUser) => void;
 }
 
 const useUserGlobalStore = create<IUserGlobalStore>()(

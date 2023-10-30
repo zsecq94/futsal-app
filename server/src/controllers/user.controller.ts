@@ -30,43 +30,12 @@ export const userUpdate = async (req: Request, res: Response) => {
   try {
     const { id, teamData } = req.body;
     const user = await User.findOne({ id });
-
     if (user) {
-      user.team = teamData.teamName;
+      user.team = teamData;
       await user.save();
-      return res.send({ user });
+      return res.send(user);
     } else {
       return;
-    }
-  } catch (error) {
-    console.log("error in userUpdate", error);
-    throw error;
-  }
-};
-
-export const getApplyUser = async (req: Request, res: Response) => {
-  try {
-    const { id } = req.body;
-    const user = await User.findOne({ id });
-
-    return res.send({ user });
-  } catch (error) {
-    console.log("error in getApplyUser", error);
-    throw error;
-  }
-};
-
-export const userTeamUpdate = async (req: Request, res: Response) => {
-  try {
-    const { id, team } = req.body;
-    const user = await User.findOne({ id });
-
-    if (user.team === null) {
-      user.team = team;
-      await user.save();
-      return res.send({ message: "수락 완료", state: true });
-    } else {
-      return res.send({ message: "이미 팀이 있음", state: false });
     }
   } catch (error) {
     console.log("error in userUpdate", error);

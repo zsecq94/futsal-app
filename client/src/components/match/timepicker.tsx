@@ -1,9 +1,11 @@
-import { getOnePlaceData } from "@/services/api";
 import theme, { Box, Text } from "@/utils/theme";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Toast from "react-native-toast-message";
 
+import { fetcher } from "@/services/config";
 import { ScrollView, TouchableOpacity } from "react-native";
+import useSWR from "swr";
+import Loader from "../shared/loader";
 
 const TimePicker = ({
   selectedTimes,
@@ -12,7 +14,6 @@ const TimePicker = ({
   setSelectedTimes,
   name,
 }: any) => {
-  const [data, setData] = useState([]);
   // 선택 날짜가 오늘이면 현재시간부터 24시까지 아니면 6시부터 24시까지 times배열생성
   let currHour = 6;
   if (date.todayDate === selectedDate) {
@@ -126,15 +127,14 @@ const TimePicker = ({
     }
   };
 
-  // 데이터 요청
-  useEffect(() => {
-    const getOnePlace = async () => {
-      const res = await getOnePlaceData({ selectedDate, name });
-      setData(res);
-    };
-    getOnePlace();
-    setSelectedTimes([]);
-  }, [selectedDate]);
+  const id = selectedDate;
+  const { data, isLoading } = useSWR(
+    `matchs/getoneplace/${id}/${name}`,
+    fetcher,
+    {
+      refreshInterval: 1000,
+    }
+  );
 
   return (
     <Box style={{ padding: 20 }}>

@@ -1,29 +1,18 @@
 import Card from "@/components/match/card";
 import MatchCard from "@/components/match/matchcard";
 import HrTag from "@/components/shared/hrtag";
-import { getFalseMatch, getTodayDate } from "@/services/api";
+import Loader from "@/components/shared/loader";
+import { fetcher } from "@/services/config";
 import theme, { Box, Text } from "@/utils/theme";
 import { useNavigation } from "@react-navigation/native";
 import moment from "moment";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { ScrollView } from "react-native";
+import useSWR from "swr";
 
 const MatchMatchingScreen = () => {
   const navigate = useNavigation();
   const todayDate = moment().format("YYYY-MM-DD");
-  const [matchData, setMatchData] = useState([]);
-  const [refresh, setRefresh] = useState(false);
-  const [todayData, setTodayData] = useState([
-    {
-      times: [],
-    },
-    {
-      times: [],
-    },
-    {
-      times: [],
-    },
-  ]);
 
   const goSignIn = ({ name }: any) => {
     navigate.navigate("SignIn", { name });
@@ -33,38 +22,26 @@ const MatchMatchingScreen = () => {
     console.log("눌림");
   };
 
-  useEffect(() => {
-    const unsubscribe = navigate.addListener("focus", () => {
-      setRefresh((prev) => !prev);
-    });
+  const { data: matchData, isLoading } = useSWR(
+    "matchs/getfalsematch",
+    fetcher,
+    {
+      refreshInterval: 1000,
+    }
+  );
 
-    return unsubscribe;
-  }, [navigate]);
+  const id = todayDate;
+  const { data: todayData, isLoading: isLoadingTodayData } = useSWR(
+    `matchs/gettodaydate/${id}`,
+    fetcher,
+    {
+      refreshInterval: 1000,
+    }
+  );
 
-  useEffect(() => {
-    const getMatch = async () => {
-      try {
-        const res = await getFalseMatch();
-        setMatchData(res.response);
-      } catch (error) {
-        console.log("error in getMatch");
-        throw error;
-      }
-    };
-    const getDate = async () => {
-      try {
-        const res = await getTodayDate({ id: todayDate });
-        if (res.length > 0) {
-          setTodayData(res);
-        }
-      } catch (error) {
-        console.log("error in getDate");
-        throw error;
-      }
-    };
-    getDate();
-    getMatch();
-  }, [refresh]);
+  if (isLoading || !matchData || isLoadingTodayData || !todayData) {
+    return <Loader />;
+  }
 
   return (
     <ScrollView
@@ -84,9 +61,9 @@ const MatchMatchingScreen = () => {
         오늘의 구장 현황
       </Text>
       <HrTag />
-      {todayData.map((data, index) => (
+      {todayData?.map((data, index) => (
         <Box key={index}>
-          <Card data={data} idx={index} refresh={refresh} onPress={goSignIn} />
+          <Card data={data} idx={index} onPress={goSignIn} />
           <Box height={10} />
         </Box>
       ))}
@@ -102,7 +79,7 @@ const MatchMatchingScreen = () => {
         매칭 대기중
       </Text>
       <HrTag />
-      {matchData.map((V, index) => (
+      {matchData?.map((V, index) => (
         <Box key={index}>
           <MatchCard data={V} onPress={goMatchDetail} />
           <Box height={10} />

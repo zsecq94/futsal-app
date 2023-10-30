@@ -1,11 +1,13 @@
 import Button from "@/components/shared/button";
-import { createApplyTeam } from "@/services/api";
+import { createApplyTeamRequest } from "@/services/api";
+import { axiosInstance } from "@/services/config";
 import useUserGlobalStore from "@/store/useUserGlobalStore";
 import { Box, Text } from "@/utils/theme";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import React from "react";
 import { Image } from "react-native";
 import Toast from "react-native-toast-message";
+import useSWRMutation from "swr/mutation";
 
 const TeamDetailScreen = () => {
   const route = useRoute();
@@ -16,20 +18,29 @@ const TeamDetailScreen = () => {
   const calculateWinRate = (team: any) => {
     const { win, draw, lose } = team;
     const totalGames = win + draw + lose;
-
     if (totalGames === 0) {
       return 0;
     }
-
     const winRate = ((win + draw * 0.5) / totalGames) * 100;
     return winRate;
   };
-
   const winRate = calculateWinRate(team);
+
+  const { trigger, isMutating } = useSWRMutation(
+    "teams/update-team-apply",
+    createApplyTeamRequest
+  );
 
   const applyTeam = async () => {
     try {
-      const res = await createApplyTeam({ user, team });
+      const data = {
+        user,
+        team,
+        state: true,
+      };
+      const res = await trigger({
+        ...data,
+      });
       if (res.state) {
         Toast.show({
           type: "success",
@@ -76,7 +87,7 @@ const TeamDetailScreen = () => {
           }}
         >
           <Image
-            source={{ uri: team.teamImg }}
+            source={{ uri: team.img }}
             width={100}
             height={100}
             style={{
@@ -85,7 +96,7 @@ const TeamDetailScreen = () => {
           />
         </Box>
         <Text fontWeight="700" variant="text2Xl">
-          {team.teamName}
+          {team.name}
         </Text>
         <Box
           flexDirection="row"

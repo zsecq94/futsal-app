@@ -3,6 +3,7 @@ import Filter from "@/components/team/filter";
 import Input from "@/components/team/input";
 import TeamCard from "@/components/team/team-card";
 import { getAllTeam } from "@/services/api";
+import { BASE_URL } from "@/services/config";
 import useUserGlobalStore from "@/store/useUserGlobalStore";
 import theme, { Box, Text } from "@/utils/theme";
 import { useNavigation } from "@react-navigation/native";
@@ -53,7 +54,7 @@ const TeamSearchScreen = () => {
       const skillOrder = ["하", "중하", "중", "중상", "상"];
       sortedTeams.sort(
         (a: any, b: any) =>
-          skillOrder.indexOf(b.teamLevel) - skillOrder.indexOf(a.teamLevel)
+          skillOrder.indexOf(b.level) - skillOrder.indexOf(a.level)
       );
     } else {
       sortedTeams = defaultData;
@@ -87,6 +88,7 @@ const TeamSearchScreen = () => {
         if (res) {
           setDefaultData(res);
           setAllTeams(res);
+          console.log(res);
         }
       } catch (error) {
         console.log("error in getAllTeam");
@@ -175,7 +177,7 @@ const TeamSearchScreen = () => {
             }}
           >
             {allTeams
-              ?.filter((team) => team.teamName.includes(searchTeam))
+              ?.filter((team: any) => team.name.includes(searchTeam))
               .map((team) => {
                 return <TeamCard key={team?._id} team={team} />;
               })}

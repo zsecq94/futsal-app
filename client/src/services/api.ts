@@ -40,59 +40,59 @@ export const matchSign = async ({
   }
 };
 
-export const getFalseMatch = async () => {
+export const createApplyTeamRequest = async (
+  url: string,
+  { arg }: { arg: any }
+) => {
   try {
-    const res = await axiosInstance.get("./matchs/getfalsematch");
+    const res = await axiosInstance.put(url, {
+      ...arg,
+    });
     return res.data;
   } catch (error) {
-    console.log("error in getFalseMatch", error);
+    console.log("error in createApplyTeamRequest", error);
     throw error;
   }
 };
 
-export const getTodayDate = async ({ id }: any) => {
+export const createTeamRequest = async (url: string, { arg }: { arg: any }) => {
   try {
-    const res = await axiosInstance.post("./matchs/gettodaydate", {
-      id,
+    const res = await axiosInstance.post(url, {
+      ...arg,
     });
     return res.data;
   } catch (error) {
-    console.log("error in getFalseMatch", error);
+    console.log("error in createApplyTeamRequest", error);
     throw error;
   }
 };
 
-export const getOnePlaceData = async ({ selectedDate, name }: any) => {
+export const userTeamUpdateRequest = async (
+  url: string,
+  { arg }: { arg: any }
+) => {
   try {
-    const res = await axiosInstance.post("./matchs/getoneplace", {
-      id: selectedDate,
-      name,
+    const res = await axiosInstance.put(url, {
+      ...arg,
     });
     return res.data;
   } catch (error) {
-    console.log("error in getFalseMatch", error);
+    console.log("error in createApplyTeamRequest", error);
     throw error;
   }
 };
 
-export const createTeam = async ({ teamData, user }: any) => {
+export const applyTeamUpdateRequest = async (
+  url: string,
+  { arg }: { arg: any }
+) => {
   try {
-    const res = await axiosInstance.post("./teams/create", {
-      teamData,
-      leader: user.name,
+    const res = await axiosInstance.put(url, {
+      ...arg,
     });
-
-    if (res.data.state) {
-      const ress = await axiosInstance.put("./users/update", {
-        id: user.id,
-        teamData,
-      });
-      return { res1: res.data, res2: ress.data };
-    } else {
-      return { res1: res.data };
-    }
+    return res.data;
   } catch (error) {
-    console.log("error in createTeam", error);
+    console.log("error in createApplyTeamRequest", error);
     throw error;
   }
 };
@@ -107,32 +107,9 @@ export const getAllTeam = async () => {
   }
 };
 
-export const createApplyTeam = async ({ user, team }: any) => {
-  try {
-    const res = await axiosInstance.post("./teams/createteamdata", {
-      user,
-      team,
-    });
-    return res.data;
-  } catch (error) {
-    console.log("error in applyTeam", error);
-    throw error;
-  }
-};
-
 export const getApplyData = async ({ name }: any) => {
   try {
     const res = await axiosInstance.post("./teams/getapplydata", { name });
-    return res.data;
-  } catch (error) {
-    console.log("error in getApplyData", error);
-    throw error;
-  }
-};
-
-export const getApplyUser = async ({ id }: any) => {
-  try {
-    const res = await axiosInstance.post("./users/getapplyuser", { id });
     return res.data;
   } catch (error) {
     console.log("error in getApplyData", error);

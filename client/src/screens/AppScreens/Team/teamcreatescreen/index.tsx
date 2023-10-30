@@ -2,13 +2,14 @@ import Button from "@/components/shared/button";
 import HrTag from "@/components/shared/hrtag";
 import Level from "@/components/shared/level";
 import NavigateBack from "@/components/shared/navigate-back";
-import { createTeam } from "@/services/api";
+import { createTeamRequest, userTeamUpdateRequest } from "@/services/api";
 import useUserGlobalStore from "@/store/useUserGlobalStore";
 import theme, { Box, Text } from "@/utils/theme";
 import { useNavigation } from "@react-navigation/native";
 import React, { useState } from "react";
 import { Image, ScrollView, TextInput } from "react-native";
 import Toast from "react-native-toast-message";
+import useSWRMutation from "swr/mutation";
 
 const TeamCreateScreen = () => {
   const navigation = useNavigation();
@@ -17,10 +18,9 @@ const TeamCreateScreen = () => {
   const { user, updateUser } = useUserGlobalStore();
 
   const [teamData, setTeamData] = useState({
-    teamImg:
-      "https://mycar.shinhancard.com/conts/images/mycar/bg_profile_basic.png",
-    teamName: "",
-    teamLevel: "",
+    img: "https://mycar.shinhancard.com/conts/images/mycar/bg_profile_basic.png",
+    name: "",
+    level: "",
   });
 
   const isValidKorean = (text: any) => {
@@ -31,34 +31,50 @@ const TeamCreateScreen = () => {
   const handleLevel = (value: any) => {
     if (value === level) {
       setLevel("");
-      setTeamData({ ...teamData, teamLevel: "" });
+      setTeamData({ ...teamData, level: "" });
     } else {
       setLevel(value);
-      setTeamData({ ...teamData, teamLevel: value });
+      setTeamData({ ...teamData, level: value });
     }
   };
+
+  const { trigger, isMutating } = useSWRMutation(
+    "teams/create",
+    createTeamRequest
+  );
+
+  const { trigger: userTeamUpdate } = useSWRMutation(
+    `users/update`,
+    userTeamUpdateRequest
+  );
   const handleSubmit = async () => {
     try {
       if (validCheck) {
-        const res = await createTeam({ teamData, user });
-        if (res.res1.state) {
+        const data = {
+          teamData,
+          user,
+        };
+        const res = await trigger({ ...data });
+
+        if (res.state) {
+          const data = {
+            id: user?.id,
+            teamData: teamData.name,
+          };
+          const newUser = await userTeamUpdate({ ...data });
           updateUser({
-            id: user.id,
-            name: user.name,
-            thumb: user.thumb,
-            num: user.num,
-            team: res.res2.user.team,
-            level: user.level,
+            ...user,
+            team: teamData.name,
           });
           Toast.show({
             type: "success",
-            text1: res.res1.message,
+            text1: res.message,
           });
           navigation.navigate("TeamInfo");
         } else {
           Toast.show({
             type: "error",
-            text1: res.res1.message,
+            text1: res.message,
           });
         }
       } else {
@@ -72,9 +88,9 @@ const TeamCreateScreen = () => {
   };
 
   const validCheck =
-    teamData.teamName.length > 0 &&
-    teamData.teamLevel.length > 0 &&
-    isValidKorean(teamData.teamName);
+    teamData.name.length > 0 &&
+    teamData.level.length > 0 &&
+    isValidKorean(teamData.name);
 
   return (
     <ScrollView>
@@ -105,7 +121,7 @@ const TeamCreateScreen = () => {
           </Text>
           <Box p="1" style={{ backgroundColor: "white", borderRadius: 100 }}>
             <Image
-              source={{ uri: teamData.teamImg }}
+              source={{ uri: teamData.img }}
               width={100}
               height={100}
               style={{
@@ -136,10 +152,10 @@ const TeamCreateScreen = () => {
             </Text>
             <TextInput
               placeholder="클릭하여 작성..."
-              value={teamData.teamName}
+              value={teamData.name}
               onChangeText={(text) => {
                 if (text.length <= 10) {
-                  setTeamData({ ...teamData, teamName: text });
+                  setTeamData({ ...teamData, name: text });
                 } else {
                   alert("팀 이름은 최대 10자까지 가능합니다.");
                 }

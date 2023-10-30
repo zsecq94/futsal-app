@@ -35,7 +35,7 @@ const TeamCard = ({ team }: any) => {
       >
         <Box width={"15%"}>
           <Image
-            source={{ uri: team.teamImg }}
+            source={{ uri: team.img }}
             width={30}
             height={30}
             style={{ borderRadius: 50 }}
@@ -47,7 +47,7 @@ const TeamCard = ({ team }: any) => {
             variant="textBase"
             fontWeight="700"
           >
-            {team.teamName}
+            {team.name}
           </Text>
         </Box>
         <Box width={"20%"}>
@@ -56,7 +56,7 @@ const TeamCard = ({ team }: any) => {
             variant="textBase"
             fontWeight="700"
           >
-            {team.teamLevel}
+            {team.level}
           </Text>
         </Box>
         <Box width={"20%"}>

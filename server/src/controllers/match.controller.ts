@@ -45,6 +45,7 @@ export const createMatch = async (req: Request, res: Response) => {
       )
     ) {
       release();
+
       return res
         .status(201)
         .send({ message: "해당 시간대는 이미 신청되었습니다." });
@@ -82,7 +83,7 @@ export const getFalseMatch = async (req: Request, res: Response) => {
     const response = await Match.find({
       state: false,
     });
-    return res.send({ response });
+    return res.send(response);
   } catch (error) {
     console.log("error in getFalseMatch", error);
     throw error;
@@ -90,7 +91,7 @@ export const getFalseMatch = async (req: Request, res: Response) => {
 };
 
 export const getTodayDate = async (req: Request, res: Response) => {
-  const { id } = req.body;
+  const { id } = req.params;
   try {
     const response = await MatchDate.findOne({
       id,
@@ -98,7 +99,7 @@ export const getTodayDate = async (req: Request, res: Response) => {
     if (response) {
       return res.send([response.A, response.B, response.C]);
     } else {
-      return res.send([]);
+      return res.send([[], [], []]);
     }
   } catch (error) {
     console.log("error in getTodayDate", error);
@@ -107,7 +108,7 @@ export const getTodayDate = async (req: Request, res: Response) => {
 };
 
 export const getOnePlaceData = async (req: Request, res: Response) => {
-  const { id, name } = req.body;
+  const { id, name } = req.params;
   try {
     const response = await MatchDate.findOne({
       id,

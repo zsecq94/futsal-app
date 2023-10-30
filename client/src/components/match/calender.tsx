@@ -1,14 +1,11 @@
-import { useState, useEffect } from "react";
-import { StyleSheet, Text, View, ScrollView } from "react-native";
 import moment, { Moment } from "moment";
-import DatePicker from "./datepicker";
+import { useEffect, useState } from "react";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 import HrTag from "../shared/hrtag";
+import DatePicker from "./datepicker";
 
 const Calendar = ({ onSelectDate, selected }: any) => {
   const [dates, setDates] = useState<Moment[]>([]);
-  const [scrollPosition, setScrollPosition] = useState(0);
-  const [currentMonth, setCurrentMonth] = useState();
-
   // get the dates from today to 10 days from now, format them as strings and store them in state
   const getDates = () => {
     const _dates = [];

@@ -1,18 +1,16 @@
 import express from "express";
 import {
-  createApplyTeam,
   createTeam,
   getAllTeam,
-  getApplyData,
-  updateApplyData,
+  getTeamData,
+  updateApplyTeam,
 } from "../controllers/team.controller";
 
 const teamRoutes = express.Router();
 
 teamRoutes.route("/getallteam").get(getAllTeam);
+teamRoutes.route("/getteam/:name").get(getTeamData);
 teamRoutes.route("/create").post(createTeam);
-teamRoutes.route("/createteamdata").post(createApplyTeam);
-teamRoutes.route("/updataapply").put(updateApplyData);
-teamRoutes.route("/getapplydata").post(getApplyData);
+teamRoutes.route("/update-team-apply").put(updateApplyTeam);
 
 export default teamRoutes;

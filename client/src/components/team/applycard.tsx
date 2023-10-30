@@ -26,15 +26,15 @@ const ApplyCard = ({ user, onPress }: any) => {
       }}
     >
       <Image
-        source={{ uri: user.user.thumb }}
+        source={{ uri: user.thumb }}
         width={30}
         height={30}
         style={{ borderRadius: 30 }}
       />
-      <Text fontWeight="700">{user.user.name}</Text>
+      <Text fontWeight="700">{user.name}</Text>
       <Box flexDirection="row" style={{ gap: 10 }}>
         <TouchableOpacity
-          onPress={() => onPress({ state: true, id: user.user.id })}
+          onPress={() => onPress({ state: true, id: user.id })}
           style={{
             backgroundColor: theme.colors.green700,
             padding: 5,
@@ -46,7 +46,7 @@ const ApplyCard = ({ user, onPress }: any) => {
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={() => onPress({ state: false, id: user.user.id })}
+          onPress={() => onPress({ state: false, id: user.id })}
           style={{
             backgroundColor: "red",
             padding: 5,
