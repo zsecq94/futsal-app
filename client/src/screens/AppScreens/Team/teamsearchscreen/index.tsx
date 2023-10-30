@@ -88,7 +88,6 @@ const TeamSearchScreen = () => {
         if (res) {
           setDefaultData(res);
           setAllTeams(res);
-          console.log(res);
         }
       } catch (error) {
         console.log("error in getAllTeam");

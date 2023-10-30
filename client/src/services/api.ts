@@ -106,31 +106,3 @@ export const getAllTeam = async () => {
     throw error;
   }
 };
-
-export const getApplyData = async ({ name }: any) => {
-  try {
-    const res = await axiosInstance.post("./teams/getapplydata", { name });
-    return res.data;
-  } catch (error) {
-    console.log("error in getApplyData", error);
-    throw error;
-  }
-};
-
-export const userTeamUpdate = async ({ id, team }: any) => {
-  try {
-    const res = await axiosInstance.put("./users/teamupdate", { id, team });
-    if (res.data.state) {
-      const res2 = await axiosInstance.put("./teams/updataapply", { id, team });
-
-      if (res2.data.state) {
-        return res.data;
-      }
-    } else {
-      return res.data;
-    }
-  } catch (error) {
-    console.log("error in userTeamUpdate", error);
-    throw error;
-  }
-};

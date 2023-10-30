@@ -1,4 +1,5 @@
 import SafeAreaWrapper from "@/components/shared/safe-area-wrapper";
+import { Socketcontext, socket } from "@/context/SocketContext";
 import Navigation from "@/navigation";
 import theme from "@/utils/theme";
 import { ThemeProvider } from "@shopify/restyle";
@@ -11,8 +12,10 @@ const App = () => {
     <ThemeProvider theme={theme}>
       <SafeAreaProvider>
         <SafeAreaWrapper>
-          <Navigation />
-          <StatusBar style="auto" />
+          <Socketcontext.Provider value={socket}>
+            <Navigation />
+            <StatusBar style="auto" />
+          </Socketcontext.Provider>
         </SafeAreaWrapper>
       </SafeAreaProvider>
       <Toast />

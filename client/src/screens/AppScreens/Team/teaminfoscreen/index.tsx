@@ -1,16 +1,19 @@
 import HrTag from "@/components/shared/hrtag";
 import Loader from "@/components/shared/loader";
 import ApplyCard from "@/components/team/applycard";
+import { Socketcontext } from "@/context/SocketContext";
 import { applyTeamUpdateRequest, userTeamUpdateRequest } from "@/services/api";
 import { fetcher } from "@/services/config";
 import useUserGlobalStore from "@/store/useUserGlobalStore";
 import theme, { Box, Text } from "@/utils/theme";
-import React from "react";
+import React, { useContext, useEffect } from "react";
+import { TouchableOpacity } from "react-native";
 import useSWR from "swr";
 import useSWRMutation from "swr/mutation";
 
 const TeamInfoScreen = () => {
   const { user } = useUserGlobalStore();
+  const socket = useContext(Socketcontext);
 
   const name = user?.team;
   const { data: teamData, isLoading } = useSWR(
@@ -53,6 +56,19 @@ const TeamInfoScreen = () => {
       throw error;
     }
   };
+  const testSocket = () => {
+    socket.emit("USER_ONLINE", user);
+  };
+  useEffect(() => {
+    socket.on("message", (data) => {
+      console.log(data);
+    });
+
+    return () => {
+      socket.off("message");
+    };
+  }, []);
+
   if (!teamData || isLoading) {
     return <Loader />;
   }
@@ -79,6 +95,9 @@ const TeamInfoScreen = () => {
             })}
         </Box>
       </Box>
+      <TouchableOpacity onPress={testSocket}>
+        <Text>보내기</Text>
+      </TouchableOpacity>
     </Box>
   );
 };
