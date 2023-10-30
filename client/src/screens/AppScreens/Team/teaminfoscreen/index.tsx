@@ -62,6 +62,7 @@ const TeamInfoScreen = () => {
   useEffect(() => {
     socket.on("message", (data) => {
       console.log(data);
+      console.log("git오류 수정 테스트");
     });
 
     return () => {
