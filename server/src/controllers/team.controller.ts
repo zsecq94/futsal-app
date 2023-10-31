@@ -1,10 +1,11 @@
 import { Request, Response } from "express";
 import Team from "../models/team-model";
+import { getSocketIo } from "../socket";
 
 export const createTeam = async (req: Request, res: Response) => {
   try {
     const { name, img, level } = req.body.teamData;
-    const leader = req.body.user.name;
+    const id = req.body.user.id;
 
     const teamData = await Team.findOne({
       name,
@@ -19,7 +20,7 @@ export const createTeam = async (req: Request, res: Response) => {
         name,
         img,
         level,
-        leader: leader,
+        leader: id,
         score: 1500,
         win: 0,
         draw: 0,
@@ -50,10 +51,10 @@ export const getAllTeam = async (req: Request, res: Response) => {
 };
 
 export const updateApplyTeam = async (req: Request, res: Response) => {
+  const socket = getSocketIo();
   try {
     const { user, team, state } = req.body;
     if (state) {
-      const {} = req.body;
       if (user.team === null) {
         const teamData = await Team.findOne({ name: team.name });
         if (teamData) {
@@ -65,16 +66,16 @@ export const updateApplyTeam = async (req: Request, res: Response) => {
               message: "이미 신청했습니다!",
               state: false,
             });
-          } else {
-            teamData.apply.push({
-              name: user.name,
-              id: user.id,
-              thumb: user.thumb,
-            });
-            await teamData.save();
           }
+          teamData.apply.push({
+            name: user.name,
+            id: user.id,
+            thumb: user.thumb,
+          });
+          await teamData.save();
+          socket.emit(teamData.leader, teamData);
+          return res.send({ message: "팀 신청 완료", state: true });
         }
-        return res.send({ message: "팀 신청 완료", state: true });
       } else {
         return res.send({
           message: "이미 팀이 있습니다 어플을 재시작 해주세요!",

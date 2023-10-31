@@ -23,7 +23,7 @@ const MatchMatchingScreen = () => {
   };
 
   const { data: matchData, isLoading } = useSWR(
-    "matchs/getfalsematch",
+    "matchs/get-false-match",
     fetcher,
     {
       refreshInterval: 1000,
@@ -32,7 +32,7 @@ const MatchMatchingScreen = () => {
 
   const id = todayDate;
   const { data: todayData, isLoading: isLoadingTodayData } = useSWR(
-    `matchs/gettodaydate/${id}`,
+    `matchs/get-today-date/${id}`,
     fetcher,
     {
       refreshInterval: 1000,

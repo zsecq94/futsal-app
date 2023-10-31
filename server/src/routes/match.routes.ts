@@ -9,8 +9,8 @@ import {
 const matchRoutes = express.Router();
 
 matchRoutes.route("/sign").post(createMatch);
-matchRoutes.route("/gettodaydate/:id").get(getTodayDate);
-matchRoutes.route("/getoneplace/:id/:name").get(getOnePlaceData);
-matchRoutes.route("/getfalsematch").get(getFalseMatch);
+matchRoutes.route("/get-today-date/:id").get(getTodayDate);
+matchRoutes.route("/get-one-place/:id/:name").get(getOnePlaceData);
+matchRoutes.route("/get-false-match").get(getFalseMatch);
 
 export default matchRoutes;

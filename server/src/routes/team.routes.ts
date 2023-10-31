@@ -8,8 +8,8 @@ import {
 
 const teamRoutes = express.Router();
 
-teamRoutes.route("/getallteam").get(getAllTeam);
-teamRoutes.route("/getteam/:name").get(getTeamData);
+teamRoutes.route("/get-all-team").get(getAllTeam);
+teamRoutes.route("/get-team/:name").get(getTeamData);
 teamRoutes.route("/create").post(createTeam);
 teamRoutes.route("/update-team-apply").put(updateApplyTeam);
 

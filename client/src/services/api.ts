@@ -99,7 +99,7 @@ export const applyTeamUpdateRequest = async (
 
 export const getAllTeam = async () => {
   try {
-    const res = await axiosInstance.get("./teams/getallteam");
+    const res = await axiosInstance.get("./teams/get-all-team");
     return res.data;
   } catch (error) {
     console.log("error in getTeam", error);

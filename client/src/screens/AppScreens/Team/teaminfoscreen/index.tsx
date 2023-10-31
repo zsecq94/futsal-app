@@ -14,10 +14,13 @@ import useSWRMutation from "swr/mutation";
 const TeamInfoScreen = () => {
   const { user } = useUserGlobalStore();
   const socket = useContext(Socketcontext);
+  // socket.on(user?.id, (newTeamData) => {
+  //   console.log("소켓", newTeamData);
+  // });
 
   const name = user?.team;
   const { data: teamData, isLoading } = useSWR(
-    `teams/getteam/${name}`,
+    `teams/get-team/${name}`,
     fetcher,
     {
       refreshInterval: 1000,
@@ -35,6 +38,10 @@ const TeamInfoScreen = () => {
   );
 
   const handleApply = async ({ state, id }: any) => {
+    const data = {
+      id,
+      teamData: teamData.name,
+    };
     const data2 = {
       user: id,
       team: teamData,
@@ -42,10 +49,6 @@ const TeamInfoScreen = () => {
     };
     try {
       if (state) {
-        const data = {
-          id,
-          teamData: teamData.name,
-        };
         await userTeamUpdate({ ...data });
         await applyTeamUpdate({ ...data2 });
       } else {
@@ -56,19 +59,6 @@ const TeamInfoScreen = () => {
       throw error;
     }
   };
-  const testSocket = () => {
-    socket.emit("USER_ONLINE", user);
-  };
-  useEffect(() => {
-    socket.on("message", (data) => {
-      console.log(data);
-      console.log("git오류 수정 테스트");
-    });
-
-    return () => {
-      socket.off("message");
-    };
-  }, []);
 
   if (!teamData || isLoading) {
     return <Loader />;
@@ -96,9 +86,6 @@ const TeamInfoScreen = () => {
             })}
         </Box>
       </Box>
-      <TouchableOpacity onPress={testSocket}>
-        <Text>보내기</Text>
-      </TouchableOpacity>
     </Box>
   );
 };

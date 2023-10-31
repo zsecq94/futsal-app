@@ -1,15 +1,16 @@
 import Button from "@/components/shared/button";
+import { Socketcontext } from "@/context/SocketContext";
 import { createApplyTeamRequest } from "@/services/api";
-import { axiosInstance } from "@/services/config";
 import useUserGlobalStore from "@/store/useUserGlobalStore";
 import { Box, Text } from "@/utils/theme";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import React from "react";
+import React, { useContext } from "react";
 import { Image } from "react-native";
 import Toast from "react-native-toast-message";
 import useSWRMutation from "swr/mutation";
 
 const TeamDetailScreen = () => {
+  const socket = useContext(Socketcontext);
   const route = useRoute();
   const navigation = useNavigation();
   const { team }: any = route.params;

@@ -61,7 +61,7 @@ const TeamCreateScreen = () => {
             id: user?.id,
             teamData: teamData.name,
           };
-          const newUser = await userTeamUpdate({ ...data });
+          await userTeamUpdate({ ...data });
           updateUser({
             ...user,
             team: teamData.name,

@@ -2,21 +2,23 @@ import HrTag from "@/components/shared/hrtag";
 import Filter from "@/components/team/filter";
 import Input from "@/components/team/input";
 import TeamCard from "@/components/team/team-card";
+import { Socketcontext } from "@/context/SocketContext";
 import { getAllTeam } from "@/services/api";
-import { BASE_URL } from "@/services/config";
 import useUserGlobalStore from "@/store/useUserGlobalStore";
 import theme, { Box, Text } from "@/utils/theme";
 import { useNavigation } from "@react-navigation/native";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import {
+  ScrollView,
   TextInput,
   TouchableOpacity,
   TouchableWithoutFeedback,
-  ScrollView,
 } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 
 const TeamSearchScreen = () => {
+  const socket = useContext(Socketcontext);
+  const { user, updateUser } = useUserGlobalStore();
   const data = ["점수순", "인원순", "실력순"];
   const [selectedFilter, setSelectedFilter] = useState("");
   const [searchTeam, setSearchTeam] = useState("");
@@ -26,6 +28,10 @@ const TeamSearchScreen = () => {
   const [refresh, setRefresh] = useState(false);
   const navigation = useNavigation();
   const inputRef = useRef<TextInput>(null);
+
+  socket.on(user?.id, (userData) => {
+    updateUser(userData);
+  });
 
   const handlePress = () => {
     if (inputRef.current) {
