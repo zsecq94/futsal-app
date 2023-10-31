@@ -1,12 +1,27 @@
 import MatchCategory from "@/components/match/matchcategory";
 import { Box } from "@/utils/theme";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import MatchMatchingScreen from "../match-matching-screen";
 import MatchMercenaryScreen from "../match-mercenary-screen";
+import useUserGlobalStore from "@/store/useUserGlobalStore";
+import { axiosInstance } from "@/services/config";
 
 const MatchScreen = () => {
   const [check, setCheck] = useState(0);
+
   const data = ["매칭 / 예약", "용병"];
+  const { user, updateUser } = useUserGlobalStore();
+
+  const getNewUser = async () => {
+    const newUser = await axiosInstance.get(`users/get-user/${user?.id}`);
+    updateUser(newUser.data);
+  };
+
+  useEffect(() => {
+    if (user) {
+      getNewUser();
+    }
+  }, []);
 
   return (
     <Box>

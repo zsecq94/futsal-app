@@ -2,21 +2,28 @@ import HrTag from "@/components/shared/hrtag";
 import Loader from "@/components/shared/loader";
 import ApplyCard from "@/components/team/applycard";
 import { Socketcontext } from "@/context/SocketContext";
-import { applyTeamUpdateRequest, userTeamUpdateRequest } from "@/services/api";
+import {
+  applyTeamUpdateRequest,
+  deleteUserTeamRequest,
+  userTeamUpdateRequest,
+} from "@/services/api";
 import { fetcher } from "@/services/config";
 import useUserGlobalStore from "@/store/useUserGlobalStore";
 import theme, { Box, Text } from "@/utils/theme";
+import { useNavigation } from "@react-navigation/native";
 import React, { useContext, useEffect } from "react";
 import { TouchableOpacity } from "react-native";
+import Toast from "react-native-toast-message";
 import useSWR from "swr";
 import useSWRMutation from "swr/mutation";
 
 const TeamInfoScreen = () => {
-  const { user } = useUserGlobalStore();
+  const { user, updateUser } = useUserGlobalStore();
+  const navigation = useNavigation();
   const socket = useContext(Socketcontext);
-  // socket.on(user?.id, (newTeamData) => {
-  //   console.log("소켓", newTeamData);
-  // });
+  socket.on(user?.id, (newUserData) => {
+    updateUser(newUserData);
+  });
 
   const name = user?.team;
   const { data: teamData, isLoading } = useSWR(
@@ -35,6 +42,11 @@ const TeamInfoScreen = () => {
   const { trigger: applyTeamUpdate } = useSWRMutation(
     `teams/update-team-apply`,
     applyTeamUpdateRequest
+  );
+
+  const { trigger: deleteUserTeam } = useSWRMutation(
+    `users/delete-user-team`,
+    deleteUserTeamRequest
   );
 
   const handleApply = async ({ state, id }: any) => {
@@ -58,6 +70,18 @@ const TeamInfoScreen = () => {
       console.log("error in handleApply", error);
       throw error;
     }
+  };
+
+  const deleteTeam = async () => {
+    const data = {
+      id: user?.id,
+    };
+    const res = await deleteUserTeam({ ...data });
+    Toast.show({
+      type: "error",
+      text1: res.message,
+    });
+    navigation.navigate("TeamSearch");
   };
 
   if (!teamData || isLoading) {
@@ -86,6 +110,25 @@ const TeamInfoScreen = () => {
             })}
         </Box>
       </Box>
+      <TouchableOpacity onPress={deleteTeam}>
+        <Box height={50} />
+        <Box
+          alignItems="center"
+          style={{
+            backgroundColor: "red",
+          }}
+        >
+          <Text
+            p="5"
+            style={{
+              color: "white",
+            }}
+          >
+            팀 탈퇴
+          </Text>
+        </Box>
+        <Box height={50} />
+      </TouchableOpacity>
     </Box>
   );
 };

@@ -58,3 +58,20 @@ export const getUser = async (req: Request, res: Response) => {
     throw error;
   }
 };
+
+export const deleteUserTeam = async (req: Request, res: Response) => {
+  const socket = getSocketIo();
+  try {
+    const { id } = req.body;
+    const user = await User.findOne({ id });
+    if (user) {
+      user.team = null;
+      await user.save();
+      socket.emit(id, user);
+      return res.send({ message: "탈퇴 성공!" });
+    }
+  } catch (error) {
+    console.log("error in deleteUserTeam", error);
+    throw error;
+  }
+};

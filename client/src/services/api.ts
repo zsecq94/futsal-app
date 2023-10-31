@@ -97,6 +97,21 @@ export const applyTeamUpdateRequest = async (
   }
 };
 
+export const deleteUserTeamRequest = async (
+  url: string,
+  { arg }: { arg: any }
+) => {
+  try {
+    const res = await axiosInstance.put(url, {
+      ...arg,
+    });
+    return res.data;
+  } catch (error) {
+    console.log("error in createApplyTeamRequest", error);
+    throw error;
+  }
+};
+
 export const getAllTeam = async () => {
   try {
     const res = await axiosInstance.get("./teams/get-all-team");
