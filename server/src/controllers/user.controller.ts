@@ -35,7 +35,7 @@ export const userUpdate = async (req: Request, res: Response) => {
     if (user) {
       user.team = teamData;
       await user.save();
-      socket.emit(id, user);
+      socket.emit(`${id}-update`, user);
       return res.send(user);
     } else {
       return;
@@ -67,7 +67,7 @@ export const deleteUserTeam = async (req: Request, res: Response) => {
     if (user) {
       user.team = null;
       await user.save();
-      socket.emit(id, user);
+      socket.emit(`${id}-delete`, user);
       return res.send({ message: "탈퇴 성공!" });
     }
   } catch (error) {

@@ -7,10 +7,10 @@ import useUserGlobalStore from "@/store/useUserGlobalStore";
 import { axiosInstance } from "@/services/config";
 
 const MatchScreen = () => {
+  const { user, updateUser } = useUserGlobalStore();
   const [check, setCheck] = useState(0);
 
   const data = ["매칭 / 예약", "용병"];
-  const { user, updateUser } = useUserGlobalStore();
 
   const getNewUser = async () => {
     const newUser = await axiosInstance.get(`users/get-user/${user?.id}`);

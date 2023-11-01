@@ -51,7 +51,6 @@ export const getAllTeam = async (req: Request, res: Response) => {
 };
 
 export const updateApplyTeam = async (req: Request, res: Response) => {
-  const socket = getSocketIo();
   try {
     const { user, team, state } = req.body;
     if (state) {
@@ -73,7 +72,6 @@ export const updateApplyTeam = async (req: Request, res: Response) => {
             thumb: user.thumb,
           });
           await teamData.save();
-          socket.emit(teamData.leader, teamData);
           return res.send({ message: "팀 신청 완료", state: true });
         }
       } else {

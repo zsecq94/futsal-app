@@ -29,7 +29,7 @@ const TeamSearchScreen = () => {
   const navigation = useNavigation();
   const inputRef = useRef<TextInput>(null);
 
-  socket.on(user?.id, (userData) => {
+  socket.on(`${user?.id}-update`, (userData) => {
     updateUser(userData);
   });
 

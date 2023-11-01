@@ -11,7 +11,7 @@ import { fetcher } from "@/services/config";
 import useUserGlobalStore from "@/store/useUserGlobalStore";
 import theme, { Box, Text } from "@/utils/theme";
 import { useNavigation } from "@react-navigation/native";
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { TouchableOpacity } from "react-native";
 import Toast from "react-native-toast-message";
 import useSWR from "swr";
@@ -19,10 +19,15 @@ import useSWRMutation from "swr/mutation";
 
 const TeamInfoScreen = () => {
   const { user, updateUser } = useUserGlobalStore();
+  const [loading, Loading] = useState(false);
   const navigation = useNavigation();
   const socket = useContext(Socketcontext);
-  socket.on(user?.id, (newUserData) => {
-    updateUser(newUserData);
+  // socket.on(`${user?.id}-teamData`, (newTeamData) => {
+  //   console.log("newTeamData :", newTeamData);
+  // });
+
+  socket.on(`${user?.id}-delete`, (newUser) => {
+    updateUser(newUser);
   });
 
   const name = user?.team;
@@ -73,6 +78,7 @@ const TeamInfoScreen = () => {
   };
 
   const deleteTeam = async () => {
+    Loading(true);
     const data = {
       id: user?.id,
     };
@@ -82,9 +88,10 @@ const TeamInfoScreen = () => {
       text1: res.message,
     });
     navigation.navigate("TeamSearch");
+    Loading(false);
   };
 
-  if (!teamData || isLoading) {
+  if (!teamData || isLoading || loading) {
     return <Loader />;
   }
   return (
