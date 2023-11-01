@@ -5,6 +5,7 @@ import { createJSONStorage, persist } from "zustand/middleware";
 interface IUserGlobalStore {
   user: IAuthUser | null;
   updateUser: (user: IAuthUser) => void;
+  logoutUser: () => void;
 }
 
 const useUserGlobalStore = create<IUserGlobalStore>()(
@@ -14,6 +15,12 @@ const useUserGlobalStore = create<IUserGlobalStore>()(
       updateUser: (user) => {
         set({
           user,
+        });
+      },
+      logoutUser: async () => {
+        await AsyncStorage.removeItem("user-store");
+        set({
+          user: null,
         });
       },
     }),
