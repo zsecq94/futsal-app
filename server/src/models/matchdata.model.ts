@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const matchDateSchema = new mongoose.Schema(
+const matchDataSchema = new mongoose.Schema(
   {
     id: {
       type: String,
@@ -42,6 +42,6 @@ const matchDateSchema = new mongoose.Schema(
   }
 );
 
-const MatchDate = mongoose.model("MatchDate", matchDateSchema);
+const MatchData = mongoose.model("MatchData", matchDataSchema);
 
-export default MatchDate;
+export default MatchData;

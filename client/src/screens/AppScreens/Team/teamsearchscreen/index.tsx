@@ -2,7 +2,7 @@ import HrTag from "@/components/shared/hrtag";
 import Filter from "@/components/team/filter";
 import Input from "@/components/team/input";
 import TeamCard from "@/components/team/team-card";
-import { Socketcontext } from "@/context/SocketContext";
+import { SocketContext } from "@/context/SocketContext";
 import { getAllTeam } from "@/services/api";
 import useUserGlobalStore from "@/store/useUserGlobalStore";
 import theme, { Box, Text } from "@/utils/theme";
@@ -17,7 +17,7 @@ import {
 import Icon from "react-native-vector-icons/Ionicons";
 
 const TeamSearchScreen = () => {
-  const socket = useContext(Socketcontext);
+  const socket = useContext(SocketContext);
   const { user, updateUser } = useUserGlobalStore();
   const data = ["점수순", "인원순", "실력순"];
   const [selectedFilter, setSelectedFilter] = useState("");
@@ -29,14 +29,27 @@ const TeamSearchScreen = () => {
   const navigation = useNavigation();
   const inputRef = useRef<TextInput>(null);
 
-  socket.on(`${user?.id}-update`, (userData) => {
-    updateUser(userData);
-  });
+  useEffect(() => {
+    if (socket) {
+      socket.on(`${user?.id}-update`, (userData) => {
+        updateUser(userData);
+        navigation.navigate("TeamInfo");
+      });
+
+      socket.on("getAllTeam", () => {
+        getTeams();
+      });
+    }
+    return () => {
+      if (socket) {
+        socket.off(`${user?.id}-update`);
+      }
+    };
+  }, [socket]);
 
   const handlePress = () => {
     if (inputRef.current) {
       inputRef.current.blur();
-
       setFocusCheck(false);
     }
   };
@@ -85,21 +98,22 @@ const TeamSearchScreen = () => {
     return unsubscribe;
   }, [navigation]);
 
+  const getTeams = async () => {
+    try {
+      const res = await getAllTeam();
+      if (res) {
+        setDefaultData(res);
+        setAllTeams(res);
+      }
+    } catch (error) {
+      console.log("error in getAllTeam");
+      throw error;
+    }
+  };
+
   useEffect(() => {
     setSelectedFilter("");
     setSearchTeam("");
-    const getTeams = async () => {
-      try {
-        const res = await getAllTeam();
-        if (res) {
-          setDefaultData(res);
-          setAllTeams(res);
-        }
-      } catch (error) {
-        console.log("error in getAllTeam");
-        throw error;
-      }
-    };
     getTeams();
   }, [refresh]);
 

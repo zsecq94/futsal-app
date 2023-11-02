@@ -1,6 +1,9 @@
 import { Request, Response } from "express";
 import User from "../models/user-model";
 import { getSocketIo } from "../socket";
+import { Mutex } from "async-mutex";
+
+const mutex = new Mutex();
 
 export const userInfo = async (req: Request, res: Response) => {
   try {
@@ -28,15 +31,22 @@ export const userInfo = async (req: Request, res: Response) => {
 };
 
 export const userUpdate = async (req: Request, res: Response) => {
+  const release = await mutex.acquire();
   const socket = getSocketIo();
   try {
     const { id, teamData } = req.body;
     const user = await User.findOne({ id });
     if (user) {
-      user.team = teamData;
-      await user.save();
-      socket.emit(`${id}-update`, user);
-      return res.send(user);
+      if (user.team === null) {
+        user.team = teamData;
+        await user.save();
+        socket.emit(`${id}-update`, user);
+        release();
+        return res.send({ state: true, message: "팀 수락 완료!" });
+      } else {
+        release();
+        return res.send({ state: false, message: "이미 소속된 팀이 있음!" });
+      }
     } else {
       return;
     }
@@ -64,14 +74,32 @@ export const deleteUserTeam = async (req: Request, res: Response) => {
   try {
     const { id } = req.body;
     const user = await User.findOne({ id });
+    const saveTeam = user.team;
     if (user) {
       user.team = null;
       await user.save();
       socket.emit(`${id}-delete`, user);
+      socket.emit(`${saveTeam}-update`);
+
       return res.send({ message: "탈퇴 성공!" });
     }
   } catch (error) {
     console.log("error in deleteUserTeam", error);
+    throw error;
+  }
+};
+
+export const getTeamMember = async (req: Request, res: Response) => {
+  try {
+    const { name } = req.params;
+    const users = await User.find({ team: name });
+    if (users) {
+      return res.send(users);
+    } else {
+      return res.send([]);
+    }
+  } catch (error) {
+    console.log("error in getTeamMember", error);
     throw error;
   }
 };

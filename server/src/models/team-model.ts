@@ -38,6 +38,10 @@ const teamSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    manager: {
+      type: [],
+      required: true,
+    },
     apply: {
       type: [],
       required: false,

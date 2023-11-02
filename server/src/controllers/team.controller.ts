@@ -3,8 +3,10 @@ import Team from "../models/team-model";
 import { getSocketIo } from "../socket";
 
 export const createTeam = async (req: Request, res: Response) => {
+  const socket = getSocketIo();
   try {
     const { name, img, level } = req.body.teamData;
+    const leader = req.body.user.name;
     const id = req.body.user.id;
 
     const teamData = await Team.findOne({
@@ -20,15 +22,16 @@ export const createTeam = async (req: Request, res: Response) => {
         name,
         img,
         level,
-        leader: id,
+        leader: leader,
         score: 1500,
         win: 0,
         draw: 0,
         lose: 0,
         count: 1,
+        manager: [id],
       });
     }
-
+    socket.emit("getAllTeam");
     return res.send({ message: "팀 생성 완료", state: true });
   } catch (error) {
     console.log("error in createTeam", error);
@@ -51,6 +54,7 @@ export const getAllTeam = async (req: Request, res: Response) => {
 };
 
 export const updateApplyTeam = async (req: Request, res: Response) => {
+  const socket = getSocketIo();
   try {
     const { user, team, state } = req.body;
     if (state) {
@@ -72,6 +76,7 @@ export const updateApplyTeam = async (req: Request, res: Response) => {
             thumb: user.thumb,
           });
           await teamData.save();
+          socket.emit(`${teamData.leader}-apply-update`);
           return res.send({ message: "팀 신청 완료", state: true });
         }
       } else {
@@ -89,6 +94,7 @@ export const updateApplyTeam = async (req: Request, res: Response) => {
 
         teamData.apply = updatedApply;
         await teamData.save();
+        socket.emit(`${teamData.leader}-apply-update`);
       }
     }
   } catch (error) {
@@ -101,7 +107,11 @@ export const getTeamData = async (req: Request, res: Response) => {
   try {
     const { name } = req.params;
     const teamData = await Team.findOne({ name });
-    return res.send(teamData);
+    if (teamData) {
+      return res.send(teamData);
+    } else {
+      return res.send([]);
+    }
   } catch (error) {
     console.log("error in getTeamData", error);
     throw error;

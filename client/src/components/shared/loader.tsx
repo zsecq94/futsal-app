@@ -6,7 +6,12 @@ import { ActivityIndicator } from "react-native";
 const Loader = () => {
   return (
     <SafeAreaWrapper>
-      <Box flex={1} alignItems="center" justifyContent="center">
+      <Box
+        flex={1}
+        alignItems="center"
+        justifyContent="center"
+        backgroundColor="transparent"
+      >
         <ActivityIndicator />
       </Box>
     </SafeAreaWrapper>

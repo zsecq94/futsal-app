@@ -1,15 +1,18 @@
 import { Server } from "socket.io";
 
 let io;
+let connectedClients = 0;
 
 export const initializeSocketIo = (server: any) => {
   io = new Server(server);
 
   io.on("connection", (socket: any) => {
-    console.log("Connected users: ", io.engine.clientsCount);
+    connectedClients++;
+    console.log("Connected : ", connectedClients);
 
     socket.on("disconnect", () => {
-      console.log("Connected users: ", io.engine.clientsCount);
+      connectedClients--;
+      console.log("Disconnect : ", connectedClients);
     });
   });
 };

@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import Match from "../models/match-model";
-import MatchDate from "../models/matchdate.model";
+import MatchData from "../models/matchdata.model";
 import { Mutex } from "async-mutex";
 
 const mutex = new Mutex();
@@ -10,7 +10,7 @@ export const createMatch = async (req: Request, res: Response) => {
   try {
     const { team, place, date, time, level, todayTime } = req.body;
 
-    const matchDate = await MatchDate.findOne({ id: date });
+    const matchData = await MatchData.findOne({ id: date });
 
     const fillGapsInTimes = (dates: number[][]) => {
       let filledDates: number[][] = [];
@@ -37,11 +37,11 @@ export const createMatch = async (req: Request, res: Response) => {
       );
     };
 
-    // time의 원소가 matchDate[place].times에 존재하는지 확인
+    // time의 원소가 matchData[place].times에 존재하는지 확인
     if (
-      matchDate &&
+      matchData &&
       newDateList.some((newTime) =>
-        matchDate[place].times.some((time: any) => arrayEquals(time, newTime))
+        matchData[place].times.some((time: any) => arrayEquals(time, newTime))
       )
     ) {
       release();
@@ -50,7 +50,7 @@ export const createMatch = async (req: Request, res: Response) => {
         .status(201)
         .send({ message: "해당 시간대는 이미 신청되었습니다." });
     } else {
-      await MatchDate.findOneAndUpdate(
+      await MatchData.findOneAndUpdate(
         { id: date },
         {
           $push: { [`${place}.times`]: { $each: newDateList } },
@@ -83,7 +83,11 @@ export const getFalseMatch = async (req: Request, res: Response) => {
     const response = await Match.find({
       state: false,
     });
-    return res.send(response);
+    if (response) {
+      return res.send(response);
+    } else {
+      return res.send([]);
+    }
   } catch (error) {
     console.log("error in getFalseMatch", error);
     throw error;
@@ -93,7 +97,7 @@ export const getFalseMatch = async (req: Request, res: Response) => {
 export const getTodayDate = async (req: Request, res: Response) => {
   const { id } = req.params;
   try {
-    const response = await MatchDate.findOne({
+    const response = await MatchData.findOne({
       id,
     });
     if (response) {
@@ -110,7 +114,7 @@ export const getTodayDate = async (req: Request, res: Response) => {
 export const getOnePlaceData = async (req: Request, res: Response) => {
   const { id, name } = req.params;
   try {
-    const response = await MatchDate.findOne({
+    const response = await MatchData.findOne({
       id,
     });
     if (response) {

@@ -1,14 +1,16 @@
 import Button from "@/components/shared/button";
-import { Socketcontext } from "@/context/SocketContext";
+import { SocketContext, getSocket } from "@/context/SocketContext";
 import useUserGlobalStore from "@/store/useUserGlobalStore";
-import { Box, Text } from "@/utils/theme";
+import { Box } from "@/utils/theme";
 import React, { useContext } from "react";
 
 const RankingScreen = () => {
   const { user, updateUser, logoutUser } = useUserGlobalStore();
-  const socket = useContext(Socketcontext);
+
+  const socket = getSocket();
   const logout = () => {
-    socket.off();
+    socket.off(`${user?.id}-update`);
+    socket.off(`${user?.id}-apply-update`);
     logoutUser();
   };
 

@@ -1,8 +1,5 @@
 import MessageScreen from "@/screens/AppScreens/Message/messagescreen";
 import RankingScreen from "@/screens/AppScreens/Rank/rankingscreen";
-import TeamInfoScreen from "@/screens/AppScreens/Team/teaminfoscreen";
-import TeamScreen from "@/screens/AppScreens/Team/teamsearchscreen";
-import useUserGlobalStore from "@/store/useUserGlobalStore";
 import theme from "@/utils/theme";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Icon from "react-native-vector-icons/Ionicons";
@@ -12,8 +9,6 @@ import TeamNavigation from "./teamnavigation";
 const Tab = createBottomTabNavigator();
 
 const BottomNavigation = () => {
-  const { user } = useUserGlobalStore();
-
   return (
     <Tab.Navigator
       screenOptions={{
@@ -53,7 +48,7 @@ const BottomNavigation = () => {
         component={TeamNavigation}
         options={{
           headerShown: false,
-          title: user?.team === null ? "팀 찾기" : "팀 보기",
+          title: "팀 보기",
           tabBarIcon: ({ color, size }) => (
             <Icon name="people" size={size} color={color} />
           ),

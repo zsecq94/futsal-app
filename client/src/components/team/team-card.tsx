@@ -41,7 +41,7 @@ const TeamCard = ({ team }: any) => {
             style={{ borderRadius: 50 }}
           />
         </Box>
-        <Box width={"25%"}>
+        <Box width={"35%"}>
           <Text
             style={{ textAlign: "left" }}
             variant="textBase"
@@ -50,7 +50,7 @@ const TeamCard = ({ team }: any) => {
             {team.name}
           </Text>
         </Box>
-        <Box width={"20%"}>
+        <Box width={"15%"}>
           <Text
             style={{ textAlign: "center" }}
             variant="textBase"
@@ -59,7 +59,7 @@ const TeamCard = ({ team }: any) => {
             {team.level}
           </Text>
         </Box>
-        <Box width={"20%"}>
+        <Box width={"10%"}>
           <Text
             style={{ textAlign: "center" }}
             variant="textBase"
