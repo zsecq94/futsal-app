@@ -130,10 +130,10 @@ const TimePicker = ({
   const id = selectedDate;
   const { data, isLoading } = useSWR(
     `matchs/get-one-place/${id}/${name}`,
-    fetcher
-    // {
-    //   refreshInterval: 1000,
-    // }
+    fetcher,
+    {
+      refreshInterval: 1000,
+    }
   );
 
   return (

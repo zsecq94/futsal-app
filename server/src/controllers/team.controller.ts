@@ -31,7 +31,7 @@ export const createTeam = async (req: Request, res: Response) => {
         manager: [id],
       });
     }
-    socket.emit("getAllTeam");
+    socket.emit("team-list-update");
     return res.send({ message: "팀 생성 완료", state: true });
   } catch (error) {
     console.log("error in createTeam", error);

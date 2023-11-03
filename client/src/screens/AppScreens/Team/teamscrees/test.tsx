@@ -16,7 +16,7 @@ import {
 } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 
-const TeamSearchScreen = () => {
+const TeamScreen = () => {
   const socket = useContext(SocketContext);
   const { user, updateUser } = useUserGlobalStore();
   const data = ["점수순", "인원순", "실력순"];
@@ -26,12 +26,12 @@ const TeamSearchScreen = () => {
   const [defaultData, setDefaultData] = useState([]);
   const [focusCheck, setFocusCheck] = useState(false);
   const [refresh, setRefresh] = useState(false);
-  const navigation = useNavigation();
+  const navigation = useNavigation<any>();
   const inputRef = useRef<TextInput>(null);
 
   useEffect(() => {
     if (socket) {
-      socket.on(`${user?.id}-update`, (userData) => {
+      socket.on(`${user?.id}-update`, (userData: IAuthUser) => {
         updateUser(userData);
         navigation.navigate("TeamInfo");
       });
@@ -116,6 +116,8 @@ const TeamSearchScreen = () => {
     setSearchTeam("");
     getTeams();
   }, [refresh]);
+
+  console.log(user);
 
   return (
     <TouchableWithoutFeedback onPress={handlePress}>
@@ -208,4 +210,4 @@ const TeamSearchScreen = () => {
   );
 };
 
-export default TeamSearchScreen;
+export default TeamScreen;

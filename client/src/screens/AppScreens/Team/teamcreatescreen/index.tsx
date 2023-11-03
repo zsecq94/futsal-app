@@ -13,7 +13,7 @@ import Toast from "react-native-toast-message";
 import useSWRMutation from "swr/mutation";
 
 const TeamCreateScreen = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<any>();
   const [isLoading, setIsLoading] = useState(false);
   const [level, setLevel] = useState("");
   const levelData = ["하", "중하", "중", "중상", "상"];
@@ -49,6 +49,7 @@ const TeamCreateScreen = () => {
     `users/update`,
     userTeamUpdateRequest
   );
+
   const handleSubmit = async () => {
     try {
       setIsLoading(true); // 로딩 시작
@@ -73,7 +74,6 @@ const TeamCreateScreen = () => {
             type: "success",
             text1: res.message,
           });
-          navigation.navigate("TeamInfo");
         } else {
           Toast.show({
             type: "error",
@@ -87,6 +87,7 @@ const TeamCreateScreen = () => {
           visibilityTime: 3000,
         });
       }
+      navigation.navigate("Team");
     } catch (error) {
       console.log("error in handleSubmit", error);
       throw error;

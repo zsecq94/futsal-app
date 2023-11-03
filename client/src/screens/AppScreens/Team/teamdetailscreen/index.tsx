@@ -144,9 +144,11 @@ const TeamDetailScreen = () => {
         </Box>
       </Box>
       <Box height={30} />
-      <Box px="20">
-        <Button label="팀 신청" onPress={applyTeam} />
-      </Box>
+      {user?.team === null && (
+        <Box px="20">
+          <Button label="팀 신청" onPress={applyTeam} />
+        </Box>
+      )}
     </Box>
   );
 };

@@ -48,7 +48,7 @@ const BottomNavigation = () => {
         component={TeamNavigation}
         options={{
           headerShown: false,
-          title: "팀 보기",
+          title: "팀 찾기",
           tabBarIcon: ({ color, size }) => (
             <Icon name="people" size={size} color={color} />
           ),

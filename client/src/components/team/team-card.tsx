@@ -4,7 +4,7 @@ import React from "react";
 import { Image, TouchableOpacity } from "react-native";
 
 const TeamCard = ({ team }: any) => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<any>();
   const handleNavigation = () => {
     navigation.navigate("TeamDetail", { team });
   };
@@ -41,7 +41,7 @@ const TeamCard = ({ team }: any) => {
             style={{ borderRadius: 50 }}
           />
         </Box>
-        <Box width={"35%"}>
+        <Box width={"30%"}>
           <Text
             style={{ textAlign: "left" }}
             variant="textBase"
@@ -59,7 +59,7 @@ const TeamCard = ({ team }: any) => {
             {team.level}
           </Text>
         </Box>
-        <Box width={"10%"}>
+        <Box width={"15%"}>
           <Text
             style={{ textAlign: "center" }}
             variant="textBase"

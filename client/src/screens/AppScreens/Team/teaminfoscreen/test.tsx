@@ -27,7 +27,7 @@ import useSWRMutation from "swr/mutation";
 const TeamInfoScreen = () => {
   const { user, updateUser } = useUserGlobalStore();
   const [loading, setLoading] = useState(false);
-  const navigation = useNavigation<any>();
+  const navigation = useNavigation();
   const socket = useContext(SocketContext);
 
   const {
@@ -95,7 +95,6 @@ const TeamInfoScreen = () => {
       text1: res.message,
     });
     setLoading(false);
-    navigation.navigate("Team");
   };
 
   const handleApply = async ({ state, id }: any) => {
