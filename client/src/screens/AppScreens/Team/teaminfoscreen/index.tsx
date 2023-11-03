@@ -29,6 +29,7 @@ const TeamInfoScreen = () => {
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation<any>();
   const socket = useContext(SocketContext);
+  const [deleteModalVisible, setDeleteModalVisible] = useState(false);
 
   const {
     data: teamData,
@@ -94,8 +95,9 @@ const TeamInfoScreen = () => {
       type: "error",
       text1: res.message,
     });
-    setLoading(false);
     navigation.navigate("Team");
+    setLoading(false);
+    setDeleteModalVisible(!deleteModalVisible);
   };
 
   const handleApply = async ({ state, id }: any) => {
@@ -162,6 +164,10 @@ const TeamInfoScreen = () => {
     inputRange: [0, 1],
     outputRange: [0, width * 0.7],
   });
+
+  const toggleModal = () => {
+    setDeleteModalVisible(!deleteModalVisible);
+  };
 
   if (!teamData || isLoading || loading || teamMemberIsLoading) {
     return <Loader />;
@@ -244,30 +250,90 @@ const TeamInfoScreen = () => {
                 })}
                 <Box height={20} />
                 <TouchableOpacity
-                  onPress={deleteTeam}
+                  onPress={toggleModal}
                   style={{
                     marginHorizontal: 80,
                   }}
                 >
-                  <Box
-                    alignItems="center"
+                  <Text
+                    p="3"
+                    fontWeight="700"
                     style={{
+                      textAlign: "center",
                       borderRadius: 10,
                       backgroundColor: "red",
+                      color: "white",
                     }}
                   >
-                    <Text
-                      p="3"
-                      fontWeight="700"
-                      style={{
-                        color: "white",
-                      }}
-                    >
-                      팀 탈퇴
-                    </Text>
-                  </Box>
+                    팀 탈퇴
+                  </Text>
                   <Box height={50} />
                 </TouchableOpacity>
+                <Modal
+                  animationType="fade"
+                  transparent={true}
+                  visible={deleteModalVisible}
+                  onRequestClose={toggleModal}
+                >
+                  <Box
+                    style={{
+                      flex: 1,
+                      justifyContent: "center",
+                      alignItems: "center",
+                      backgroundColor: "rgba(0, 0, 0, 0.5)",
+                    }}
+                  >
+                    <Box
+                      style={{
+                        backgroundColor: "white",
+                        padding: 20,
+                        borderRadius: 10,
+                      }}
+                    >
+                      <Text
+                        variant="textBase"
+                        fontWeight="700"
+                        style={{ color: "red", textAlign: "center" }}
+                      >
+                        정말로 팀을 탈퇴하시겠습니까?
+                      </Text>
+                      <Box height={30} />
+                      <Box
+                        flexDirection="row"
+                        mx="10"
+                        style={{ gap: 50 }}
+                        justifyContent="center"
+                      >
+                        <TouchableOpacity onPress={deleteTeam}>
+                          <Text
+                            p="2"
+                            style={{
+                              backgroundColor: "red",
+                              borderRadius: 5,
+                              color: "white",
+                              fontWeight: "bold",
+                            }}
+                          >
+                            네
+                          </Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={toggleModal}>
+                          <Text
+                            p="2"
+                            style={{
+                              backgroundColor: theme.colors.green700,
+                              borderRadius: 5,
+                              color: "white",
+                              fontWeight: "bold",
+                            }}
+                          >
+                            아니요
+                          </Text>
+                        </TouchableOpacity>
+                      </Box>
+                    </Box>
+                  </Box>
+                </Modal>
               </ScrollView>
             </Animated.View>
           </Modal>

@@ -39,7 +39,6 @@ const TeamScreen = () => {
     if (socket) {
       socket.on(`${user?.id}-update`, (userData: IAuthUser) => {
         updateUser(userData);
-        navigation.navigate("TeamInfo");
       });
 
       socket.on("team-list-update", async () => {

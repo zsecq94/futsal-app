@@ -56,7 +56,8 @@ export const getAllTeam = async (req: Request, res: Response) => {
 export const updateApplyTeam = async (req: Request, res: Response) => {
   const socket = getSocketIo();
   try {
-    const { user, team, state } = req.body;
+    const { user, team, state, count } = req.body;
+
     if (state) {
       if (user.team === null) {
         const teamData = await Team.findOne({ name: team.name });
@@ -86,14 +87,17 @@ export const updateApplyTeam = async (req: Request, res: Response) => {
         });
       }
     } else {
-      const teamData = await Team.findOne({ name: team.name });
-      if (teamData) {
-        const updatedApply = teamData.apply.filter(
-          (applicant) => applicant.id !== user
-        );
+      const filter = { name: team.name };
+      const update = {
+        $pull: { apply: { id: user } },
+        $inc: { count: count ? 1 : 0 },
+      };
 
-        teamData.apply = updatedApply;
-        await teamData.save();
+      const teamData = await Team.findOneAndUpdate(filter, update, {
+        new: true,
+      });
+
+      if (teamData) {
         socket.emit(`${teamData.leader}-apply-update`);
       }
     }
