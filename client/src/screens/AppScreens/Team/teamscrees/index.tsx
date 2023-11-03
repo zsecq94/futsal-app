@@ -1,4 +1,5 @@
 import HrTag from "@/components/shared/hrtag";
+import Loader from "@/components/shared/loader";
 import Filter from "@/components/team/filter";
 import Input from "@/components/team/input";
 import TeamCard from "@/components/team/team-card";
@@ -96,6 +97,10 @@ const TeamScreen = () => {
     setFocusCheck(true);
     setSelectedFilter("");
   };
+
+  if (isLoading) {
+    return <Loader />;
+  }
 
   return (
     <TouchableWithoutFeedback onPress={handlePress}>

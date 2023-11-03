@@ -41,9 +41,11 @@ const TeamMemberCard = ({ teamData, member, idx }: any) => {
         }}
       >
         {teamData.leader === member.name ? (
-          <Text>팀장</Text>
+          <Text fontWeight="700">팀장</Text>
         ) : (
-          <Text>{teamData?.manager.includes(member.id) && "관리자"}</Text>
+          <Text fontWeight="700">
+            {teamData?.manager.includes(member.id) && "관리자"}
+          </Text>
         )}
       </Box>
     </Box>

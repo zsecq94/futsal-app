@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import User from "../models/user-model";
 import { getSocketIo } from "../socket";
 import { Mutex } from "async-mutex";
+import Team from "../models/team-model";
 
 const mutex = new Mutex();
 
@@ -72,14 +73,23 @@ export const getUser = async (req: Request, res: Response) => {
 export const deleteUserTeam = async (req: Request, res: Response) => {
   const socket = getSocketIo();
   try {
-    const { id } = req.body;
-    const user = await User.findOne({ id });
-    const saveTeam = user.team;
-    if (user) {
-      user.team = null;
-      await user.save();
+    const { id, teamData } = req.body;
+
+    const user = await User.findOneAndUpdate(
+      { id },
+      { team: null },
+      { new: true }
+    );
+
+    const team = await Team.findOneAndUpdate(
+      { name: teamData.name },
+      { $inc: { count: -1 } },
+      { new: true }
+    );
+
+    if (user && team) {
       socket.emit(`${id}-delete`, user);
-      socket.emit(`${saveTeam}-update`);
+      socket.emit(`${team.name}-update`);
 
       return res.send({ message: "탈퇴 성공!" });
     }

@@ -2,6 +2,8 @@ import HrTag from "@/components/shared/hrtag";
 import Loader from "@/components/shared/loader";
 import ApplyCard from "@/components/team/applycard";
 import TeamMemberCard from "@/components/team/team-member-card";
+import TeamMemberDetail from "@/components/team/team-member-detail";
+import TeamMemberModal from "@/components/team/team-member-modal";
 import { SocketContext } from "@/context/SocketContext";
 import {
   applyTeamUpdateRequest,
@@ -29,13 +31,39 @@ const TeamInfoScreen = () => {
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation<any>();
   const socket = useContext(SocketContext);
-  const [deleteModalVisible, setDeleteModalVisible] = useState(false);
+  const modalAnimatedValue = useState(new Animated.Value(1))[0];
+  const { width, height } = Dimensions.get("window");
+  const [deleteModal, setDeleteModal] = useState(false);
+  const [memberListModal, setMemberListModal] = useState(false);
+  const [memberDetailModal, setMemberDetailModal] = useState(false);
+  const [memberDetail, setMemberDetail] = useState([]);
 
   const {
     data: teamData,
-    isLoading,
+    isLoading: teamDataIsLoading,
     mutate,
   } = useSWR(`teams/get-team/${user?.team}`, fetcher);
+
+  const { trigger: userTeamUpdate } = useSWRMutation(
+    `users/update`,
+    userTeamUpdateRequest
+  );
+
+  const { trigger: applyTeamUpdate } = useSWRMutation(
+    `teams/update-team-apply`,
+    applyTeamUpdateRequest
+  );
+
+  const {
+    data: teamMember,
+    isLoading: teamMemberIsLoading,
+    mutate: teamMemberMutate,
+  } = useSWR(`users/get-member/${teamData?.name}`, fetcher);
+
+  const { trigger: deleteUserTeam } = useSWRMutation(
+    `users/delete-user-team`,
+    deleteUserTeamRequest
+  );
 
   useEffect(() => {
     if (socket) {
@@ -63,41 +91,18 @@ const TeamInfoScreen = () => {
     };
   }, [socket]);
 
-  const { trigger: userTeamUpdate } = useSWRMutation(
-    `users/update`,
-    userTeamUpdateRequest
-  );
-
-  const { trigger: applyTeamUpdate } = useSWRMutation(
-    `teams/update-team-apply`,
-    applyTeamUpdateRequest
-  );
-
-  const {
-    data: teamMember,
-    isLoading: teamMemberIsLoading,
-    mutate: teamMemberMutate,
-  } = useSWR(`users/get-member/${teamData?.name}`, fetcher);
-
-  const { trigger: deleteUserTeam } = useSWRMutation(
-    `users/delete-user-team`,
-    deleteUserTeamRequest
-  );
-
   const deleteTeam = async () => {
     setLoading(true);
-    const data = {
-      id: user?.id,
-      teamData,
-    };
-    const res = await deleteUserTeam({ ...data });
-    Toast.show({
-      type: "error",
-      text1: res.message,
-    });
-    navigation.navigate("Team");
+    const res = await deleteUserTeam({ id: user?.id, teamData });
+    if (res) {
+      Toast.show({
+        type: "error",
+        text1: res.message,
+      });
+      navigation.navigate("Team");
+    }
     setLoading(false);
-    setDeleteModalVisible(!deleteModalVisible);
+    setDeleteModal(!deleteModal);
   };
 
   const handleApply = async ({ state, id }: any) => {
@@ -137,12 +142,8 @@ const TeamInfoScreen = () => {
     }
   };
 
-  const [modalVisible, setModalVisible] = useState(false);
-  const modalAnimatedValue = useState(new Animated.Value(1))[0];
-  const { width, height } = Dimensions.get("window");
-
   const handleModal = () => {
-    setModalVisible(true);
+    setMemberListModal(true);
     Animated.timing(modalAnimatedValue, {
       toValue: 0,
       duration: 500,
@@ -156,7 +157,7 @@ const TeamInfoScreen = () => {
       duration: 500,
       useNativeDriver: true,
     }).start(() => {
-      setModalVisible(false);
+      setMemberListModal(false);
     });
   };
 
@@ -166,17 +167,154 @@ const TeamInfoScreen = () => {
   });
 
   const toggleModal = () => {
-    setDeleteModalVisible(!deleteModalVisible);
+    setDeleteModal(!deleteModal);
   };
 
-  if (!teamData || isLoading || loading || teamMemberIsLoading) {
+  const toggleDetailModal = (member: any) => {
+    if (member) {
+      setMemberDetail(member);
+    }
+    setMemberDetailModal(!memberDetailModal);
+  };
+
+  if (!teamData || teamDataIsLoading || loading || teamMemberIsLoading) {
     return <Loader />;
   }
 
   return (
     <Box>
+      <Box justifyContent="space-between" flexDirection="row" px="5" mt="5">
+        <Text
+          variant="textXl"
+          fontWeight="700"
+          style={{
+            textAlign: "center",
+            color: theme.colors.green700,
+          }}
+        >
+          {teamData.name}
+        </Text>
+        <TouchableOpacity
+          onPress={handleModal}
+          style={{
+            backgroundColor: theme.colors.green700,
+            borderRadius: 10,
+          }}
+        >
+          <Text
+            p="1"
+            variant="textBase"
+            fontWeight="700"
+            style={{
+              textAlign: "center",
+              color: "white",
+            }}
+          >
+            {teamData?.manager.includes(user?.id) ? "팀원관리" : "팀원보기"}
+          </Text>
+        </TouchableOpacity>
+        <Modal
+          animationType="none"
+          transparent={true}
+          visible={memberListModal}
+          onRequestClose={hideModal}
+        >
+          <Animated.View
+            style={{
+              transform: [{ translateX: modalTranslateX }],
+              position: "absolute",
+              right: 0,
+              top: 0,
+              width: width * 0.7,
+              height: height,
+              backgroundColor: "white",
+            }}
+          >
+            <TouchableOpacity onPress={hideModal}>
+              <Text
+                p="2"
+                variant="text2Xl"
+                fontWeight="700"
+                style={{
+                  color: "white",
+                  backgroundColor: theme.colors.green700,
+                  textAlign: "center",
+                }}
+              >
+                나가기
+              </Text>
+            </TouchableOpacity>
+            <ScrollView>
+              {teamMember?.map((member: any, idx: any) => {
+                return (
+                  <TouchableOpacity
+                    key={member.id}
+                    onPress={() => toggleDetailModal(member)}
+                  >
+                    <TeamMemberCard
+                      teamData={teamData}
+                      idx={idx}
+                      member={member}
+                    />
+                  </TouchableOpacity>
+                );
+              })}
+              <Modal
+                animationType="none"
+                transparent={true}
+                visible={memberDetailModal}
+                onRequestClose={toggleDetailModal}
+              >
+                <TeamMemberDetail
+                  deleteUserTeam={deleteUserTeam}
+                  setMemberDetailModal={setMemberDetailModal}
+                  teamData={teamData}
+                  user={user}
+                  toggleDetailModal={toggleDetailModal}
+                  memberDetail={memberDetail}
+                />
+              </Modal>
+              <Box height={20} />
+              <TouchableOpacity
+                onPress={toggleModal}
+                style={{
+                  marginHorizontal: 80,
+                }}
+              >
+                <Text
+                  p="3"
+                  fontWeight="700"
+                  style={{
+                    textAlign: "center",
+                    borderRadius: 10,
+                    backgroundColor: "red",
+                    color: "white",
+                  }}
+                >
+                  팀 탈퇴
+                </Text>
+                <Box height={50} />
+              </TouchableOpacity>
+              <Modal
+                animationType="fade"
+                transparent={true}
+                visible={deleteModal}
+                onRequestClose={toggleModal}
+              >
+                <TeamMemberModal
+                  deleteTeam={deleteTeam}
+                  toggleModal={toggleModal}
+                />
+              </Modal>
+            </ScrollView>
+          </Animated.View>
+        </Modal>
+      </Box>
       <Box>
-        <Box justifyContent="space-between" flexDirection="row" px="5" mt="5">
+        <HrTag />
+      </Box>
+      {teamData?.manager.includes(user?.id) && (
+        <Box>
           <Text
             variant="textXl"
             fontWeight="700"
@@ -185,187 +323,18 @@ const TeamInfoScreen = () => {
               color: theme.colors.green700,
             }}
           >
-            {teamData.name}
+            팀 신청 목록
           </Text>
-          <TouchableOpacity
-            onPress={handleModal}
-            style={{
-              backgroundColor: theme.colors.green700,
-              borderRadius: 10,
-            }}
-          >
-            <Text
-              p="1"
-              variant="textBase"
-              fontWeight="700"
-              style={{
-                textAlign: "center",
-                color: "white",
-              }}
-            >
-              {teamData?.manager.includes(user?.id) ? "팀원관리" : "팀원보기"}
-            </Text>
-          </TouchableOpacity>
-          <Modal
-            animationType="none"
-            transparent={true}
-            visible={modalVisible}
-            onRequestClose={hideModal}
-          >
-            <Animated.View
-              style={{
-                transform: [{ translateX: modalTranslateX }],
-                position: "absolute",
-                right: 0,
-                top: 0,
-                width: width * 0.7,
-                height: height,
-                backgroundColor: "white",
-              }}
-            >
-              <TouchableOpacity onPress={hideModal}>
-                <Text
-                  p="2"
-                  variant="text2Xl"
-                  fontWeight="700"
-                  style={{
-                    color: "white",
-                    backgroundColor: theme.colors.green700,
-                    textAlign: "center",
-                  }}
-                >
-                  나가기
-                </Text>
-              </TouchableOpacity>
-              <ScrollView>
-                {teamMember?.map((member: any, idx: any) => {
-                  return (
-                    <TeamMemberCard
-                      key={member.id}
-                      teamData={teamData}
-                      idx={idx}
-                      member={member}
-                    />
-                  );
-                })}
-                <Box height={20} />
-                <TouchableOpacity
-                  onPress={toggleModal}
-                  style={{
-                    marginHorizontal: 80,
-                  }}
-                >
-                  <Text
-                    p="3"
-                    fontWeight="700"
-                    style={{
-                      textAlign: "center",
-                      borderRadius: 10,
-                      backgroundColor: "red",
-                      color: "white",
-                    }}
-                  >
-                    팀 탈퇴
-                  </Text>
-                  <Box height={50} />
-                </TouchableOpacity>
-                <Modal
-                  animationType="fade"
-                  transparent={true}
-                  visible={deleteModalVisible}
-                  onRequestClose={toggleModal}
-                >
-                  <Box
-                    style={{
-                      flex: 1,
-                      justifyContent: "center",
-                      alignItems: "center",
-                      backgroundColor: "rgba(0, 0, 0, 0.5)",
-                    }}
-                  >
-                    <Box
-                      style={{
-                        backgroundColor: "white",
-                        padding: 20,
-                        borderRadius: 10,
-                      }}
-                    >
-                      <Text
-                        variant="textBase"
-                        fontWeight="700"
-                        style={{ color: "red", textAlign: "center" }}
-                      >
-                        정말로 팀을 탈퇴하시겠습니까?
-                      </Text>
-                      <Box height={30} />
-                      <Box
-                        flexDirection="row"
-                        mx="10"
-                        style={{ gap: 50 }}
-                        justifyContent="center"
-                      >
-                        <TouchableOpacity onPress={deleteTeam}>
-                          <Text
-                            p="2"
-                            style={{
-                              backgroundColor: "red",
-                              borderRadius: 5,
-                              color: "white",
-                              fontWeight: "bold",
-                            }}
-                          >
-                            네
-                          </Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={toggleModal}>
-                          <Text
-                            p="2"
-                            style={{
-                              backgroundColor: theme.colors.green700,
-                              borderRadius: 5,
-                              color: "white",
-                              fontWeight: "bold",
-                            }}
-                          >
-                            아니요
-                          </Text>
-                        </TouchableOpacity>
-                      </Box>
-                    </Box>
-                  </Box>
-                </Modal>
-              </ScrollView>
-            </Animated.View>
-          </Modal>
-        </Box>
-        <Box>
-          <HrTag />
-        </Box>
-        {teamData?.manager.includes(user?.id) && (
-          <Box>
-            <Text
-              variant="textXl"
-              fontWeight="700"
-              style={{
-                textAlign: "center",
-                color: theme.colors.green700,
-              }}
-            >
-              팀 신청 목록
-            </Text>
-            <Box px="5">
-              <HrTag />
-            </Box>
-            <Box alignItems="center" style={{ gap: 10 }}>
-              {teamData?.apply.map((user: any, idx: number) => {
-                return (
-                  <ApplyCard key={idx} onPress={handleApply} user={user} />
-                );
-              })}
-            </Box>
+          <Box px="5">
+            <HrTag />
           </Box>
-        )}
-      </Box>
+          <Box alignItems="center" style={{ gap: 10 }}>
+            {teamData?.apply.map((user: any, idx: number) => {
+              return <ApplyCard key={idx} onPress={handleApply} user={user} />;
+            })}
+          </Box>
+        </Box>
+      )}
     </Box>
   );
 };
