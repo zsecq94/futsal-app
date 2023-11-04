@@ -4,7 +4,6 @@ import Filter from "@/components/team/filter";
 import Input from "@/components/team/input";
 import TeamCard from "@/components/team/team-card";
 import { SocketContext } from "@/context/SocketContext";
-import { getAllTeam } from "@/services/api";
 import { fetcher } from "@/services/config";
 import useUserGlobalStore from "@/store/useUserGlobalStore";
 import theme, { Box, Text } from "@/utils/theme";
@@ -26,7 +25,6 @@ const TeamScreen = () => {
   const [selectedFilter, setSelectedFilter] = useState("");
   const [searchTeam, setSearchTeam] = useState("");
   const [focusCheck, setFocusCheck] = useState(false);
-  const [defaultData, setDefaultData] = useState([]);
   const navigation = useNavigation<any>();
   const inputRef = useRef<TextInput>(null);
   const [sortedTeams, setSortedTeams] = useState([]);
@@ -36,19 +34,20 @@ const TeamScreen = () => {
     isLoading,
     mutate: allTeamsMutate,
   } = useSWR("teams/get-all-team", fetcher);
+
+  useEffect(() => {
+    allTeamsMutate();
+  }, []);
+
   useEffect(() => {
     if (socket) {
-      socket.on(`${user?.id}-update`, (userData: IAuthUser) => {
-        updateUser(userData);
-      });
-
       socket.on("team-list-update", async () => {
         await allTeamsMutate();
       });
     }
     return () => {
       if (socket) {
-        socket.off(`${user?.id}-update`);
+        socket.off("team-list-update");
       }
     };
   }, [socket]);

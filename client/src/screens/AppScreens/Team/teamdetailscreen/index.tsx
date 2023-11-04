@@ -44,12 +44,14 @@ const TeamDetailScreen = () => {
         Toast.show({
           type: "success",
           text1: res.message,
+          visibilityTime: 2000,
         });
         navigation.goBack();
       } else {
         Toast.show({
           type: "error",
           text1: res.message,
+          visibilityTime: 2000,
         });
         navigation.goBack();
       }

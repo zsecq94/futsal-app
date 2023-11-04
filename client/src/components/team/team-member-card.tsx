@@ -2,7 +2,7 @@ import theme, { Box, Text } from "@/utils/theme";
 import React from "react";
 import { Image } from "react-native";
 
-const TeamMemberCard = ({ teamData, member, idx }: any) => {
+const TeamMemberCard = ({ teamData, member, user }: any) => {
   return (
     <Box
       width={"100%"}
@@ -10,7 +10,9 @@ const TeamMemberCard = ({ teamData, member, idx }: any) => {
       flexDirection="row"
       alignItems="center"
       style={{
-        backgroundColor: idx % 2 === 0 ? theme.colors.gray100 : "white",
+        borderBottomWidth: 1,
+        borderColor: theme.colors.gray200,
+        backgroundColor: user.id === member.id ? theme.colors.gray200 : "white",
       }}
     >
       <Box
@@ -43,9 +45,9 @@ const TeamMemberCard = ({ teamData, member, idx }: any) => {
         {teamData.leader === member.name ? (
           <Text fontWeight="700">팀장</Text>
         ) : (
-          <Text fontWeight="700">
-            {teamData?.manager.includes(member.id) && "관리자"}
-          </Text>
+          teamData?.manager.includes(member.id) && (
+            <Text fontWeight="700">관리자</Text>
+          )
         )}
       </Box>
     </Box>

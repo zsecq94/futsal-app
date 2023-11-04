@@ -121,3 +121,66 @@ export const getTeamData = async (req: Request, res: Response) => {
     throw error;
   }
 };
+
+export const updateTeamManager = async (req: Request, res: Response) => {
+  const socket = getSocketIo();
+  try {
+    const { id, teamName } = req.body;
+
+    const teamData = await Team.findOne({ name: teamName });
+
+    if (teamData.manager.length < 2) {
+      await Team.findOneAndUpdate(
+        { name: teamName },
+        { $push: { manager: id } },
+        { new: true }
+      );
+      socket.emit(`${teamName}-manager`);
+      return res.send({ message: "매치 권한 부여 완료!", state: true });
+    } else {
+      return res.send({
+        message: "이미 2명의 매니저가 존재합니다...",
+        state: false,
+      });
+    }
+  } catch (error) {
+    console.log("error in updateTeamManager", error);
+    throw error;
+  }
+};
+
+export const deleteTeamManager = async (req: Request, res: Response) => {
+  const socket = getSocketIo();
+  try {
+    const { id, teamName } = req.body;
+    await Team.findOneAndUpdate(
+      { name: teamName },
+      { $pull: { manager: id } },
+      { new: true }
+    );
+    socket.emit(`${teamName}-manager`);
+    return res.send({ message: "매치 권한 제거 완료!" });
+  } catch (error) {
+    console.log("error in deleteTeamManager", error);
+    throw error;
+  }
+};
+
+export const changeTeamLeader = async (req: Request, res: Response) => {
+  const socket = getSocketIo();
+  try {
+    const { name, teamName } = req.body;
+
+    await Team.findOneAndUpdate(
+      { name: teamName },
+      { leader: name },
+      { new: true }
+    );
+
+    socket.emit(`${teamName}-manager`);
+    return res.send({ message: "팀장을 성공적으로 넘겼습니다!" });
+  } catch (error) {
+    console.log("error in changeTeamLeader", error);
+    throw error;
+  }
+};

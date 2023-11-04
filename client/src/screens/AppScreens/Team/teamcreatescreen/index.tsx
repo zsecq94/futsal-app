@@ -73,21 +73,23 @@ const TeamCreateScreen = () => {
           Toast.show({
             type: "success",
             text1: res.message,
+            visibilityTime: 2000,
           });
         } else {
           Toast.show({
             type: "error",
             text1: res.message,
+            visibilityTime: 2000,
           });
         }
+        navigation.navigate("Team");
       } else {
         Toast.show({
           type: "error",
           text1: "띄어쓰기 사용 불가, 팀 수준 필수 값",
-          visibilityTime: 3000,
+          visibilityTime: 2000,
         });
       }
-      navigation.navigate("Team");
     } catch (error) {
       console.log("error in handleSubmit", error);
       throw error;

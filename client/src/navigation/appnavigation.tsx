@@ -1,18 +1,40 @@
+import { SocketContext } from "@/context/SocketContext";
 import MessageScreen from "@/screens/AppScreens/Message/messagescreen";
 import RankingScreen from "@/screens/AppScreens/Rank/rankingscreen";
-import TeamInfoScreen from "@/screens/AppScreens/Team/teaminfoscreen";
-import TeamSearchScreen from "@/screens/AppScreens/Team/teamsearchscreen";
 import useUserGlobalStore from "@/store/useUserGlobalStore";
 import theme from "@/utils/theme";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { useNavigation } from "@react-navigation/native";
+import { useContext, useEffect } from "react";
+import Toast from "react-native-toast-message";
 import Icon from "react-native-vector-icons/Ionicons";
 import MatchNavigation from "./matchnavigation";
 import TeamNavigation from "./teamnavigation";
+import ProfileScreen from "@/screens/AppScreens/Profile/profilescreen";
 
 const Tab = createBottomTabNavigator();
-
 const AppNavigation = () => {
-  const { user } = useUserGlobalStore();
+  const { user, updateUser } = useUserGlobalStore();
+  const navigation = useNavigation<any>();
+  const socket = useContext(SocketContext);
+
+  useEffect(() => {
+    if (socket) {
+      socket.on(`${user?.id}-delete`, (newUser: IAuthUser) => {
+        navigation.navigate("TeamStack");
+        Toast.show({
+          type: "error",
+          text1: "팀에서 추방되었습니다...",
+          visibilityTime: 2000,
+        });
+        updateUser(newUser);
+      });
+
+      socket.on(`${user?.id}-update`, (userData: IAuthUser) => {
+        updateUser(userData);
+      });
+    }
+  }, [socket]);
 
   return (
     <Tab.Navigator
@@ -72,7 +94,7 @@ const AppNavigation = () => {
       />
       <Tab.Screen
         name="ProfileStack"
-        component={MessageScreen}
+        component={ProfileScreen}
         options={{
           headerShown: false,
           title: "내 정보",

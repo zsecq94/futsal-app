@@ -4,12 +4,84 @@ import { Image, TouchableOpacity } from "react-native";
 import Toast from "react-native-toast-message";
 
 const TeamMemberDetail = ({
+  changeTeamLeader,
   memberDetail,
   toggleDetailModal,
   user,
   teamData,
   deleteUserTeam,
+  setMemberListModal,
+  updateTeamManager,
+  deleteTeamManager,
 }: any) => {
+  const handleUpdateTeamManager = async () => {
+    toggleDetailModal();
+    setMemberListModal(false);
+    const res = await updateTeamManager({
+      id: memberDetail.id,
+      teamName: teamData.name,
+    });
+    if (res.state) {
+      Toast.show({
+        type: "success",
+        text1: res.message,
+        visibilityTime: 2000,
+      });
+    } else {
+      Toast.show({
+        type: "error",
+        text1: res.message,
+        visibilityTime: 2000,
+      });
+    }
+  };
+
+  const handleDeleteTeamManager = async () => {
+    toggleDetailModal();
+    setMemberListModal(false);
+    const res = await deleteTeamManager({
+      id: memberDetail.id,
+      teamName: teamData.name,
+    });
+    Toast.show({
+      type: "success",
+      text1: res.message,
+      visibilityTime: 2000,
+    });
+  };
+
+  const handleDeleteUserTeam = async () => {
+    toggleDetailModal();
+    setMemberListModal(false);
+    const res = await deleteUserTeam({
+      id: memberDetail?.id,
+      teamData,
+    });
+    if (res) {
+      return Toast.show({
+        type: "success",
+        text1: "추방 성공!",
+        visibilityTime: 2000,
+      });
+    }
+  };
+
+  const handleChangeTeamLeader = async () => {
+    toggleDetailModal();
+    setMemberListModal(false);
+    const res = await changeTeamLeader({
+      name: memberDetail?.name,
+      teamName: teamData.name,
+    });
+    if (res) {
+      return Toast.show({
+        type: "success",
+        text1: res.message,
+        visibilityTime: 2000,
+      });
+    }
+  };
+
   return (
     <Box
       style={{
@@ -25,7 +97,7 @@ const TeamMemberDetail = ({
           padding: 20,
           borderRadius: 10,
           alignItems: "center",
-          gap: 15,
+          gap: 20,
         }}
       >
         <TouchableOpacity onPress={toggleDetailModal}>
@@ -57,7 +129,7 @@ const TeamMemberDetail = ({
             <Text
               p="2"
               style={{
-                backgroundColor: theme.colors.blue400,
+                backgroundColor: theme.colors.yellow400,
                 borderRadius: 5,
                 color: "white",
                 fontWeight: "bold",
@@ -68,23 +140,41 @@ const TeamMemberDetail = ({
           </TouchableOpacity>
         )}
         <Box flexDirection="row" style={{ gap: 10 }}>
+          {teamData.leader === user.name &&
+          teamData.manager.includes(memberDetail.id)
+            ? user._id !== memberDetail._id && (
+                <TouchableOpacity onPress={handleDeleteTeamManager}>
+                  <Text
+                    p="2"
+                    style={{
+                      backgroundColor: theme.colors.red500,
+                      borderRadius: 5,
+                      color: "white",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    권한 제거
+                  </Text>
+                </TouchableOpacity>
+              )
+            : user.name === teamData.leader &&
+              user._id !== memberDetail._id && (
+                <TouchableOpacity onPress={handleUpdateTeamManager}>
+                  <Text
+                    p="2"
+                    style={{
+                      backgroundColor: theme.colors.blue400,
+                      borderRadius: 5,
+                      color: "white",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    매칭 권한
+                  </Text>
+                </TouchableOpacity>
+              )}
           {user.name === teamData.leader && user._id !== memberDetail._id && (
-            <TouchableOpacity onPress={toggleDetailModal}>
-              <Text
-                p="2"
-                style={{
-                  backgroundColor: theme.colors.blue400,
-                  borderRadius: 5,
-                  color: "white",
-                  fontWeight: "bold",
-                }}
-              >
-                매칭 권한
-              </Text>
-            </TouchableOpacity>
-          )}
-          {user.name === teamData.leader && user._id !== memberDetail._id && (
-            <TouchableOpacity onPress={toggleDetailModal}>
+            <TouchableOpacity onPress={handleChangeTeamLeader}>
               <Text
                 p="2"
                 style={{
@@ -99,25 +189,11 @@ const TeamMemberDetail = ({
             </TouchableOpacity>
           )}
           {user.name === teamData.leader && user._id !== memberDetail._id && (
-            <TouchableOpacity
-              onPress={async () => {
-                toggleDetailModal();
-                const res = await deleteUserTeam({
-                  id: memberDetail?.id,
-                  teamData,
-                });
-                if (res) {
-                  return Toast.show({
-                    type: "success",
-                    text1: "추방 성공!",
-                  });
-                }
-              }}
-            >
+            <TouchableOpacity onPress={handleDeleteUserTeam}>
               <Text
                 p="2"
                 style={{
-                  backgroundColor: theme.colors.blue400,
+                  backgroundColor: theme.colors.red500,
                   borderRadius: 5,
                   color: "white",
                   fontWeight: "bold",

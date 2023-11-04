@@ -41,8 +41,8 @@ export const userUpdate = async (req: Request, res: Response) => {
       if (user.team === null) {
         user.team = teamData;
         await user.save();
-        socket.emit(`${id}-update`, user);
         release();
+        await socket.emit(`${id}-update`, user);
         return res.send({ state: true, message: "팀 수락 완료!" });
       } else {
         release();
@@ -83,7 +83,10 @@ export const deleteUserTeam = async (req: Request, res: Response) => {
 
     const team = await Team.findOneAndUpdate(
       { name: teamData.name },
-      { $inc: { count: -1 } },
+      {
+        $inc: { count: -1 },
+        $pull: { manager: id },
+      },
       { new: true }
     );
 

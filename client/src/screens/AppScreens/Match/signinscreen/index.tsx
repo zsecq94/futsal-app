@@ -58,12 +58,14 @@ const SignInScreen = () => {
         Toast.show({
           type: type,
           text1: `👍 ${res.message}`,
+          visibilityTime: 2000,
         });
         navigate.goBack();
       } else {
         Toast.show({
           type: "error",
           text1: "선택사항을 모두 선택해주세요",
+          visibilityTime: 2000,
         });
       }
     } catch (error) {
