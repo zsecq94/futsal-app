@@ -2,11 +2,13 @@ import { Request, Response } from "express";
 import Match from "../models/match-model";
 import MatchData from "../models/matchdata.model";
 import { Mutex } from "async-mutex";
+import { getSocketIo } from "../socket";
 
 const mutex = new Mutex();
 
 export const createMatch = async (req: Request, res: Response) => {
   const release = await mutex.acquire();
+  const socket = getSocketIo();
   try {
     const { team, place, date, time, level, todayTime } = req.body;
 
@@ -70,7 +72,7 @@ export const createMatch = async (req: Request, res: Response) => {
       time,
       state: false,
     });
-
+    socket.emit("create-match");
     return res.status(201).send({ message: "신청 완료" });
   } catch (error) {
     console.log("error in createMatch", error);
@@ -80,7 +82,9 @@ export const createMatch = async (req: Request, res: Response) => {
 
 export const getFalseMatch = async (req: Request, res: Response) => {
   try {
+    const { date } = req.params;
     const response = await Match.find({
+      date,
       state: false,
     });
     if (response) {
@@ -95,8 +99,8 @@ export const getFalseMatch = async (req: Request, res: Response) => {
 };
 
 export const getTodayDate = async (req: Request, res: Response) => {
-  const { id } = req.params;
   try {
+    const { id } = req.params;
     const response = await MatchData.findOne({
       id,
     });

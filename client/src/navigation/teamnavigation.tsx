@@ -1,7 +1,7 @@
-import TeamCreateScreen from "@/screens/AppScreens/Team/teamcreatescreen";
-import TeamDetailScreen from "@/screens/AppScreens/Team/teamdetailscreen";
-import TeamInfoScreen from "@/screens/AppScreens/Team/teaminfoscreen";
-import TeamScreen from "@/screens/AppScreens/Team/teamscrees";
+import TeamCreateScreen from "@/screens/AppScreens/Team/team-create-screen";
+import TeamDetailScreen from "@/screens/AppScreens/Team/team-detail-screen";
+import TeamInfoScreen from "@/screens/AppScreens/Team/team-info-screen";
+import TeamScreen from "@/screens/AppScreens/Team/team-screes";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import React from "react";
 

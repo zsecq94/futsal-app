@@ -39,14 +39,13 @@ const DatePicker = ({ date, onSelectDate, selected }: any) => {
       >
         {isToday ? "오늘" : moment(date).format("ddd")}
       </Text>
-      <View style={{ height: 10 }} />
       <Text
         style={[
           styles.medium,
           selected === formattedDate && {
             color: "#fff",
             fontWeight: "bold",
-            fontSize: 24,
+            fontSize: 12,
           },
         ]}
       >
@@ -67,17 +66,17 @@ const styles = StyleSheet.create({
     backgroundColor: "#eee",
     borderRadius: 10,
     borderColor: "#ddd",
-    padding: 10,
+    justifyContent: "center",
     alignItems: "center",
-    height: 90,
-    width: 80,
+    height: 40,
+    width: 40,
     marginHorizontal: 5,
   },
   big: {
     fontWeight: "bold",
-    fontSize: 20,
+    fontSize: 13,
   },
   medium: {
-    fontSize: 16,
+    fontSize: 11,
   },
 });

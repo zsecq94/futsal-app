@@ -3,10 +3,10 @@ import { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import HrTag from "../shared/hrtag";
 import DatePicker from "./datepicker";
+import theme from "@/utils/theme";
 
-const Calendar = ({ onSelectDate, selected }: any) => {
+const Calendar = ({ setSelectedDate, selectedDate }: any) => {
   const [dates, setDates] = useState<Moment[]>([]);
-  // get the dates from today to 10 days from now, format them as strings and store them in state
   const getDates = () => {
     const _dates = [];
     for (let i = 0; i < 21; i++) {
@@ -23,22 +23,20 @@ const Calendar = ({ onSelectDate, selected }: any) => {
   return (
     <>
       <View style={styles.centered}>
-        <Text style={styles.title}>{selected?.slice(5, 7)}월</Text>
+        <Text style={styles.title}>{selectedDate?.slice(5, 7)}월</Text>
       </View>
       <HrTag />
       <View style={styles.dateSection}>
-        <View style={styles.scroll}>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-            {dates.map((date, index) => (
-              <DatePicker
-                key={index}
-                date={date}
-                onSelectDate={onSelectDate}
-                selected={selected}
-              />
-            ))}
-          </ScrollView>
-        </View>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          {dates.map((date, index) => (
+            <DatePicker
+              key={index}
+              date={date}
+              onSelectDate={setSelectedDate}
+              selected={selectedDate}
+            />
+          ))}
+        </ScrollView>
       </View>
     </>
   );
@@ -53,14 +51,12 @@ const styles = StyleSheet.create({
   },
   title: {
     marginTop: 10,
-    fontSize: 20,
+    fontSize: 25,
     fontWeight: "bold",
+    color: theme.colors.green700,
   },
   dateSection: {
     width: "100%",
     padding: 10,
-  },
-  scroll: {
-    height: 90,
   },
 });

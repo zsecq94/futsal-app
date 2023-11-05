@@ -1,6 +1,6 @@
 import { SocketContext } from "@/context/SocketContext";
-import MessageScreen from "@/screens/AppScreens/Message/messagescreen";
-import RankingScreen from "@/screens/AppScreens/Rank/rankingscreen";
+import MessageScreen from "@/screens/AppScreens/Message/message-screen";
+import RankingScreen from "@/screens/AppScreens/Rank/ranking-screen";
 import useUserGlobalStore from "@/store/useUserGlobalStore";
 import theme from "@/utils/theme";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -10,7 +10,7 @@ import Toast from "react-native-toast-message";
 import Icon from "react-native-vector-icons/Ionicons";
 import MatchNavigation from "./matchnavigation";
 import TeamNavigation from "./teamnavigation";
-import ProfileScreen from "@/screens/AppScreens/Profile/profilescreen";
+import ProfileScreen from "@/screens/AppScreens/Profile/profiles-creen";
 
 const Tab = createBottomTabNavigator();
 const AppNavigation = () => {

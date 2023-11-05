@@ -201,7 +201,7 @@ const TimePicker = ({
                 <Box key={index}>
                   <TouchableOpacity
                     onPress={() => handlePress(time)}
-                    disabled={data?.some((d) => d[0] === time[0])}
+                    disabled={data?.some((d: any) => d[0] === time[0])}
                   >
                     <Box
                       height={30}

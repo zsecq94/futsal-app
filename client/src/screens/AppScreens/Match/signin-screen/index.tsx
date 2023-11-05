@@ -17,15 +17,14 @@ const SignInScreen = () => {
   const todayHour = moment().format("HH");
   const todayMinute = moment().format("mm");
   const second = moment().format("ss");
+  const route = useRoute();
+  const { name, selected }: any = route.params;
 
-  const [selectedDate, setSelectedDate] = useState(todayDate);
+  const { user } = useUserGlobalStore();
+  const [selectedDate, setSelectedDate] = useState(selected);
   const [selectedTimes, setSelectedTimes] = useState([]);
   const [level, setLevel] = useState("");
 
-  const route = useRoute();
-  const { name }: any = route.params;
-
-  const { user } = useUserGlobalStore();
   const userTeam = user?.team;
 
   const levelData = ["하", "중하", "중", "중상", "상"];
@@ -96,7 +95,7 @@ const SignInScreen = () => {
           {name}구장
         </Text>
       </Box>
-      <Calendar onSelectDate={setSelectedDate} selected={selectedDate} />
+      <Calendar setSelectedDate={setSelectedDate} selectedDate={selectedDate} />
       <HrTag />
       <TimePicker
         selectedTimes={selectedTimes}
@@ -114,7 +113,7 @@ const SignInScreen = () => {
           textAlign: "center",
         }}
       >
-        실력 선택
+        매칭 상대 실력 선택
       </Text>
       <Box px="10" py="3" flexDirection="row" justifyContent="space-between">
         {levelData.map((V, index) => (
