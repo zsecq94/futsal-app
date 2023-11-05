@@ -166,3 +166,18 @@ export const changeTeamLeaderRequest = async (
     throw error;
   }
 };
+
+export const updateMatchStateRequest = async (
+  url: string,
+  { arg }: { arg: any }
+) => {
+  try {
+    const res = await axiosInstance.put(url, {
+      ...arg,
+    });
+    return res.data;
+  } catch (error) {
+    console.log("error in updateMatchStateRequest", error);
+    throw error;
+  }
+};

@@ -40,7 +40,7 @@ const teamSchema = new mongoose.Schema(
     },
     manager: {
       type: [],
-      required: true,
+      required: false,
     },
     apply: {
       type: [],

@@ -7,6 +7,10 @@ import TimePickerPreview from "./timepicker-preview";
 const Card = ({ data, idx, onPress }: any) => {
   const name = idx === 0 ? "A" : idx === 1 ? "B" : "C";
 
+  // 매칭신청 시간 사이에 예약 시 매칭 제거...
+  // 매칭 타임바 색은 초록, 매칭 확정 및 예약 타임바 색은 빨강... 변수발생...
+  console.log(data);
+
   return (
     <TouchableOpacity
       onPress={() => onPress({ name })}

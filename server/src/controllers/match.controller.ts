@@ -72,7 +72,7 @@ export const createMatch = async (req: Request, res: Response) => {
       time,
       state: false,
     });
-    socket.emit("create-match");
+    socket.emit("update-match");
     return res.status(201).send({ message: "신청 완료" });
   } catch (error) {
     console.log("error in createMatch", error);
@@ -128,6 +128,31 @@ export const getOnePlaceData = async (req: Request, res: Response) => {
     }
   } catch (error) {
     console.log("error in getOnePlaceData", error);
+    throw error;
+  }
+};
+
+export const updateMatchState = async (req: Request, res: Response) => {
+  const release = await mutex.acquire();
+  const socket = getSocketIo();
+  try {
+    const { id, team2 } = req.body;
+
+    const existingMatch = await Match.findOne({ _id: id });
+
+    if (existingMatch && existingMatch.state) {
+      return res.send({ message: "이미 성사된 매칭입니다!", state: false });
+    }
+    await Match.findOneAndUpdate(
+      { _id: id },
+      { state: true, team2 },
+      { new: true }
+    );
+    socket.emit("update-match");
+    release();
+    return res.send({ message: "매칭이 성사되었습니다!", state: true });
+  } catch (error) {
+    console.log("error in updateMatchState", error);
     throw error;
   }
 };

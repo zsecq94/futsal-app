@@ -1,21 +1,25 @@
 import Calendar from "@/components/match/calender";
 import Card from "@/components/match/card";
+import MatchModal from "@/components/match/match-modal";
 import MatchCard from "@/components/match/matchcard";
 import HrTag from "@/components/shared/hrtag";
 import Loader from "@/components/shared/loader";
 import { SocketContext } from "@/context/SocketContext";
 import { fetcher } from "@/services/config";
+import useUserGlobalStore from "@/store/useUserGlobalStore";
 import theme, { Box, Text } from "@/utils/theme";
 import { useNavigation } from "@react-navigation/native";
 import moment from "moment";
 import React, { useContext, useEffect, useState } from "react";
-import { ScrollView } from "react-native";
+import { Modal, ScrollView } from "react-native";
 import useSWR from "swr";
 
 const MatchMatchingScreen = () => {
   const navigate = useNavigation<any>();
   const todayDate = moment().format("YYYY-MM-DD");
   const [selectedDate, setSelectedDate] = useState(todayDate);
+  const [checkModal, setCheckModal] = useState(false);
+  const [oneData, setOneData] = useState([]);
   const socket = useContext(SocketContext);
 
   const {
@@ -30,6 +34,8 @@ const MatchMatchingScreen = () => {
     mutate: todayDataMutate,
   } = useSWR(`matchs/get-today-date/${selectedDate}`, fetcher);
 
+  console.log(todayData.times);
+
   useEffect(() => {
     const getMatch = async () => {
       await matchDataMutate();
@@ -40,7 +46,7 @@ const MatchMatchingScreen = () => {
 
   useEffect(() => {
     if (socket) {
-      socket.on("create-match", async () => {
+      socket.on("update-match", async () => {
         await matchDataMutate();
         await todayDataMutate();
       });
@@ -48,7 +54,7 @@ const MatchMatchingScreen = () => {
 
     return () => {
       if (socket) {
-        socket.off("create-match");
+        socket.off("update-match");
       }
     };
   }, [socket, matchData, todayData]);
@@ -57,8 +63,9 @@ const MatchMatchingScreen = () => {
     navigate.navigate("SignIn", { name, selected: selectedDate });
   };
 
-  const goMatchDetail = (data: any) => {
-    navigate.navigate("MatchDetail", { data });
+  const toggleModal = (V: any) => {
+    setOneData(V);
+    setCheckModal(!checkModal);
   };
 
   return (
@@ -81,7 +88,7 @@ const MatchMatchingScreen = () => {
               color: theme.colors.green700,
             }}
           >
-            {selectedDate.slice(5, 7)}월 {selectedDate.slice(8, 10)}일 구장 현황
+            구장 현황
           </Text>
           <HrTag />
           {todayData?.map((data: any, index: number) => (
@@ -99,17 +106,24 @@ const MatchMatchingScreen = () => {
               color: theme.colors.green700,
             }}
           >
-            {selectedDate.slice(5, 7)}월 {selectedDate.slice(8, 10)}일 매칭
-            대기중
+            매칭 대기중...
           </Text>
           <HrTag />
           {matchData?.map((V: any, index: number) => (
             <Box key={index}>
-              <MatchCard data={V} onPress={() => goMatchDetail(V)} />
+              <MatchCard data={V} onPress={() => toggleModal(V)} />
               <Box height={10} />
             </Box>
           ))}
           <Box height={80} />
+          <Modal
+            animationType="fade"
+            transparent={true}
+            visible={checkModal}
+            onRequestClose={toggleModal}
+          >
+            <MatchModal oneData={oneData} toggleModal={toggleModal} />
+          </Modal>
         </>
       )}
     </ScrollView>

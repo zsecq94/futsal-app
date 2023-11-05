@@ -7,7 +7,6 @@ export const createTeam = async (req: Request, res: Response) => {
   try {
     const { name, img, level } = req.body.teamData;
     const leader = req.body.user.name;
-    const id = req.body.user.id;
 
     const teamData = await Team.findOne({
       name,
@@ -28,7 +27,6 @@ export const createTeam = async (req: Request, res: Response) => {
         draw: 0,
         lose: 0,
         count: 1,
-        manager: [id],
       });
     }
     socket.emit("team-list-update");

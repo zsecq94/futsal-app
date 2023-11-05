@@ -36,6 +36,21 @@ const TeamInfoScreen = () => {
     mutate: teamMemberMutate,
   } = useSWR(`users/get-member/${teamData?.name}`, fetcher);
 
+  const { trigger: userTeamUpdate } = useSWRMutation(
+    `users/update`,
+    userTeamUpdateRequest
+  );
+
+  const { trigger: applyTeamUpdate } = useSWRMutation(
+    `teams/update-team-apply`,
+    applyTeamUpdateRequest
+  );
+
+  useEffect(() => {
+    teamDataMutate();
+    teamMemberMutate();
+  }, []);
+
   useEffect(() => {
     if (socket) {
       socket.on(`${user?.name}-apply-update`, async () => {
@@ -74,21 +89,6 @@ const TeamInfoScreen = () => {
       }
     };
   }, [socket, user, teamData]);
-
-  useEffect(() => {
-    teamDataMutate();
-    teamMemberMutate();
-  }, []);
-
-  const { trigger: userTeamUpdate } = useSWRMutation(
-    `users/update`,
-    userTeamUpdateRequest
-  );
-
-  const { trigger: applyTeamUpdate } = useSWRMutation(
-    `teams/update-team-apply`,
-    applyTeamUpdateRequest
-  );
 
   const handleApply = async ({ state, id }: any) => {
     try {
@@ -171,14 +171,18 @@ const TeamInfoScreen = () => {
               color: "white",
             }}
           >
-            {teamData?.manager?.includes(user?.id) ? "팀원관리" : "팀원보기"}
+            {teamData?.manager.includes(user?.id) ||
+            teamData.leader === user?.name
+              ? "팀원관리"
+              : "팀원보기"}
           </Text>
         </TouchableOpacity>
       </Box>
       <Box>
         <HrTag />
       </Box>
-      {teamData?.manager?.includes(user?.id) && (
+      {(teamData?.manager.includes(user?.id) ||
+        teamData.leader === user?.name) && (
         <Box>
           <Text
             variant="textXl"
