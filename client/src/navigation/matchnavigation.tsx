@@ -1,5 +1,5 @@
 import MatchScreen from "@/screens/AppScreens/Match/match-screen";
-import SignInScreen from "@/screens/AppScreens/Match/signin-screen";
+import MatchSignInScreen from "@/screens/AppScreens/Match/match-signin-screen";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import React from "react";
 
@@ -17,7 +17,7 @@ const MatchNavigation = () => {
       />
       <Stack.Screen
         name="SignIn"
-        component={SignInScreen}
+        component={MatchSignInScreen}
         options={{
           headerShown: false,
         }}

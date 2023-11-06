@@ -3,80 +3,118 @@ import Match from "../models/match-model";
 import MatchData from "../models/matchdata.model";
 import { Mutex } from "async-mutex";
 import { getSocketIo } from "../socket";
+import mongoose from "mongoose";
 
 const mutex = new Mutex();
 
+// 겹치는 매치 찾기
+const findOverlappingMatches = async (date, place, time, state) => {
+  if (!state) return [];
+  const start = time[0][0];
+  const end = time[1][1];
+  const matches = await Match.find({ date, place, state: false });
+  return matches.filter((match) => {
+    const matchStart = Math.min(...match.time[0]);
+    const matchEnd = Math.max(...match.time[1]);
+    return start <= matchEnd && matchStart <= end;
+  });
+};
+
+// 겹치는 시간 제거
+const removeOverlappingTimes = (matchData, place, overlaps) => {
+  for (let match of overlaps) {
+    const newTime = fillGapsInTimes(match.time, match.state);
+    matchData[place].times = matchData[place].times.filter((time) => {
+      return !newTime.some((newTimeItem) => newTimeItem[0] === time[0]);
+    });
+  }
+  return matchData;
+};
+
+// 시간 채우기
+const fillGapsInTimes = (times, state) => {
+  let filledTimes = [];
+  for (let i = 0; i < times.length - 1; i += 2) {
+    let start = times[i][0];
+    let end = times[i + 1][1];
+    for (let j = start; j < end; j += 0.5) {
+      filledTimes.push([j, j + 0.5, state]);
+    }
+  }
+  return filledTimes;
+};
+
 export const createMatch = async (req: Request, res: Response) => {
-  const release = await mutex.acquire();
   const socket = getSocketIo();
+  const release = await mutex.acquire();
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
   try {
-    const { team, place, date, time, level, todayTime } = req.body;
+    const { team, place, date, time, level, state } = req.body;
+    const newDateList = fillGapsInTimes(time, state);
+    let matchData = await MatchData.findOne({ id: date });
 
-    const matchData = await MatchData.findOne({ id: date });
-
-    const fillGapsInTimes = (dates: number[][]) => {
-      let filledDates: number[][] = [];
-      for (let i = 0; i < dates.length - 1; i += 2) {
-        let start = dates[i][0];
-        let end = dates[i + 1][1];
-
-        for (let j = start; j < end; j += 0.5) {
-          filledDates.push([j, j + 0.5]);
-        }
+    const overlaps = await findOverlappingMatches(date, place, time, state);
+    if (overlaps.length > 0) {
+      matchData = removeOverlappingTimes(matchData, place, overlaps);
+      // 이 부분에 삭제된 매치의 팀에 실시간 알림 필요
+      await matchData.save();
+      await Match.updateMany({ _id: { $in: overlaps } }, { state: true });
+    }
+    if (matchData) {
+      const existingTimes = matchData[place].times;
+      if (
+        newDateList.some((newTime) =>
+          existingTimes.some((time) => time[0] === newTime[0])
+        )
+      ) {
+        return res.send({
+          message: "해당 시간대는 이미 신청되었습니다.",
+          state: false,
+          type: "error",
+        });
       }
-
-      return filledDates;
-    };
-    const newDateList = fillGapsInTimes(time);
-
-    // 배열 비교 함수
-    const arrayEquals = (a: any, b: any) => {
-      return (
-        Array.isArray(a) &&
-        Array.isArray(b) &&
-        a.length === b.length &&
-        a.every((val, index) => val === b[index])
-      );
-    };
-
-    // time의 원소가 matchData[place].times에 존재하는지 확인
-    if (
-      matchData &&
-      newDateList.some((newTime) =>
-        matchData[place].times.some((time: any) => arrayEquals(time, newTime))
-      )
-    ) {
-      release();
-
-      return res
-        .status(201)
-        .send({ message: "해당 시간대는 이미 신청되었습니다." });
-    } else {
-      await MatchData.findOneAndUpdate(
-        { id: date },
-        {
-          $push: { [`${place}.times`]: { $each: newDateList } },
-          $inc: { [`${place}.count`]: 1 },
-        },
-        { upsert: true, new: true }
-      );
-      release();
     }
 
-    await Match.create({
-      id: date + todayTime + team,
-      team1: team,
-      place,
-      level,
-      date,
-      time,
-      state: false,
-    });
+    await MatchData.findOneAndUpdate(
+      { id: date },
+      {
+        $push: { [`${place}.times`]: { $each: newDateList } },
+        $inc: { [`${place}.count`]: 1 },
+      },
+      { upsert: true, new: true, session }
+    );
+
+    await Match.create(
+      [
+        {
+          team1: team,
+          place,
+          level,
+          date,
+          time,
+          state,
+        },
+      ],
+      { session }
+    );
+
+    await session.commitTransaction();
+
     socket.emit("update-match");
-    return res.status(201).send({ message: "신청 완료" });
+    socket.emit("timepicker-update");
+
+    return res.send({ message: "신청 완료", state: true, type: "success" });
   } catch (error) {
     console.log("error in createMatch", error);
-    throw error;
+    await session.abortTransaction();
+    return res
+      .status(500)
+      .send({ message: error.message, state: false, type: "error" });
+  } finally {
+    session.endSession();
+    release();
   }
 };
 
@@ -132,9 +170,29 @@ export const getOnePlaceData = async (req: Request, res: Response) => {
   }
 };
 
+// 매치 데이터 업데이트
+const updateMatchDataTimes = async (teamData) => {
+  const matchData = await MatchData.findOne({ id: teamData.date });
+  if (matchData) {
+    matchData[teamData.place].times = matchData[teamData.place].times.map(
+      (time) => {
+        if (teamData.time[0][0] <= time[0] && time[0] <= teamData.time[1][0]) {
+          return [time[0], time[1], true];
+        } else {
+          return time;
+        }
+      }
+    );
+    await matchData.save();
+  }
+};
+
 export const updateMatchState = async (req: Request, res: Response) => {
-  const release = await mutex.acquire();
   const socket = getSocketIo();
+  const release = await mutex.acquire();
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
   try {
     const { id, team2 } = req.body;
 
@@ -143,16 +201,27 @@ export const updateMatchState = async (req: Request, res: Response) => {
     if (existingMatch && existingMatch.state) {
       return res.send({ message: "이미 성사된 매칭입니다!", state: false });
     }
-    await Match.findOneAndUpdate(
+
+    const teamData = await Match.findOneAndUpdate(
       { _id: id },
       { state: true, team2 },
-      { new: true }
+      { new: true, session }
     );
+
+    await updateMatchDataTimes(teamData);
+
+    await session.commitTransaction();
+
     socket.emit("update-match");
-    release();
+    socket.emit("timepicker-update");
+
     return res.send({ message: "매칭이 성사되었습니다!", state: true });
   } catch (error) {
     console.log("error in updateMatchState", error);
-    throw error;
+    await session.abortTransaction();
+    return res.status(500).send({ message: error.message, state: false });
+  } finally {
+    session.endSession();
+    release();
   }
 };

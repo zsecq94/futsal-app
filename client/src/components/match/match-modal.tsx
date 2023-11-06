@@ -1,7 +1,7 @@
 import { fetcher } from "@/services/config";
 import useUserGlobalStore from "@/store/useUserGlobalStore";
 import theme, { Box, Text } from "@/utils/theme";
-import React from "react";
+import React, { useState } from "react";
 import { TouchableOpacity } from "react-native";
 import useSWR from "swr";
 import Loader from "../shared/loader";
@@ -11,6 +11,7 @@ import Toast from "react-native-toast-message";
 
 const MatchModal = ({ toggleModal, oneData }: any) => {
   const { user } = useUserGlobalStore();
+  const [isLoading, setIsLoading] = useState(false);
 
   const {
     data: teamData,
@@ -23,9 +24,34 @@ const MatchModal = ({ toggleModal, oneData }: any) => {
     updateMatchStateRequest
   );
 
-  if (!teamData || teamDataIsLoading) {
+  const handleMatch = async () => {
+    setIsLoading(true);
+    const res = await updateMatchState({
+      id: oneData._id,
+      team2: user?.team,
+    });
+    if (res.state) {
+      Toast.show({
+        type: "success",
+        text1: res.message,
+      });
+    } else {
+      Toast.show({
+        type: "error",
+        text1: res.message,
+      });
+    }
+    setIsLoading(false);
+    toggleModal();
+  };
+
+  if (!teamData || teamDataIsLoading || isLoading) {
     return <Loader />;
   }
+
+  const isMatchable =
+    user?.team !== oneData?.team1 &&
+    (teamData?.manager?.includes(user?.id) || teamData.leader === user?.name);
 
   return (
     <Box
@@ -59,43 +85,22 @@ const MatchModal = ({ toggleModal, oneData }: any) => {
             뒤로가기
           </Text>
         </TouchableOpacity>
-        {user?.team !== oneData?.team1 &&
-          (teamData?.manager.includes(user?.id) ||
-            teamData.leader === user?.name) && (
-            <TouchableOpacity
-              onPress={async () => {
-                const res = await updateMatchState({
-                  id: oneData._id,
-                  team2: user?.team,
-                });
-                if (res.state) {
-                  Toast.show({
-                    type: "success",
-                    text1: res.message,
-                  });
-                } else {
-                  Toast.show({
-                    type: "error",
-                    text1: res.message,
-                  });
-                }
-                toggleModal();
+        {isMatchable && (
+          <TouchableOpacity onPress={handleMatch}>
+            <Text
+              p="2"
+              variant="textBase"
+              fontWeight="700"
+              style={{
+                color: "white",
+                backgroundColor: theme.colors.green700,
+                textAlign: "center",
               }}
             >
-              <Text
-                p="2"
-                variant="textBase"
-                fontWeight="700"
-                style={{
-                  color: "white",
-                  backgroundColor: theme.colors.green700,
-                  textAlign: "center",
-                }}
-              >
-                매칭
-              </Text>
-            </TouchableOpacity>
-          )}
+              매칭
+            </Text>
+          </TouchableOpacity>
+        )}
       </Box>
     </Box>
   );

@@ -2,11 +2,6 @@ import mongoose from "mongoose";
 
 const matchSchema = new mongoose.Schema(
   {
-    id: {
-      type: String,
-      required: true,
-      unique: true,
-    },
     team1: {
       type: String,
       required: true,

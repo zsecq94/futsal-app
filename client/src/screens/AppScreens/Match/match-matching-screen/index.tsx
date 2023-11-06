@@ -1,12 +1,11 @@
 import Calendar from "@/components/match/calender";
 import Card from "@/components/match/card";
+import MatchCard from "@/components/match/match-card";
 import MatchModal from "@/components/match/match-modal";
-import MatchCard from "@/components/match/matchcard";
 import HrTag from "@/components/shared/hrtag";
 import Loader from "@/components/shared/loader";
 import { SocketContext } from "@/context/SocketContext";
 import { fetcher } from "@/services/config";
-import useUserGlobalStore from "@/store/useUserGlobalStore";
 import theme, { Box, Text } from "@/utils/theme";
 import { useNavigation } from "@react-navigation/native";
 import moment from "moment";
@@ -33,8 +32,6 @@ const MatchMatchingScreen = () => {
     isLoading: isLoadingTodayData,
     mutate: todayDataMutate,
   } = useSWR(`matchs/get-today-date/${selectedDate}`, fetcher);
-
-  console.log(todayData.times);
 
   useEffect(() => {
     const getMatch = async () => {
@@ -76,6 +73,7 @@ const MatchMatchingScreen = () => {
       }}
     >
       <Calendar setSelectedDate={setSelectedDate} selectedDate={selectedDate} />
+
       {matchDataIsLoading || !matchData || isLoadingTodayData || !todayData ? (
         <Loader />
       ) : (
@@ -91,6 +89,41 @@ const MatchMatchingScreen = () => {
             구장 현황
           </Text>
           <HrTag />
+          <Box
+            flexDirection="row"
+            alignItems="center"
+            justifyContent="center"
+            style={{ gap: 5 }}
+          >
+            <Box
+              width={5}
+              height={12}
+              style={{ backgroundColor: theme.colors.primary, borderRadius: 5 }}
+            />
+            <Text
+              variant="textXs"
+              fontWeight="700"
+              style={{ color: theme.colors.gray500 }}
+            >
+              대기중인 매치
+            </Text>
+            <Text>/</Text>
+            <Box
+              width={5}
+              height={12}
+              style={{
+                backgroundColor: theme.colors.green700,
+                borderRadius: 5,
+              }}
+            />
+            <Text
+              variant="textXs"
+              fontWeight="700"
+              style={{ color: theme.colors.gray500 }}
+            >
+              확정된 매치 & 예약
+            </Text>
+          </Box>
           {todayData?.map((data: any, index: number) => (
             <Box key={index}>
               <Card data={data} idx={index} onPress={goSignIn} />

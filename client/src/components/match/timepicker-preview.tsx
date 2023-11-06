@@ -21,17 +21,31 @@ const TimePickerPreview = ({ data }: any) => {
         }}
       >
         {times.map((time, index) => {
+          // 먼저 d[0]이 time[0]과 같고, d[1]이 time[1]과 같은 요소를 찾습니다.
+          const matchedData = data?.find(
+            (d: any) => d[0] === time[0] && d[1] === time[1]
+          );
+
+          // backgroundColor를 결정합니다.
+          let backgroundColor;
+          if (matchedData) {
+            // d[2] 값에 따라 backgroundColor를 다르게 설정합니다.
+            backgroundColor = matchedData[2]
+              ? theme.colors.green700
+              : theme.colors.primary;
+          } else {
+            // matchedData가 없는 경우 backgroundColor를 lightgray로 설정합니다.
+            backgroundColor = "lightgray";
+          }
+
           return (
             <Box key={index} height={15} width={"2.7%"} alignItems="center">
               <Box
                 height={15}
                 width={"70%"}
                 style={{
-                  backgroundColor: data?.some(
-                    (d: any) => d[0] === time[0] && d[1] === time[1]
-                  )
-                    ? theme.colors.green700
-                    : "lightgray",
+                  backgroundColor: backgroundColor,
+                  borderRadius: 5,
                 }}
               />
             </Box>

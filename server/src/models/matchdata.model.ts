@@ -9,7 +9,7 @@ const matchDataSchema = new mongoose.Schema(
     A: {
       count: {
         type: Number,
-        required: true,
+        required: false,
       },
       times: {
         type: [],
@@ -19,7 +19,7 @@ const matchDataSchema = new mongoose.Schema(
     B: {
       count: {
         type: Number,
-        required: true,
+        required: false,
       },
       times: {
         type: [],
@@ -29,7 +29,7 @@ const matchDataSchema = new mongoose.Schema(
     C: {
       count: {
         type: Number,
-        required: true,
+        required: false,
       },
       times: {
         type: [],

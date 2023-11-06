@@ -15,37 +15,14 @@ export const userInfo = async ({ id, name, thumb }: any) => {
   }
 };
 
-export const matchSign = async ({
-  userTeam,
-  name,
-  level,
-  selectedDate,
-  selectedTimes,
-  todayTime,
-}: any) => {
+export const signMatchRequest = async (url: string, { arg }: { arg: any }) => {
   try {
-    const res = await axiosInstance.post("/matchs/sign", {
-      team: userTeam,
-      place: name,
-      date: selectedDate,
-      time: selectedTimes,
-      level,
-      todayTime,
+    const res = await axiosInstance.post(url, {
+      ...arg,
     });
-
     return res.data;
   } catch (error) {
-    console.log("error in userInfo", error);
-    throw error;
-  }
-};
-
-export const getAllTeam = async () => {
-  try {
-    const res = await axiosInstance.get("./teams/get-all-team");
-    return res.data;
-  } catch (error) {
-    console.log("error in getTeam", error);
+    console.log("error in createApplyTeamRequest", error);
     throw error;
   }
 };
