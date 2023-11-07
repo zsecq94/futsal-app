@@ -5,11 +5,13 @@ import axios, { AxiosResponse } from "axios";
 import useUserGlobalStore from "@/store/useUserGlobalStore";
 import { REDIRECT_URI, REST_API_KEY } from "@/services/config";
 import { userInfo } from "@/services/api";
+import { useNavigation } from "@react-navigation/native";
 
 const INJECTED_JAVASCRIPT = `window.ReactNativeWebView.postMessage('message from webView')`;
 
 const KakaoLogin = () => {
   const { updateUser } = useUserGlobalStore();
+  const navigation = useNavigation();
 
   const KakaoLoginWebView = (data: string) => {
     const exp = "code=";

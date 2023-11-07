@@ -1,10 +1,29 @@
+import { REDIRECT_URI, REST_API_KEY } from "@/services/config";
 import theme, { Box, Text } from "@/utils/theme";
-import { useNavigation } from "@react-navigation/native";
+import * as WebBrowser from "expo-web-browser";
+import * as AuthSession from "expo-auth-session";
 import React from "react";
 import { Image, Pressable } from "react-native";
 
+AuthSession.makeRedirectUri();
+
 const LoginScreen = () => {
-  const navigate = useNavigation();
+  const discovery = {
+    authorizationEndpoint: "https://kauth.kakao.com/oauth/authorize",
+    tokenEndpoint: "https://kauth.kakao.com/oauth/token",
+    revocationEndpoint: "https://kauth.kakao.com/oauth/revoke",
+  };
+
+  const [request, response, promptAsync] = AuthSession.useAuthRequest(
+    {
+      clientId: REST_API_KEY,
+      redirectUri: AuthSession.makeRedirectUri(),
+      responseType: "code",
+    },
+    discovery
+  );
+
+  console.log(response);
   return (
     <Box flex={1} alignItems="center" justifyContent="center">
       <Text
@@ -20,7 +39,7 @@ const LoginScreen = () => {
         소셜 계정으로 간편하게 이용하세요.
       </Text>
       <Text variant="textLg">소셜 계정으로 간편하게 이용하세요.</Text>
-      <Pressable onPress={() => navigate.navigate("KakaoLogin" as never)}>
+      <Pressable onPress={() => promptAsync()}>
         <Image
           style={{
             marginTop: 50,
