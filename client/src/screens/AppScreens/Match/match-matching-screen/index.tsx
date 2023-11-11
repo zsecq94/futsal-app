@@ -1,69 +1,69 @@
-import Calendar from "@/components/match/calender";
-import Card from "@/components/match/card";
-import MatchCard from "@/components/match/match-card";
-import MatchModal from "@/components/match/match-modal";
-import HrTag from "@/components/shared/hrtag";
-import Loader from "@/components/shared/loader";
-import { SocketContext } from "@/context/SocketContext";
-import { fetcher } from "@/services/config";
-import theme, { Box, Text } from "@/utils/theme";
-import { useNavigation } from "@react-navigation/native";
-import moment from "moment";
-import React, { useContext, useEffect, useState } from "react";
-import { Modal, ScrollView } from "react-native";
-import useSWR from "swr";
+import Calendar from '@/components/match/calender'
+import Card from '@/components/match/card'
+import MatchCard from '@/components/match/match-card'
+import MatchModal from '@/components/match/match-modal'
+import HrTag from '@/components/shared/hrtag'
+import Loader from '@/components/shared/loader'
+import { SocketContext } from '@/context/SocketContext'
+import { fetcher } from '@/services/config'
+import theme, { Box, Text } from '@/utils/theme'
+import { useNavigation } from '@react-navigation/native'
+import moment from 'moment'
+import React, { useContext, useEffect, useState } from 'react'
+import { Modal, ScrollView } from 'react-native'
+import useSWR from 'swr'
 
 const MatchMatchingScreen = () => {
-  const navigate = useNavigation<any>();
-  const todayDate = moment().format("YYYY-MM-DD");
-  const [selectedDate, setSelectedDate] = useState(todayDate);
-  const [checkModal, setCheckModal] = useState(false);
-  const [oneData, setOneData] = useState([]);
-  const socket = useContext(SocketContext);
+  const navigate = useNavigation<any>()
+  const todayDate = moment().format('YYYY-MM-DD')
+  const [selectedDate, setSelectedDate] = useState(todayDate)
+  const [checkModal, setCheckModal] = useState(false)
+  const [oneData, setOneData] = useState([])
+  const socket = useContext(SocketContext)
 
   const {
     data: matchData,
     isLoading: matchDataIsLoading,
     mutate: matchDataMutate,
-  } = useSWR(`matchs/get-false-match/${selectedDate}`, fetcher);
+  } = useSWR(`matchs/get-false-match/${selectedDate}`, fetcher)
 
   const {
     data: todayData,
     isLoading: isLoadingTodayData,
     mutate: todayDataMutate,
-  } = useSWR(`matchs/get-today-date/${selectedDate}`, fetcher);
+  } = useSWR(`matchs/get-today-date/${selectedDate}`, fetcher)
 
   useEffect(() => {
     const getMatch = async () => {
-      await matchDataMutate();
-      await todayDataMutate();
-    };
-    getMatch();
-  }, [selectedDate]);
+      await matchDataMutate()
+      await todayDataMutate()
+    }
+    getMatch()
+  }, [selectedDate])
 
   useEffect(() => {
     if (socket) {
-      socket.on("update-match", async () => {
-        await matchDataMutate();
-        await todayDataMutate();
-      });
+      socket.on('update-match', async () => {
+        await matchDataMutate()
+        await todayDataMutate()
+      })
     }
 
     return () => {
       if (socket) {
-        socket.off("update-match");
+        socket.off('update-match')
       }
-    };
-  }, [socket, matchData, todayData]);
+    }
+  }, [socket, matchData, todayData])
 
   const goSignIn = ({ name }: any) => {
-    navigate.navigate("SignIn", { name, selected: selectedDate });
-  };
+    navigate.navigate('SignIn', { name, selected: selectedDate })
+  }
 
   const toggleModal = (V: any) => {
-    setOneData(V);
-    setCheckModal(!checkModal);
-  };
+    setOneData(V)
+    setCheckModal(!checkModal)
+  }
 
   return (
     <ScrollView
@@ -160,7 +160,7 @@ const MatchMatchingScreen = () => {
         </>
       )}
     </ScrollView>
-  );
-};
+  )
+}
 
-export default MatchMatchingScreen;
+export default MatchMatchingScreen

@@ -1,9 +1,10 @@
-import MatchScreen from "@/screens/AppScreens/Match/match-screen";
-import MatchSignInScreen from "@/screens/AppScreens/Match/match-signin-screen";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import React from "react";
+import MatchScreen from '@/screens/AppScreens/Match/match-screen'
+import MatchSignInScreen from '@/screens/AppScreens/Match/match-signin-screen'
+import MervenarySignInScreen from '@/screens/AppScreens/Match/mercenary-signin-screen'
+import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import React from 'react'
 
-const Stack = createNativeStackNavigator();
+const Stack = createNativeStackNavigator()
 
 const MatchNavigation = () => {
   return (
@@ -22,8 +23,15 @@ const MatchNavigation = () => {
           headerShown: false,
         }}
       />
+      <Stack.Screen
+        name="MervenarySignIn"
+        component={MervenarySignInScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
     </Stack.Navigator>
-  );
-};
+  )
+}
 
-export default MatchNavigation;
+export default MatchNavigation

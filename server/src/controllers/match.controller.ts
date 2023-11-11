@@ -13,6 +13,7 @@ const findOverlappingMatches = async (date, place, time, state) => {
   const start = time[0][0];
   const end = time[1][1];
   const matches = await Match.find({ date, place, state: false });
+
   return matches.filter((match) => {
     const matchStart = Math.min(...match.time[0]);
     const matchEnd = Math.max(...match.time[1]);
@@ -56,7 +57,9 @@ export const createMatch = async (req: Request, res: Response) => {
     let matchData = await MatchData.findOne({ id: date });
 
     const overlaps = await findOverlappingMatches(date, place, time, state);
-    if (overlaps.length > 0) {
+    const overlapCount = overlaps.length;
+
+    if (overlapCount > 0) {
       matchData = removeOverlappingTimes(matchData, place, overlaps);
       // 이 부분에 삭제된 매치의 팀에 실시간 알림 필요
       await matchData.save();
@@ -81,7 +84,7 @@ export const createMatch = async (req: Request, res: Response) => {
       { id: date },
       {
         $push: { [`${place}.times`]: { $each: newDateList } },
-        $inc: { [`${place}.count`]: 1 },
+        $inc: { [`${place}.count`]: 1 - overlapCount },
       },
       { upsert: true, new: true, session }
     );

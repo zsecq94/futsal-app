@@ -1,57 +1,54 @@
-import Calendar from "@/components/match/calender";
-import TimePicker from "@/components/match/timepicker";
-import Button from "@/components/shared/button";
-import HrTag from "@/components/shared/hrtag";
-import Level from "@/components/shared/level";
-import Loader from "@/components/shared/loader";
-import { signMatchRequest } from "@/services/api";
-import { fetcher } from "@/services/config";
-import useUserGlobalStore from "@/store/useUserGlobalStore";
-import theme, { Box, Text } from "@/utils/theme";
-import { useNavigation, useRoute } from "@react-navigation/native";
-import moment from "moment";
-import React, { useState } from "react";
-import { TouchableOpacity, ScrollView } from "react-native";
-import Toast from "react-native-toast-message";
-import useSWR from "swr";
-import useSWRMutation from "swr/mutation";
+import Calendar from '@/components/match/calender'
+import TimePicker from '@/components/match/timepicker'
+import Button from '@/components/shared/button'
+import HrTag from '@/components/shared/hrtag'
+import Level from '@/components/shared/level'
+import Loader from '@/components/shared/loader'
+import { signMatchRequest } from '@/services/api'
+import { fetcher } from '@/services/config'
+import useUserGlobalStore from '@/store/useUserGlobalStore'
+import theme, { Box, Text } from '@/utils/theme'
+import { useNavigation, useRoute } from '@react-navigation/native'
+import moment from 'moment'
+import React, { useState } from 'react'
+import { TouchableOpacity, ScrollView } from 'react-native'
+import Toast from 'react-native-toast-message'
+import useSWR from 'swr'
+import useSWRMutation from 'swr/mutation'
 
 const MatchSignInScreen = () => {
-  const navigate = useNavigation();
-  const todayDate = moment().format("YYYY-MM-DD");
-  const todayHour = moment().format("HH");
-  const todayMinute = moment().format("mm");
-  const second = moment().format("ss");
-  const route = useRoute();
+  const navigate = useNavigation()
+  const todayDate = moment().format('YYYY-MM-DD')
+  const todayHour = moment().format('HH')
+  const todayMinute = moment().format('mm')
+  const second = moment().format('ss')
+  const route = useRoute()
 
-  const { name, selected }: any = route.params;
-  const { user } = useUserGlobalStore();
+  const { name, selected }: any = route.params
+  const { user } = useUserGlobalStore()
 
-  const userTeam = user?.team;
-  const levelData = ["하", "중하", "중", "중상", "상"];
+  const userTeam = user?.team
+  const levelData = ['하', '중하', '중', '중상', '상']
   const date = {
     todayDate: todayDate,
     todayTime: {
       todayHour: todayHour,
       todayMinute: todayMinute,
     },
-  };
+  }
 
-  const [selectedDate, setSelectedDate] = useState(selected);
-  const [selectedTimes, setSelectedTimes] = useState([]);
-  const [level, setLevel] = useState("");
-  const [categoryCheck, setCategoryCheck] = useState(0);
-  const [isLoading, setIsLoading] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(selected)
+  const [selectedTimes, setSelectedTimes] = useState([])
+  const [level, setLevel] = useState('')
+  const [categoryCheck, setCategoryCheck] = useState(0)
+  const [isLoading, setIsLoading] = useState(false)
 
-  const { trigger: signMatch } = useSWRMutation(
-    `matchs/sign`,
-    signMatchRequest
-  );
+  const { trigger: signMatch } = useSWRMutation(`matchs/sign`, signMatchRequest)
 
   const { data: teamData, isLoading: teamDataIsLoading } = useSWR(
     `teams/get-team/${user?.team}`,
-    fetcher
-  );
+    fetcher,
+  )
 
   const handleSubmit = async () => {
     const submitData = {
@@ -62,57 +59,57 @@ const MatchSignInScreen = () => {
       time: selectedTimes,
       todayTime: todayHour + todayMinute + second,
       state: categoryCheck === 0 ? false : true,
-    };
+    }
     try {
-      setIsLoading(true);
+      setIsLoading(true)
       if (validityCheck) {
         if (matchManagerCheck) {
-          const res = await signMatch(submitData);
+          const res = await signMatch(submitData)
           Toast.show({
             type: res.type,
             text1: res.message,
             visibilityTime: 2000,
-          });
+          })
 
-          navigate.goBack();
+          navigate.goBack()
         } else {
           Toast.show({
-            type: "error",
-            text1: "소속된 팀이 없거나 매칭/예약 권한이 없습니다!",
+            type: 'error',
+            text1: '소속된 팀이 없거나 매칭/예약 권한이 없습니다!',
             visibilityTime: 2000,
-          });
+          })
         }
       } else {
         Toast.show({
-          type: "error",
-          text1: "선택사항을 모두 선택해주세요",
+          type: 'error',
+          text1: '선택사항을 모두 선택해주세요',
           visibilityTime: 2000,
-        });
+        })
       }
-      setIsLoading(false);
+      setIsLoading(false)
     } catch (error) {
-      console.log("error in handleSubmit");
-      throw error;
+      console.log('error in handleSubmit')
+      throw error
     }
-  };
+  }
 
   const validityCheck =
-    selectedDate && selectedTimes.length == 2 && level.length > 0;
+    selectedDate && selectedTimes.length == 2 && level.length > 0
 
   const matchManagerCheck =
     user?.team !== null &&
-    (user?.name === teamData?.leader || teamData?.manager?.includes(user?.id));
+    (user?.name === teamData?.leader || teamData?.manager?.includes(user?.id))
 
   const handleLevel = (level: any) => {
-    setLevel(level);
-  };
+    setLevel(level)
+  }
 
   const handleCategory = (num: number) => {
-    setCategoryCheck(num);
-  };
+    setCategoryCheck(num)
+  }
 
   if (isLoading || teamDataIsLoading || !teamData) {
-    return <Loader />;
+    return <Loader />
   }
 
   return (
@@ -125,12 +122,12 @@ const MatchSignInScreen = () => {
         p="3"
         mx="10"
         style={{
-          alignItems: "center",
+          alignItems: 'center',
           backgroundColor: theme.colors.green700,
           borderRadius: 10,
         }}
       >
-        <Text variant="textLg" fontWeight="700" style={{ color: "white" }}>
+        <Text variant="textLg" fontWeight="700" style={{ color: 'white' }}>
           {name}구장
         </Text>
       </Box>
@@ -138,7 +135,7 @@ const MatchSignInScreen = () => {
         <TouchableOpacity
           onPress={() => handleCategory(0)}
           style={{
-            width: "50%",
+            width: '50%',
             paddingHorizontal: 30,
           }}
         >
@@ -147,9 +144,9 @@ const MatchSignInScreen = () => {
             variant="textXl"
             p="1"
             style={{
-              textAlign: "center",
+              textAlign: 'center',
               borderRadius: 10,
-              color: categoryCheck === 0 ? "white" : "black",
+              color: categoryCheck === 0 ? 'white' : 'black',
               backgroundColor:
                 categoryCheck === 0
                   ? theme.colors.green700
@@ -162,7 +159,7 @@ const MatchSignInScreen = () => {
         <TouchableOpacity
           onPress={() => handleCategory(1)}
           style={{
-            width: "50%",
+            width: '50%',
             paddingHorizontal: 30,
           }}
         >
@@ -171,9 +168,9 @@ const MatchSignInScreen = () => {
             variant="textXl"
             p="1"
             style={{
-              textAlign: "center",
+              textAlign: 'center',
               borderRadius: 10,
-              color: categoryCheck === 1 ? "white" : "black",
+              color: categoryCheck === 1 ? 'white' : 'black',
               backgroundColor:
                 categoryCheck === 1
                   ? theme.colors.green700
@@ -199,8 +196,8 @@ const MatchSignInScreen = () => {
         py="2"
         style={{
           fontSize: 18,
-          fontWeight: "bold",
-          textAlign: "center",
+          fontWeight: 'bold',
+          textAlign: 'center',
         }}
       >
         매칭 상대 실력 선택
@@ -212,12 +209,12 @@ const MatchSignInScreen = () => {
       </Box>
       <Box height={20} />
       <Button
-        label={categoryCheck === 0 ? "매칭 신청" : "예약 신청"}
+        label={categoryCheck === 0 ? '매칭 신청' : '예약 신청'}
         onPress={handleSubmit}
       />
       <Box height={50} />
     </ScrollView>
-  );
-};
+  )
+}
 
-export default MatchSignInScreen;
+export default MatchSignInScreen

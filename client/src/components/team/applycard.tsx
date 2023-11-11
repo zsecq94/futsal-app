@@ -1,6 +1,6 @@
-import theme, { Box, Text } from "@/utils/theme";
-import React from "react";
-import { Image, TouchableOpacity } from "react-native";
+import theme, { Box, Text } from '@/utils/theme'
+import React from 'react'
+import { Image, TouchableOpacity } from 'react-native'
 
 const ApplyCard = ({ user, onPress }: any) => {
   return (
@@ -11,11 +11,11 @@ const ApplyCard = ({ user, onPress }: any) => {
       px="3"
       style={{
         gap: 10,
-        width: "80%",
+        width: '80%',
         height: 40,
-        backgroundColor: "white",
+        backgroundColor: 'white',
         borderRadius: 10,
-        shadowColor: "#000",
+        shadowColor: '#000',
         shadowOffset: {
           width: 0,
           height: 2,
@@ -41,25 +41,25 @@ const ApplyCard = ({ user, onPress }: any) => {
             borderRadius: 10,
           }}
         >
-          <Text fontWeight="700" style={{ color: "white" }}>
+          <Text fontWeight="700" style={{ color: 'white' }}>
             수락
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => onPress({ state: false, id: user.id })}
           style={{
-            backgroundColor: "red",
+            backgroundColor: 'red',
             padding: 5,
             borderRadius: 10,
           }}
         >
-          <Text fontWeight="700" style={{ color: "white" }}>
+          <Text fontWeight="700" style={{ color: 'white' }}>
             거절
           </Text>
         </TouchableOpacity>
       </Box>
     </Box>
-  );
-};
+  )
+}
 
-export default ApplyCard;
+export default ApplyCard

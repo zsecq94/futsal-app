@@ -16,7 +16,7 @@ const Input = ({
       style={{
         flexDirection: 'row',
         alignItems: 'center',
-        height: 35,
+        height: 40,
         width: '35%',
         borderColor: 'gray',
         borderWidth: 1,
@@ -31,12 +31,13 @@ const Input = ({
         onFocus={resetSelectedFilter}
         onChangeText={setSearchTeam}
         placeholder="팀 검색..."
+        placeholderTextColor="grey"
         style={{
           flex: 1,
           marginLeft: 10,
         }}
       />
-      <Icon name="search-sharp" size={25} />
+      <Icon name="search-sharp" size={25} color={'grey'} />
     </Box>
   )
 }

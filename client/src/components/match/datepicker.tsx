@@ -1,22 +1,22 @@
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
-import moment from "moment";
-import "moment/locale/ko";
-import theme from "@/utils/theme";
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
+import moment from 'moment'
+import 'moment/locale/ko'
+import theme from '@/utils/theme'
 
 const DatePicker = ({ date, onSelectDate, selected }: any) => {
-  moment.locale("ko");
+  moment.locale('ko')
 
-  const formattedDate = moment(date).format("YYYY-MM-DD");
+  const formattedDate = moment(date).format('YYYY-MM-DD')
 
-  const isToday = moment().isSame(date, "day");
-  const dayOfWeek = moment(date).format("dddd"); // 요일 이름 가져오기
+  const isToday = moment().isSame(date, 'day')
+  const dayOfWeek = moment(date).format('dddd') // 요일 이름 가져오기
 
-  let textColor = "black"; // 기본 텍스트 색상
+  let textColor = 'black' // 기본 텍스트 색상
 
-  if (dayOfWeek === "토요일") {
-    textColor = theme.colors.blue600; // 토요일일 경우 파란색
-  } else if (dayOfWeek === "일요일") {
-    textColor = theme.colors.rose500;
+  if (dayOfWeek === '토요일') {
+    textColor = theme.colors.blue600 // 토요일일 경우 파란색
+  } else if (dayOfWeek === '일요일') {
+    textColor = theme.colors.rose500
   }
   return (
     <TouchableOpacity
@@ -34,49 +34,50 @@ const DatePicker = ({ date, onSelectDate, selected }: any) => {
           {
             color: textColor, // 요일에 따라 텍스트 색상 설정
           },
-          selected === formattedDate && { color: "#fff" },
+          selected === formattedDate && { color: '#fff' },
         ]}
       >
-        {isToday ? "오늘" : moment(date).format("ddd")}
+        {isToday ? '오늘' : moment(date).format('ddd')}
       </Text>
       <Text
         style={[
           styles.medium,
           selected === formattedDate && {
-            color: "#fff",
-            fontWeight: "bold",
+            color: '#fff',
+            fontWeight: 'bold',
             fontSize: 12,
           },
         ]}
       >
-        {moment(date).format("D")}
+        {moment(date).format('D')}
       </Text>
     </TouchableOpacity>
-  );
-};
-export default DatePicker;
+  )
+}
+export default DatePicker
 
 const styles = StyleSheet.create({
   card: {
-    shadowColor: "rgba(0, 0, 0, 0.5)",
+    shadowColor: 'rgba(0, 0, 0, 0.5)',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.5,
     elevation: 5,
     shadowRadius: 2,
-    backgroundColor: "#eee",
+    backgroundColor: '#eee',
     borderRadius: 10,
-    borderColor: "#ddd",
-    justifyContent: "center",
-    alignItems: "center",
+    borderColor: '#ddd',
+    justifyContent: 'center',
+    alignItems: 'center',
     height: 40,
     width: 40,
     marginHorizontal: 5,
   },
   big: {
-    fontWeight: "bold",
+    fontWeight: 'bold',
     fontSize: 13,
   },
   medium: {
     fontSize: 11,
+    color: 'black',
   },
-});
+})
