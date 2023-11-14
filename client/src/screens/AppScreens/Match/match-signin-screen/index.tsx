@@ -113,107 +113,135 @@ const MatchSignInScreen = () => {
   }
 
   return (
-    <ScrollView
-      style={{
-        paddingVertical: 20,
-      }}
-    >
-      <Box
-        p="3"
-        mx="10"
+    <Box flex={1}>
+      <ScrollView
         style={{
-          alignItems: 'center',
-          backgroundColor: theme.colors.green700,
-          borderRadius: 10,
+          paddingVertical: 20,
         }}
       >
-        <Text variant="textLg" fontWeight="700" style={{ color: 'white' }}>
-          {name}구장
-        </Text>
-      </Box>
-      <Box flexDirection="row" m="5">
-        <TouchableOpacity
-          onPress={() => handleCategory(0)}
+        <Box
+          p="3"
+          mx="10"
           style={{
-            width: '50%',
-            paddingHorizontal: 30,
+            alignItems: 'center',
+            backgroundColor: theme.colors.green700,
+            borderRadius: 10,
           }}
         >
-          <Text
-            fontWeight="700"
-            variant="textXl"
-            p="1"
+          <Text variant="textLg" fontWeight="700" style={{ color: 'white' }}>
+            {name}구장
+          </Text>
+        </Box>
+        <Box flexDirection="row" m="5">
+          <TouchableOpacity
+            onPress={() => handleCategory(0)}
             style={{
-              textAlign: 'center',
-              borderRadius: 10,
-              color: categoryCheck === 0 ? 'white' : 'black',
-              backgroundColor:
-                categoryCheck === 0
-                  ? theme.colors.green700
-                  : theme.colors.gray400,
+              width: '50%',
+              paddingHorizontal: 30,
             }}
           >
-            매칭
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => handleCategory(1)}
-          style={{
-            width: '50%',
-            paddingHorizontal: 30,
-          }}
-        >
-          <Text
-            fontWeight="700"
-            variant="textXl"
-            p="1"
+            <Text
+              fontWeight="700"
+              variant="textXl"
+              p="1"
+              style={{
+                textAlign: 'center',
+                borderRadius: 10,
+                color: categoryCheck === 0 ? 'white' : 'black',
+                backgroundColor:
+                  categoryCheck === 0
+                    ? theme.colors.green700
+                    : theme.colors.gray400,
+              }}
+            >
+              매칭
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => handleCategory(1)}
             style={{
-              textAlign: 'center',
-              borderRadius: 10,
-              color: categoryCheck === 1 ? 'white' : 'black',
-              backgroundColor:
-                categoryCheck === 1
-                  ? theme.colors.green700
-                  : theme.colors.gray400,
+              width: '50%',
+              paddingHorizontal: 30,
             }}
           >
-            예약
-          </Text>
-        </TouchableOpacity>
-      </Box>
-      <Calendar setSelectedDate={setSelectedDate} selectedDate={selectedDate} />
-      <HrTag />
-      <TimePicker
-        categoryCheck={categoryCheck}
-        selectedTimes={selectedTimes}
-        selectedDate={selectedDate}
-        date={date}
-        setSelectedTimes={setSelectedTimes}
-        name={name}
-      />
-      <HrTag />
-      <Text
-        py="2"
-        style={{
-          fontSize: 18,
-          fontWeight: 'bold',
-          textAlign: 'center',
-        }}
-      >
-        매칭 상대 실력 선택
-      </Text>
-      <Box px="10" py="3" flexDirection="row" justifyContent="space-between">
-        {levelData.map((V, index) => (
-          <Level level={level} key={index} V={V} onPress={handleLevel} />
-        ))}
-      </Box>
-      <Box height={20} />
-      <Button
-        label={categoryCheck === 0 ? '매칭 신청' : '예약 신청'}
+            <Text
+              fontWeight="700"
+              variant="textXl"
+              p="1"
+              style={{
+                textAlign: 'center',
+                borderRadius: 10,
+                color: categoryCheck === 1 ? 'white' : 'black',
+                backgroundColor:
+                  categoryCheck === 1
+                    ? theme.colors.green700
+                    : theme.colors.gray400,
+              }}
+            >
+              예약
+            </Text>
+          </TouchableOpacity>
+        </Box>
+        <Calendar
+          setSelectedDate={setSelectedDate}
+          selectedDate={selectedDate}
+        />
+        <HrTag />
+        <TimePicker
+          categoryCheck={categoryCheck}
+          selectedTimes={selectedTimes}
+          selectedDate={selectedDate}
+          date={date}
+          setSelectedTimes={setSelectedTimes}
+          name={name}
+        />
+        <HrTag />
+        {categoryCheck === 0 && (
+          <Box>
+            <Text
+              py="2"
+              style={{
+                fontSize: 18,
+                fontWeight: 'bold',
+                textAlign: 'center',
+              }}
+            >
+              매칭 상대 실력 선택
+            </Text>
+            <Box
+              px="10"
+              py="3"
+              flexDirection="row"
+              justifyContent="space-between"
+            >
+              {levelData.map((V, index) => (
+                <Level level={level} key={index} V={V} onPress={handleLevel} />
+              ))}
+            </Box>
+          </Box>
+        )}
+      </ScrollView>
+      <TouchableOpacity
         onPress={handleSubmit}
-      />
-      <Box height={50} />
-    </ScrollView>
+        disabled={!validityCheck}
+        style={{
+          position: 'absolute',
+          bottom: 0,
+          width: '100%',
+          justifyContent: 'center',
+          backgroundColor: validityCheck ? theme.colors.green700 : 'grey',
+        }}
+      >
+        <Text
+          p="5"
+          fontWeight="700"
+          variant="textLg"
+          style={{ textAlign: 'center', color: 'white' }}
+        >
+          신청하기
+        </Text>
+      </TouchableOpacity>
+    </Box>
   )
 }
 

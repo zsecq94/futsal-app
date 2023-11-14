@@ -25,7 +25,7 @@ const MatchMercenaryScreen = () => {
           color: theme.colors.green700,
         }}
       >
-        용병 구인
+        용병 대기중...
       </Text>
       <HrTag />
       <Text
@@ -36,7 +36,7 @@ const MatchMercenaryScreen = () => {
           color: theme.colors.green700,
         }}
       >
-        용병 구직
+        용병 모집중...
       </Text>
       <HrTag />
     </ScrollView>

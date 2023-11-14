@@ -28,7 +28,7 @@ const MatchScreen = () => {
   }, [])
 
   const signInMercenary = () => {
-    navigation.navigate('MervenarySignIn')
+    navigation.navigate('MatchMervenarySignIn')
   }
 
   return (
