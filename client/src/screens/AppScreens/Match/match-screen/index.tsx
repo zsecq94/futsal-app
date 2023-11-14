@@ -8,11 +8,16 @@ import { axiosInstance } from '@/services/config'
 import { TouchableOpacity } from 'react-native'
 import Icon from 'react-native-vector-icons/Ionicons'
 import { useNavigation } from '@react-navigation/native'
+import moment from 'moment'
 
 const MatchScreen = () => {
   const { user, updateUser } = useUserGlobalStore()
   const [check, setCheck] = useState(0)
   const navigation = useNavigation<any>()
+  const todayDate = moment().format('YYYY-MM-DD')
+  const todayHour = moment().format('HH')
+  const todayMinute = moment().format('mm')
+  const [selectedDate, setSelectedDate] = useState(todayDate)
 
   const data = ['매칭 / 예약', '용병']
 
@@ -27,8 +32,19 @@ const MatchScreen = () => {
     }
   }, [])
 
+  const date = {
+    todayDate: todayDate,
+    todayTime: {
+      todayHour: todayHour,
+      todayMinute: todayMinute,
+    },
+  }
+
   const signInMercenary = () => {
-    navigation.navigate('MatchMervenarySignIn')
+    navigation.navigate('MatchMervenarySignIn', {
+      selected: selectedDate,
+      date: date,
+    })
   }
 
   return (
@@ -45,7 +61,12 @@ const MatchScreen = () => {
         ))}
       </Box>
       {check === 0 && <MatchMatchingScreen />}
-      {check === 1 && <MatchMercenaryScreen />}
+      {check === 1 && (
+        <MatchMercenaryScreen
+          selectedDate={selectedDate}
+          setSelectedDate={setSelectedDate}
+        />
+      )}
       {check === 1 && (
         <TouchableOpacity
           onPress={signInMercenary}

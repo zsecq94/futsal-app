@@ -1,13 +1,23 @@
 import Calendar from '@/components/match/calender'
 import HrTag from '@/components/shared/hrtag'
-import theme, { Text } from '@/utils/theme'
-import moment from 'moment'
-import React, { useState } from 'react'
+import Loader from '@/components/shared/loader'
+import { fetcher } from '@/services/config'
+import theme, { Box, Text } from '@/utils/theme'
+import React from 'react'
 import { ScrollView } from 'react-native'
+import useSWR from 'swr'
 
-const MatchMercenaryScreen = () => {
-  const todayDate = moment().format('YYYY-MM-DD')
-  const [selectedDate, setSelectedDate] = useState(todayDate)
+const MatchMercenaryScreen = ({ setSelectedDate, selectedDate }: any) => {
+  const { data, isLoading, mutate } = useSWR(
+    `mercenary/get-one-day/${selectedDate}`,
+    fetcher,
+  )
+
+  console.log(data)
+
+  if (isLoading || !data) {
+    return <Loader />
+  }
 
   return (
     <ScrollView
@@ -28,6 +38,11 @@ const MatchMercenaryScreen = () => {
         용병 대기중...
       </Text>
       <HrTag />
+      <Box p="5">
+        {data.map((V: any, index: number) => (
+          <Text style={{ color: 'black' }}>{V.name}</Text>
+        ))}
+      </Box>
       <Text
         ml="5"
         variant="text2Xl"

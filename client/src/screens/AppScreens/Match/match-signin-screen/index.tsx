@@ -1,6 +1,5 @@
 import Calendar from '@/components/match/calender'
 import TimePicker from '@/components/match/timepicker'
-import Button from '@/components/shared/button'
 import HrTag from '@/components/shared/hrtag'
 import Level from '@/components/shared/level'
 import Loader from '@/components/shared/loader'
@@ -11,7 +10,7 @@ import theme, { Box, Text } from '@/utils/theme'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import moment from 'moment'
 import React, { useState } from 'react'
-import { TouchableOpacity, ScrollView } from 'react-native'
+import { ScrollView, TouchableOpacity } from 'react-native'
 import Toast from 'react-native-toast-message'
 import useSWR from 'swr'
 import useSWRMutation from 'swr/mutation'
@@ -62,7 +61,7 @@ const MatchSignInScreen = () => {
     }
     try {
       setIsLoading(true)
-      if (validityCheck) {
+      if (categoryCheck === 0 ? validityCheck : validityCheck2) {
         if (matchManagerCheck) {
           const res = await signMatch(submitData)
           Toast.show({
@@ -95,6 +94,8 @@ const MatchSignInScreen = () => {
 
   const validityCheck =
     selectedDate && selectedTimes.length == 2 && level.length > 0
+
+  const validityCheck2 = selectedDate && selectedTimes.length == 2
 
   const matchManagerCheck =
     user?.team !== null &&
@@ -218,18 +219,28 @@ const MatchSignInScreen = () => {
                 <Level level={level} key={index} V={V} onPress={handleLevel} />
               ))}
             </Box>
+            <HrTag />
           </Box>
         )}
       </ScrollView>
       <TouchableOpacity
         onPress={handleSubmit}
-        disabled={!validityCheck}
+        disabled={
+          categoryCheck === 0
+            ? !validityCheck
+            : categoryCheck === 1 && !validityCheck2
+        }
         style={{
           position: 'absolute',
           bottom: 0,
           width: '100%',
           justifyContent: 'center',
-          backgroundColor: validityCheck ? theme.colors.green700 : 'grey',
+          backgroundColor:
+            categoryCheck === 0 && validityCheck
+              ? theme.colors.green700
+              : categoryCheck === 1 && validityCheck2
+              ? theme.colors.green700
+              : 'grey',
         }}
       >
         <Text

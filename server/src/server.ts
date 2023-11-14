@@ -4,6 +4,7 @@ import connectToDatabase from "./db";
 import matchRoutes from "./routes/match.routes";
 import teamRoutes from "./routes/team.routes";
 import userRoutes from "./routes/user.routes";
+import mercenaryRoutes from "./routes/mercenary.routes";
 import { initializeSocketIo } from "./socket";
 
 const app = express();
@@ -16,6 +17,7 @@ connectToDatabase();
 app.use("/users", userRoutes);
 app.use("/matchs", matchRoutes);
 app.use("/teams", teamRoutes);
+app.use("/mercenary", mercenaryRoutes);
 
 // HTTP 서버 생성
 const server = http.createServer(app);

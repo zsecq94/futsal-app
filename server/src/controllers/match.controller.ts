@@ -94,7 +94,7 @@ export const createMatch = async (req: Request, res: Response) => {
         {
           team1: team,
           place,
-          level,
+          level: state ? "예약" : level,
           date,
           time,
           state,

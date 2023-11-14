@@ -1,9 +1,61 @@
+import Calendar from '@/components/match/calender'
+import TimePicker from '@/components/match/timepicker'
+import MercenaryTimePicker from '@/components/mercenary/time-picker'
+import HrTag from '@/components/shared/hrtag'
+import { createMercenaryRequest } from '@/services/api'
+import useUserGlobalStore from '@/store/useUserGlobalStore'
 import theme, { Box, Text } from '@/utils/theme'
-import React, { useState } from 'react'
+import { useNavigation, useRoute } from '@react-navigation/native'
+import moment from 'moment'
+import React, { useEffect, useState } from 'react'
 import { TouchableOpacity } from 'react-native'
+import Toast from 'react-native-toast-message'
+import useSWRMutation from 'swr/mutation'
 
 const MatchMervenarySignInScreen = () => {
+  const { user } = useUserGlobalStore()
+  const route = useRoute<any>()
+  const { selected, date } = route.params
+  const navigation = useNavigation()
+
   const [category, setCategory] = useState(0)
+  const [userLevel, setUserLevel] = useState('중')
+  const [selectedDate, setSelectedDate] = useState(selected)
+  const [selectedTimes, setSelectedTimes] = useState([])
+
+  const { trigger: createMercenary } = useSWRMutation(
+    `mercenary/create`,
+    createMercenaryRequest,
+  )
+
+  useEffect(() => {
+    setSelectedTimes([])
+  }, [selectedDate])
+
+  const handleSubmit = async () => {
+    if (category === 0) {
+      console.log(selectedDate, selectedTimes)
+      const res = await createMercenary({
+        name: user?.name,
+        thumb: user?.thumb,
+        level: userLevel,
+        date: selectedDate,
+        times: selectedTimes,
+      })
+      console.log(res)
+      Toast.show({
+        type: res.state,
+        text1: res.message,
+        visibilityTime: 2000,
+      })
+      navigation.goBack()
+    }
+  }
+  console.log(selectedTimes.length)
+
+  const validCheck =
+    selectedTimes.length === 2 && userLevel.length > 0 && user !== null
+
   return (
     <Box flex={1}>
       <Box flexDirection="row" alignItems="center">
@@ -13,7 +65,7 @@ const MatchMervenarySignInScreen = () => {
             width: '50%',
             justifyContent: 'center',
             alignItems: 'center',
-            borderBottomWidth: category === 0 ? 3 : 0,
+            borderBottomWidth: category === 0 ? 2 : 0,
             borderBottomColor: category === 0 ? theme.colors.green700 : 'black',
           }}
         >
@@ -34,7 +86,7 @@ const MatchMervenarySignInScreen = () => {
             width: '50%',
             justifyContent: 'center',
             alignItems: 'center',
-            borderBottomWidth: category === 1 ? 3 : 0,
+            borderBottomWidth: category === 1 ? 2 : 0,
             borderBottomColor: category === 1 ? theme.colors.green700 : 'black',
           }}
         >
@@ -48,13 +100,24 @@ const MatchMervenarySignInScreen = () => {
           </Text>
         </TouchableOpacity>
       </Box>
+      <Calendar setSelectedDate={setSelectedDate} selectedDate={selectedDate} />
+      <HrTag />
+      <MercenaryTimePicker
+        selectedDate={selectedDate}
+        selectedTimes={selectedTimes}
+        setSelectedTimes={setSelectedTimes}
+        date={date}
+      />
+      <HrTag />
       <TouchableOpacity
+        onPress={handleSubmit}
+        disabled={!validCheck}
         style={{
           position: 'absolute',
           bottom: 0,
           width: '100%',
           justifyContent: 'center',
-          backgroundColor: theme.colors.green700,
+          backgroundColor: validCheck ? theme.colors.green700 : 'grey',
         }}
       >
         <Text
@@ -63,7 +126,7 @@ const MatchMervenarySignInScreen = () => {
           variant="textLg"
           style={{ textAlign: 'center', color: 'white' }}
         >
-          신청하기
+          용병 신청하기
         </Text>
       </TouchableOpacity>
     </Box>
