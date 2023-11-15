@@ -115,90 +115,110 @@ const MatchSignInScreen = () => {
 
   return (
     <Box flex={1}>
+      <Box
+        p="3"
+        style={{
+          alignItems: 'center',
+          backgroundColor: theme.colors.green600,
+        }}
+      >
+        <Text variant="textLg" fontWeight="700" style={{ color: 'white' }}>
+          {name}구장
+        </Text>
+      </Box>
+      <Box flexDirection="row" width={'100%'}>
+        <TouchableOpacity
+          onPress={() => handleCategory(0)}
+          style={{
+            width: '50%',
+            backgroundColor:
+              categoryCheck === 0 ? 'transparent' : theme.colors.gray300,
+          }}
+        >
+          <Text
+            fontWeight="700"
+            variant="textXl"
+            p="3"
+            style={{
+              textAlign: 'center',
+              color: categoryCheck === 0 ? theme.colors.green600 : 'grey',
+            }}
+          >
+            매칭
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => handleCategory(1)}
+          style={{
+            width: '50%',
+            backgroundColor:
+              categoryCheck === 1 ? 'transparent' : theme.colors.gray300,
+          }}
+        >
+          <Text
+            fontWeight="700"
+            variant="textXl"
+            p="3"
+            style={{
+              textAlign: 'center',
+              color: categoryCheck === 1 ? theme.colors.green600 : 'grey',
+            }}
+          >
+            예약
+          </Text>
+        </TouchableOpacity>
+      </Box>
       <ScrollView
         style={{
           paddingVertical: 20,
         }}
       >
-        <Box
-          p="3"
-          mx="10"
-          style={{
-            alignItems: 'center',
-            backgroundColor: theme.colors.green700,
-            borderRadius: 10,
-          }}
-        >
-          <Text variant="textLg" fontWeight="700" style={{ color: 'white' }}>
-            {name}구장
-          </Text>
-        </Box>
-        <Box flexDirection="row" m="5">
-          <TouchableOpacity
-            onPress={() => handleCategory(0)}
-            style={{
-              width: '50%',
-              paddingHorizontal: 30,
-            }}
-          >
-            <Text
-              fontWeight="700"
-              variant="textXl"
-              p="1"
-              style={{
-                textAlign: 'center',
-                borderRadius: 10,
-                color: categoryCheck === 0 ? 'white' : 'black',
-                backgroundColor:
-                  categoryCheck === 0
-                    ? theme.colors.green700
-                    : theme.colors.gray400,
-              }}
-            >
-              매칭
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => handleCategory(1)}
-            style={{
-              width: '50%',
-              paddingHorizontal: 30,
-            }}
-          >
-            <Text
-              fontWeight="700"
-              variant="textXl"
-              p="1"
-              style={{
-                textAlign: 'center',
-                borderRadius: 10,
-                color: categoryCheck === 1 ? 'white' : 'black',
-                backgroundColor:
-                  categoryCheck === 1
-                    ? theme.colors.green700
-                    : theme.colors.gray400,
-              }}
-            >
-              예약
-            </Text>
-          </TouchableOpacity>
-        </Box>
         <Calendar
           setSelectedDate={setSelectedDate}
           selectedDate={selectedDate}
         />
-        <HrTag />
-        <TimePicker
-          categoryCheck={categoryCheck}
-          selectedTimes={selectedTimes}
-          selectedDate={selectedDate}
-          date={date}
-          setSelectedTimes={setSelectedTimes}
-          name={name}
-        />
-        <HrTag />
+        <Box
+          mx="5"
+          style={{
+            backgroundColor: 'white',
+            borderRadius: 10,
+            shadowColor: '#000',
+            shadowOffset: {
+              width: 0,
+              height: 2,
+            },
+            shadowOpacity: 0.25,
+            shadowRadius: 3.84,
+            elevation: 5,
+          }}
+        >
+          <TimePicker
+            categoryCheck={categoryCheck}
+            selectedTimes={selectedTimes}
+            selectedDate={selectedDate}
+            date={date}
+            setSelectedTimes={setSelectedTimes}
+            name={name}
+          />
+        </Box>
+        <Box height={20} />
         {categoryCheck === 0 && (
-          <Box>
+          <Box
+            py="3"
+            mx="5"
+            style={{
+              backgroundColor: 'white',
+              borderRadius: 10,
+              shadowColor: '#000',
+              shadowOffset: {
+                width: 0,
+                height: 2,
+              },
+              shadowOpacity: 0.25,
+              shadowRadius: 3.84,
+              elevation: 5,
+            }}
+          >
             <Text
               py="2"
               style={{
@@ -210,18 +230,18 @@ const MatchSignInScreen = () => {
               매칭 상대 실력 선택
             </Text>
             <Box
-              px="10"
-              py="3"
               flexDirection="row"
               justifyContent="space-between"
+              m="2"
+              px="5"
             >
               {levelData.map((V, index) => (
                 <Level level={level} key={index} V={V} onPress={handleLevel} />
               ))}
             </Box>
-            <HrTag />
           </Box>
         )}
+        <Box height={120} />
       </ScrollView>
       <TouchableOpacity
         onPress={handleSubmit}
@@ -237,9 +257,9 @@ const MatchSignInScreen = () => {
           justifyContent: 'center',
           backgroundColor:
             categoryCheck === 0 && validityCheck
-              ? theme.colors.green700
+              ? theme.colors.green600
               : categoryCheck === 1 && validityCheck2
-              ? theme.colors.green700
+              ? theme.colors.green600
               : 'grey',
         }}
       >

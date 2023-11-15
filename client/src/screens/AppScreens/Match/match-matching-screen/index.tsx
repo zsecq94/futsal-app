@@ -66,30 +66,12 @@ const MatchMatchingScreen = () => {
   }
 
   return (
-    <ScrollView
-      showsVerticalScrollIndicator={false}
-      style={{
-        padding: 8,
-      }}
-    >
+    <ScrollView showsVerticalScrollIndicator={false}>
       <Calendar setSelectedDate={setSelectedDate} selectedDate={selectedDate} />
-      <HrTag />
-      <Box height={10} />
       {matchDataIsLoading || !matchData || isLoadingTodayData || !todayData ? (
         <Loader />
       ) : (
         <>
-          <Text
-            ml="5"
-            variant="text2Xl"
-            fontWeight="700"
-            style={{
-              color: theme.colors.green700,
-            }}
-          >
-            구장 현황
-          </Text>
-          <HrTag />
           <Box
             flexDirection="row"
             alignItems="center"
@@ -113,7 +95,7 @@ const MatchMatchingScreen = () => {
               width={5}
               height={12}
               style={{
-                backgroundColor: theme.colors.green700,
+                backgroundColor: theme.colors.green600,
                 borderRadius: 5,
               }}
             />
@@ -131,25 +113,24 @@ const MatchMatchingScreen = () => {
               <Box height={10} />
             </Box>
           ))}
-          <Box height={10} />
-          <Text
-            ml="5"
-            variant="text2Xl"
-            fontWeight="700"
-            style={{
-              color: theme.colors.green700,
-            }}
-          >
-            매칭 대기중...
-          </Text>
+
           <HrTag />
           {matchData.length > 0 ? (
-            matchData?.map((V: any, index: number) => (
-              <Box key={index}>
-                <MatchCard data={V} onPress={() => toggleModal(V)} />
-                <Box height={10} />
-              </Box>
-            ))
+            <Box mx="5">
+              <Text
+                variant="textBase"
+                fontWeight="700"
+                style={{ color: theme.colors.gray500, textAlign: 'center' }}
+              >
+                클릭하여 매칭을 신청해주세요!
+              </Text>
+              {matchData?.map((V: any, index: number) => (
+                <Box key={index}>
+                  <Box height={15} />
+                  <MatchCard data={V} onPress={() => toggleModal(V)} />
+                </Box>
+              ))}
+            </Box>
           ) : (
             <Text
               p="5"

@@ -17,7 +17,7 @@ const findOverlappingMatches = async (date, place, time, state) => {
   return matches.filter((match) => {
     const matchStart = Math.min(...match.time[0]);
     const matchEnd = Math.max(...match.time[1]);
-    return start <= matchEnd && matchStart <= end;
+    return start < matchEnd && matchStart < end;
   });
 };
 

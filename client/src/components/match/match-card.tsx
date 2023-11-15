@@ -1,34 +1,23 @@
 import { TouchableOpacity } from 'react-native'
 import React from 'react'
-import { Box, Text } from '@/utils/theme'
-import Icon from 'react-native-vector-icons/Ionicons'
+import theme, { Box, Text } from '@/utils/theme'
+import LinearGradient from 'react-native-linear-gradient'
 
 const MatchCard = ({ data, onPress }: any) => {
-  // console.log(data);
-
   const convertTime = (decimalTime: any) => {
     const hours = Math.floor(decimalTime)
     const minutes = (decimalTime - hours) * 60
     return `${hours}:${minutes === 0 ? '00' : minutes}`
   }
   return (
-    <TouchableOpacity
-      onPress={onPress}
-      style={{
-        alignItems: 'center',
-      }}
-    >
+    <TouchableOpacity onPress={onPress}>
       <Box
-        mt="2"
-        py="2"
-        px="5"
         flexDirection="row"
         style={{
-          gap: 30,
           justifyContent: 'center',
           alignItems: 'center',
-          width: '90%',
-          height: 100,
+          width: '100%',
+          height: 50,
           backgroundColor: 'white',
           borderRadius: 10,
           shadowColor: '#000',
@@ -41,34 +30,27 @@ const MatchCard = ({ data, onPress }: any) => {
           elevation: 5,
         }}
       >
-        <Box>
-          <Box flexDirection="row" style={{ gap: 5, alignItems: 'center' }}>
-            {/* <Icon name="football-outline" size={20} color="black" /> */}
-            <Text variant="textXl" fontWeight="700">
-              {data.place}구장
-            </Text>
-          </Box>
-          <Box flexDirection="row" style={{ gap: 5, alignItems: 'center' }}>
-            {/* <Icon name="person-outline" size={20} color="black" /> */}
-            <Text variant="textXl" fontWeight="700">
-              {data.team1}
-            </Text>
-          </Box>
-        </Box>
-        <Box>
-          <Box flexDirection="row" style={{ gap: 5, alignItems: 'center' }}>
-            {/* <Icon name="time-outline" size={20} color="black" /> */}
-            <Text variant="textXl" fontWeight="700">
-              {convertTime(data.time[0][0])} ~ {convertTime(data.time[1][1])}
-            </Text>
-          </Box>
-          <Box flexDirection="row" style={{ gap: 5, alignItems: 'center' }}>
-            {/* <Icon name="speedometer-outline" size={20} color="black" /> */}
-            <Text variant="textXl" fontWeight="700">
-              {data.level}
-            </Text>
-          </Box>
-        </Box>
+        <Text
+          variant="textBase"
+          fontWeight="700"
+          style={{ color: 'black', width: '20%', textAlign: 'center' }}
+        >
+          구장 : {data.place}
+        </Text>
+        <Text
+          variant="textBase"
+          fontWeight="700"
+          style={{ color: 'black', width: '50%', textAlign: 'center' }}
+        >
+          시간 : {convertTime(data.time[0][0])} ~ {convertTime(data.time[1][1])}
+        </Text>
+        <Text
+          variant="textBase"
+          fontWeight="700"
+          style={{ color: 'black', width: '30%', textAlign: 'center' }}
+        >
+          실력 : {data.level}
+        </Text>
       </Box>
     </TouchableOpacity>
   )

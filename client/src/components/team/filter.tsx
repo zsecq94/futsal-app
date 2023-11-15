@@ -1,6 +1,6 @@
-import theme, { Box, Text } from "@/utils/theme";
-import React from "react";
-import { TouchableOpacity } from "react-native";
+import theme, { Box, Text } from '@/utils/theme'
+import React from 'react'
+import { TouchableOpacity } from 'react-native'
 
 const Filter = ({ name, onPress, selectedFilter }: any) => {
   return (
@@ -11,7 +11,7 @@ const Filter = ({ name, onPress, selectedFilter }: any) => {
           borderRadius: 10,
           backgroundColor:
             selectedFilter === name
-              ? theme.colors.green700
+              ? theme.colors.green600
               : theme.colors.gray200,
         }}
       >
@@ -19,14 +19,14 @@ const Filter = ({ name, onPress, selectedFilter }: any) => {
           variant="textSm"
           fontWeight="700"
           style={{
-            color: selectedFilter === name ? "white" : "black",
+            color: selectedFilter === name ? 'white' : 'black',
           }}
         >
           {name}
         </Text>
       </Box>
     </TouchableOpacity>
-  );
-};
+  )
+}
 
-export default Filter;
+export default Filter

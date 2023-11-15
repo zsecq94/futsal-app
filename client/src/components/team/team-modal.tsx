@@ -3,21 +3,21 @@ import {
   deleteTeamManagerRequest,
   deleteUserTeamRequest,
   updateTeamManagerRequest,
-} from "@/services/api";
-import theme, { Box, Text } from "@/utils/theme";
-import React, { useState } from "react";
+} from '@/services/api'
+import theme, { Box, Text } from '@/utils/theme'
+import React, { useState } from 'react'
 import {
   Animated,
   Dimensions,
   Modal,
   ScrollView,
   TouchableOpacity,
-} from "react-native";
-import Toast from "react-native-toast-message";
-import useSWRMutation from "swr/mutation";
-import TeamMemberCard from "./team-member-card";
-import TeamMemberDetail from "./team-member-detail";
-import TeamOutModal from "./team-out-modal";
+} from 'react-native'
+import Toast from 'react-native-toast-message'
+import useSWRMutation from 'swr/mutation'
+import TeamMemberCard from './team-member-card'
+import TeamMemberDetail from './team-member-detail'
+import TeamOutModal from './team-out-modal'
 
 const TeamModal = ({
   teamMember,
@@ -28,44 +28,44 @@ const TeamModal = ({
   teamData,
   modalAnimatedValue,
 }: any) => {
-  const { width, height } = Dimensions.get("window");
-  const [deleteModal, setDeleteModal] = useState(false);
-  const [memberDetailModal, setMemberDetailModal] = useState(false);
-  const [memberDetail, setMemberDetail] = useState([]);
+  const { width, height } = Dimensions.get('window')
+  const [deleteModal, setDeleteModal] = useState(false)
+  const [memberDetailModal, setMemberDetailModal] = useState(false)
+  const [memberDetail, setMemberDetail] = useState([])
 
   const { trigger: deleteUserTeam } = useSWRMutation(
     `users/delete-user-team`,
-    deleteUserTeamRequest
-  );
+    deleteUserTeamRequest,
+  )
 
   const { trigger: updateTeamManager } = useSWRMutation(
     `teams/update-team-manager`,
-    updateTeamManagerRequest
-  );
+    updateTeamManagerRequest,
+  )
 
   const { trigger: deleteTeamManager } = useSWRMutation(
     `teams/delete-team-manager`,
-    deleteTeamManagerRequest
-  );
+    deleteTeamManagerRequest,
+  )
 
   const { trigger: changeTeamLeader } = useSWRMutation(
     `teams/change-team-leader`,
-    changeTeamLeaderRequest
-  );
+    changeTeamLeaderRequest,
+  )
 
   const outTeam = async () => {
-    setLoading(true);
-    const res = await deleteUserTeam({ id: user?.id, teamData });
+    setLoading(true)
+    const res = await deleteUserTeam({ id: user?.id, teamData })
     if (res) {
       Toast.show({
-        type: "error",
+        type: 'error',
         text1: res.message,
         visibilityTime: 2000,
-      });
+      })
     }
-    setDeleteModal(!deleteModal);
-    setLoading(false);
-  };
+    setDeleteModal(!deleteModal)
+    setLoading(false)
+  }
 
   const hideModal = () => {
     Animated.timing(modalAnimatedValue, {
@@ -73,25 +73,25 @@ const TeamModal = ({
       duration: 500,
       useNativeDriver: true,
     }).start(() => {
-      setMemberListModal(false);
-    });
-  };
+      setMemberListModal(false)
+    })
+  }
 
   const modalTranslateX = modalAnimatedValue.interpolate({
     inputRange: [0, 1],
     outputRange: [0, width * 0.7],
-  });
+  })
 
   const toggleModal = () => {
-    setDeleteModal(!deleteModal);
-  };
+    setDeleteModal(!deleteModal)
+  }
 
   const toggleDetailModal = (member: any) => {
     if (member) {
-      setMemberDetail(member);
+      setMemberDetail(member)
     }
-    setMemberDetailModal(!memberDetailModal);
-  };
+    setMemberDetailModal(!memberDetailModal)
+  }
 
   return (
     <Modal
@@ -103,12 +103,12 @@ const TeamModal = ({
       <Animated.View
         style={{
           transform: [{ translateX: modalTranslateX }],
-          position: "absolute",
+          position: 'absolute',
           right: 0,
           top: 0,
           width: width * 0.7,
           height: height,
-          backgroundColor: "white",
+          backgroundColor: 'white',
         }}
       >
         <TouchableOpacity onPress={hideModal}>
@@ -117,9 +117,9 @@ const TeamModal = ({
             variant="text2Xl"
             fontWeight="700"
             style={{
-              color: "white",
-              backgroundColor: theme.colors.green700,
-              textAlign: "center",
+              color: 'white',
+              backgroundColor: theme.colors.green600,
+              textAlign: 'center',
             }}
           >
             나가기
@@ -139,7 +139,7 @@ const TeamModal = ({
                   member={member}
                 />
               </TouchableOpacity>
-            );
+            )
           })}
           <Modal
             animationType="none"
@@ -171,10 +171,10 @@ const TeamModal = ({
               p="3"
               fontWeight="700"
               style={{
-                textAlign: "center",
+                textAlign: 'center',
                 borderRadius: 10,
-                backgroundColor: "red",
-                color: "white",
+                backgroundColor: 'red',
+                color: 'white',
               }}
             >
               팀 탈퇴
@@ -197,7 +197,7 @@ const TeamModal = ({
         </ScrollView>
       </Animated.View>
     </Modal>
-  );
-};
+  )
+}
 
-export default TeamModal;
+export default TeamModal

@@ -150,7 +150,7 @@ const TeamInfoScreen = () => {
           fontWeight="700"
           style={{
             textAlign: 'center',
-            color: theme.colors.green700,
+            color: theme.colors.green600,
           }}
         >
           {teamData.name}
@@ -158,7 +158,7 @@ const TeamInfoScreen = () => {
         <TouchableOpacity
           onPress={handleModal}
           style={{
-            backgroundColor: theme.colors.green700,
+            backgroundColor: theme.colors.green600,
             borderRadius: 10,
           }}
         >
@@ -189,7 +189,7 @@ const TeamInfoScreen = () => {
             fontWeight="700"
             style={{
               textAlign: 'center',
-              color: theme.colors.green700,
+              color: theme.colors.green600,
             }}
           >
             팀 신청 목록

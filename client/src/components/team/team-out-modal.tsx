@@ -1,20 +1,20 @@
-import React from "react";
-import theme, { Box, Text } from "@/utils/theme";
-import { TouchableOpacity } from "react-native";
+import React from 'react'
+import theme, { Box, Text } from '@/utils/theme'
+import { TouchableOpacity } from 'react-native'
 
 const TeamOutModal = ({ user, teamData, outTeam, toggleModal }: any) => {
   return (
     <Box
       style={{
         flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundColor: "rgba(0, 0, 0, 0.5)",
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
       }}
     >
       <Box
         style={{
-          backgroundColor: "white",
+          backgroundColor: 'white',
           padding: 20,
           borderRadius: 10,
         }}
@@ -24,14 +24,14 @@ const TeamOutModal = ({ user, teamData, outTeam, toggleModal }: any) => {
             <Text
               variant="textBase"
               fontWeight="700"
-              style={{ textAlign: "center" }}
+              style={{ textAlign: 'center' }}
             >
               팀장은 팀을 탈퇴할 수 없습니다...
             </Text>
             <Text
               variant="textSm"
               fontWeight="700"
-              style={{ textAlign: "center" }}
+              style={{ textAlign: 'center' }}
             >
               팀장을 다른 팀원에게 넘겨주세요!
             </Text>
@@ -41,11 +41,11 @@ const TeamOutModal = ({ user, teamData, outTeam, toggleModal }: any) => {
                 p="2"
                 mx="10"
                 style={{
-                  backgroundColor: theme.colors.green700,
+                  backgroundColor: theme.colors.green600,
                   borderRadius: 5,
-                  color: "white",
-                  fontWeight: "bold",
-                  textAlign: "center",
+                  color: 'white',
+                  fontWeight: 'bold',
+                  textAlign: 'center',
                 }}
               >
                 확인
@@ -57,7 +57,7 @@ const TeamOutModal = ({ user, teamData, outTeam, toggleModal }: any) => {
             <Text
               variant="textBase"
               fontWeight="700"
-              style={{ textAlign: "center" }}
+              style={{ textAlign: 'center' }}
             >
               정말로 팀을 탈퇴하시겠습니까?
             </Text>
@@ -70,16 +70,16 @@ const TeamOutModal = ({ user, teamData, outTeam, toggleModal }: any) => {
             >
               <TouchableOpacity
                 onPress={() => {
-                  outTeam({ state: true });
+                  outTeam({ state: true })
                 }}
               >
                 <Text
                   p="2"
                   style={{
-                    backgroundColor: "red",
+                    backgroundColor: 'red',
                     borderRadius: 5,
-                    color: "white",
-                    fontWeight: "bold",
+                    color: 'white',
+                    fontWeight: 'bold',
                   }}
                 >
                   네
@@ -89,10 +89,10 @@ const TeamOutModal = ({ user, teamData, outTeam, toggleModal }: any) => {
                 <Text
                   p="2"
                   style={{
-                    backgroundColor: theme.colors.green700,
+                    backgroundColor: theme.colors.green600,
                     borderRadius: 5,
-                    color: "white",
-                    fontWeight: "bold",
+                    color: 'white',
+                    fontWeight: 'bold',
                   }}
                 >
                   아니요
@@ -103,7 +103,7 @@ const TeamOutModal = ({ user, teamData, outTeam, toggleModal }: any) => {
         )}
       </Box>
     </Box>
-  );
-};
+  )
+}
 
-export default TeamOutModal;
+export default TeamOutModal

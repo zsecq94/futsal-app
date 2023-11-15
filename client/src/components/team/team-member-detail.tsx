@@ -1,7 +1,7 @@
-import theme, { Box, Text } from "@/utils/theme";
-import React from "react";
-import { Image, TouchableOpacity } from "react-native";
-import Toast from "react-native-toast-message";
+import theme, { Box, Text } from '@/utils/theme'
+import React from 'react'
+import { Image, TouchableOpacity } from 'react-native'
+import Toast from 'react-native-toast-message'
 
 const TeamMemberDetail = ({
   changeTeamLeader,
@@ -15,88 +15,88 @@ const TeamMemberDetail = ({
   deleteTeamManager,
 }: any) => {
   const handleUpdateTeamManager = async () => {
-    toggleDetailModal();
-    setMemberListModal(false);
+    toggleDetailModal()
+    setMemberListModal(false)
     const res = await updateTeamManager({
       id: memberDetail.id,
       teamName: teamData.name,
-    });
+    })
     if (res.state) {
       Toast.show({
-        type: "success",
+        type: 'success',
         text1: res.message,
         visibilityTime: 2000,
-      });
+      })
     } else {
       Toast.show({
-        type: "error",
+        type: 'error',
         text1: res.message,
         visibilityTime: 2000,
-      });
+      })
     }
-  };
+  }
 
   const handleDeleteTeamManager = async () => {
-    toggleDetailModal();
-    setMemberListModal(false);
+    toggleDetailModal()
+    setMemberListModal(false)
     const res = await deleteTeamManager({
       id: memberDetail.id,
       teamName: teamData.name,
-    });
+    })
     Toast.show({
-      type: "success",
+      type: 'success',
       text1: res.message,
       visibilityTime: 2000,
-    });
-  };
+    })
+  }
 
   const handleDeleteUserTeam = async () => {
-    toggleDetailModal();
-    setMemberListModal(false);
+    toggleDetailModal()
+    setMemberListModal(false)
     const res = await deleteUserTeam({
       id: memberDetail?.id,
       teamData,
-    });
+    })
     if (res) {
       return Toast.show({
-        type: "success",
-        text1: "추방 성공!",
+        type: 'success',
+        text1: '추방 성공!',
         visibilityTime: 2000,
-      });
+      })
     }
-  };
+  }
 
   const handleChangeTeamLeader = async () => {
-    toggleDetailModal();
-    setMemberListModal(false);
+    toggleDetailModal()
+    setMemberListModal(false)
     const res = await changeTeamLeader({
       name: memberDetail?.name,
       teamName: teamData.name,
-    });
+    })
     if (res) {
       return Toast.show({
-        type: "success",
+        type: 'success',
         text1: res.message,
         visibilityTime: 2000,
-      });
+      })
     }
-  };
+  }
 
   return (
     <Box
       style={{
         flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundColor: "rgba(0, 0, 0, 0.5)",
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
       }}
     >
       <Box
         style={{
-          backgroundColor: "white",
+          backgroundColor: 'white',
           padding: 20,
           borderRadius: 10,
-          alignItems: "center",
+          alignItems: 'center',
           gap: 20,
         }}
       >
@@ -105,8 +105,8 @@ const TeamMemberDetail = ({
             p="1"
             fontWeight="700"
             style={{
-              backgroundColor: theme.colors.green700,
-              color: "white",
+              backgroundColor: theme.colors.green600,
+              color: 'white',
               borderRadius: 5,
             }}
           >
@@ -131,8 +131,8 @@ const TeamMemberDetail = ({
               style={{
                 backgroundColor: theme.colors.yellow400,
                 borderRadius: 5,
-                color: "white",
-                fontWeight: "bold",
+                color: 'white',
+                fontWeight: 'bold',
               }}
             >
               메시지 보내기
@@ -149,8 +149,8 @@ const TeamMemberDetail = ({
                     style={{
                       backgroundColor: theme.colors.red500,
                       borderRadius: 5,
-                      color: "white",
-                      fontWeight: "bold",
+                      color: 'white',
+                      fontWeight: 'bold',
                     }}
                   >
                     권한 제거
@@ -165,8 +165,8 @@ const TeamMemberDetail = ({
                     style={{
                       backgroundColor: theme.colors.blue400,
                       borderRadius: 5,
-                      color: "white",
-                      fontWeight: "bold",
+                      color: 'white',
+                      fontWeight: 'bold',
                     }}
                   >
                     매칭 권한
@@ -180,8 +180,8 @@ const TeamMemberDetail = ({
                 style={{
                   backgroundColor: theme.colors.blue400,
                   borderRadius: 5,
-                  color: "white",
-                  fontWeight: "bold",
+                  color: 'white',
+                  fontWeight: 'bold',
                 }}
               >
                 팀장 넘기기
@@ -195,8 +195,8 @@ const TeamMemberDetail = ({
                 style={{
                   backgroundColor: theme.colors.red500,
                   borderRadius: 5,
-                  color: "white",
-                  fontWeight: "bold",
+                  color: 'white',
+                  fontWeight: 'bold',
                 }}
               >
                 추방 하기
@@ -206,7 +206,7 @@ const TeamMemberDetail = ({
         </Box>
       </Box>
     </Box>
-  );
-};
+  )
+}
 
-export default TeamMemberDetail;
+export default TeamMemberDetail

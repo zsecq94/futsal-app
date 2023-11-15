@@ -1,22 +1,21 @@
-import theme, { Text } from "@/utils/theme";
-import React from "react";
-import { TouchableOpacity } from "react-native";
+import theme, { Text } from '@/utils/theme'
+import React from 'react'
+import { TouchableOpacity } from 'react-native'
 
 type MatchCategoryProps = {
-  label: string;
-  check: number;
-  num: number;
-  setCheck: React.Dispatch<React.SetStateAction<number>>;
-};
+  label: string
+  check: number
+  num: number
+  setCheck: React.Dispatch<React.SetStateAction<number>>
+}
 
 const MatchCategory = ({ label, setCheck, check, num }: MatchCategoryProps) => {
   return (
     <TouchableOpacity
       onPress={() => setCheck(num)}
       style={{
-        width: "50%",
-        borderBottomWidth: check === num ? 2 : 0,
-        borderBottomColor: check === num ? theme.colors.green700 : "black",
+        width: '50%',
+        backgroundColor: check === num ? 'transparent' : theme.colors.gray300,
       }}
     >
       <Text
@@ -24,14 +23,14 @@ const MatchCategory = ({ label, setCheck, check, num }: MatchCategoryProps) => {
         fontWeight="700"
         p="3"
         style={{
-          textAlign: "center",
-          color: check === num ? theme.colors.green700 : "black",
+          textAlign: 'center',
+          color: check === num ? theme.colors.green600 : 'grey',
         }}
       >
         {label}
       </Text>
     </TouchableOpacity>
-  );
-};
+  )
+}
 
-export default MatchCategory;
+export default MatchCategory

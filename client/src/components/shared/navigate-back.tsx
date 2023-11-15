@@ -18,7 +18,7 @@ const NavigateBack = () => {
         p="2"
         borderRadius="rounded-7xl"
         style={{
-          backgroundColor: theme.colors.green700,
+          backgroundColor: theme.colors.green600,
         }}
       >
         <Icon name="caret-back-sharp" size={20} color="white" />

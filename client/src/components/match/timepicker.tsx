@@ -174,7 +174,7 @@ const TimePicker = ({
   }
 
   return (
-    <Box style={{ padding: 20 }}>
+    <Box style={{ padding: 10 }}>
       <Box
         style={{
           paddingBottom: 20,
@@ -206,7 +206,6 @@ const TimePicker = ({
           <Text
             style={{
               fontSize: 20,
-              color: 'black',
               fontWeight: 'bold',
             }}
           >
@@ -330,10 +329,10 @@ const TimePicker = ({
                   >
                     <Box
                       height={30}
-                      width={60}
+                      width={40}
                       style={{
                         backgroundColor: isSelected
-                          ? theme.colors.green700
+                          ? theme.colors.green600
                           : categoryCheck === 0 &&
                             onePlaceData?.some((d: any) => d[0] === time[0])
                           ? 'grey'
@@ -368,19 +367,27 @@ const TimePicker = ({
                   >
                     {index === times.length - 1 && (
                       <Box justifyContent="space-between" flexDirection="row">
-                        <Text style={{ color: 'black' }}>
+                        <Text style={{ fontSize: 10, fontWeight: 'bold' }}>
                           {formatTime(time[0])}
                         </Text>
-                        <Text style={{ color: 'black' }}>{time[1]}</Text>
+                        <Text style={{ fontSize: 10, fontWeight: 'bold' }}>
+                          {time[1]}
+                        </Text>
                       </Box>
                     )}
                     {index !== 0 && index !== times.length - 1 && (
-                      <Text style={{ color: 'black' }}>
+                      <Text style={{ fontSize: 10, fontWeight: 'bold' }}>
                         {formatTime(time[0])}
                       </Text>
                     )}
                     {index === 0 && (
-                      <Text style={{ marginLeft: 17, color: 'black' }}>
+                      <Text
+                        style={{
+                          fontSize: 10,
+                          marginLeft: 17,
+                          fontWeight: 'bold',
+                        }}
+                      >
                         {formatTime(time[0])}
                       </Text>
                     )}

@@ -24,7 +24,7 @@ const DatePicker = ({ date, onSelectDate, selected }: any) => {
       style={[
         styles.card,
         selected === formattedDate && {
-          backgroundColor: theme.colors.green700,
+          backgroundColor: theme.colors.green600,
         },
       ]}
     >
@@ -45,7 +45,7 @@ const DatePicker = ({ date, onSelectDate, selected }: any) => {
           selected === formattedDate && {
             color: '#fff',
             fontWeight: 'bold',
-            fontSize: 12,
+            fontSize: 8,
           },
         ]}
       >
@@ -68,16 +68,16 @@ const styles = StyleSheet.create({
     borderColor: '#ddd',
     justifyContent: 'center',
     alignItems: 'center',
-    height: 40,
-    width: 40,
+    height: 30,
+    width: 30,
     marginHorizontal: 5,
   },
   big: {
     fontWeight: 'bold',
-    fontSize: 13,
+    fontSize: 10,
   },
   medium: {
-    fontSize: 11,
+    fontSize: 8,
     color: 'black',
   },
 })

@@ -1,107 +1,107 @@
-import Button from "@/components/shared/button";
-import HrTag from "@/components/shared/hrtag";
-import Level from "@/components/shared/level";
-import Loader from "@/components/shared/loader";
-import NavigateBack from "@/components/shared/navigate-back";
-import { createTeamRequest, userTeamUpdateRequest } from "@/services/api";
-import useUserGlobalStore from "@/store/useUserGlobalStore";
-import theme, { Box, Text } from "@/utils/theme";
-import { useNavigation } from "@react-navigation/native";
-import React, { useState } from "react";
-import { Image, ScrollView, TextInput } from "react-native";
-import Toast from "react-native-toast-message";
-import useSWRMutation from "swr/mutation";
+import Button from '@/components/shared/button'
+import HrTag from '@/components/shared/hrtag'
+import Level from '@/components/shared/level'
+import Loader from '@/components/shared/loader'
+import NavigateBack from '@/components/shared/navigate-back'
+import { createTeamRequest, userTeamUpdateRequest } from '@/services/api'
+import useUserGlobalStore from '@/store/useUserGlobalStore'
+import theme, { Box, Text } from '@/utils/theme'
+import { useNavigation } from '@react-navigation/native'
+import React, { useState } from 'react'
+import { Image, ScrollView, TextInput } from 'react-native'
+import Toast from 'react-native-toast-message'
+import useSWRMutation from 'swr/mutation'
 
 const TeamCreateScreen = () => {
-  const navigation = useNavigation<any>();
-  const [isLoading, setIsLoading] = useState(false);
-  const [level, setLevel] = useState("");
-  const levelData = ["하", "중하", "중", "중상", "상"];
-  const { user, updateUser } = useUserGlobalStore();
+  const navigation = useNavigation<any>()
+  const [isLoading, setIsLoading] = useState(false)
+  const [level, setLevel] = useState('')
+  const levelData = ['하', '중하', '중', '중상', '상']
+  const { user, updateUser } = useUserGlobalStore()
 
   const [teamData, setTeamData] = useState({
-    img: "https://mycar.shinhancard.com/conts/images/mycar/bg_profile_basic.png",
-    name: "",
-    level: "",
-  });
+    img: 'https://mycar.shinhancard.com/conts/images/mycar/bg_profile_basic.png',
+    name: '',
+    level: '',
+  })
 
   const isValidKorean = (text: any) => {
-    const re = /^[가-힣a-zA-Z0-9~!@#$%^&*()-_+|<>?:{}]*$/;
-    return re.test(text);
-  };
+    const re = /^[가-힣a-zA-Z0-9~!@#$%^&*()-_+|<>?:{}]*$/
+    return re.test(text)
+  }
 
   const handleLevel = (value: any) => {
     if (value === level) {
-      setLevel("");
-      setTeamData({ ...teamData, level: "" });
+      setLevel('')
+      setTeamData({ ...teamData, level: '' })
     } else {
-      setLevel(value);
-      setTeamData({ ...teamData, level: value });
+      setLevel(value)
+      setTeamData({ ...teamData, level: value })
     }
-  };
+  }
 
   const { trigger, isMutating } = useSWRMutation(
-    "teams/create",
-    createTeamRequest
-  );
+    'teams/create',
+    createTeamRequest,
+  )
 
   const { trigger: userTeamUpdate } = useSWRMutation(
     `users/update`,
-    userTeamUpdateRequest
-  );
+    userTeamUpdateRequest,
+  )
 
   const handleSubmit = async () => {
     try {
-      setIsLoading(true); // 로딩 시작
+      setIsLoading(true) // 로딩 시작
       if (validCheck) {
         const data = {
           teamData,
           user,
-        };
-        const res = await trigger({ ...data });
+        }
+        const res = await trigger({ ...data })
 
         if (res.state) {
           const data = {
             id: user?.id,
             teamData: teamData.name,
-          };
-          await userTeamUpdate({ ...data });
+          }
+          await userTeamUpdate({ ...data })
           updateUser({
             ...user,
             team: teamData.name,
-          });
+          })
           Toast.show({
-            type: "success",
+            type: 'success',
             text1: res.message,
             visibilityTime: 2000,
-          });
+          })
         } else {
           Toast.show({
-            type: "error",
+            type: 'error',
             text1: res.message,
             visibilityTime: 2000,
-          });
+          })
         }
-        navigation.navigate("Team");
+        navigation.navigate('Team')
       } else {
         Toast.show({
-          type: "error",
-          text1: "띄어쓰기 사용 불가, 팀 수준 필수 값",
+          type: 'error',
+          text1: '띄어쓰기 사용 불가, 팀 수준 필수 값',
           visibilityTime: 2000,
-        });
+        })
       }
     } catch (error) {
-      console.log("error in handleSubmit", error);
-      throw error;
+      console.log('error in handleSubmit', error)
+      throw error
     } finally {
-      setIsLoading(false); // 로딩 완료
+      setIsLoading(false) // 로딩 완료
     }
-  };
+  }
 
   const validCheck =
     teamData.name.length > 0 &&
     teamData.level.length > 0 &&
-    isValidKorean(teamData.name);
+    isValidKorean(teamData.name)
 
   return (
     <>
@@ -122,7 +122,7 @@ const TeamCreateScreen = () => {
               variant="text2Xl"
               fontWeight="700"
               style={{
-                color: theme.colors.green700,
+                color: theme.colors.green600,
               }}
             >
               팀 생성하기
@@ -138,7 +138,7 @@ const TeamCreateScreen = () => {
               </Text>
               <Box
                 p="1"
-                style={{ backgroundColor: "white", borderRadius: 100 }}
+                style={{ backgroundColor: 'white', borderRadius: 100 }}
               >
                 <Image
                   source={{ uri: teamData.img }}
@@ -153,10 +153,10 @@ const TeamCreateScreen = () => {
             <Box height={20} />
             <Box
               style={{
-                width: "90%",
-                backgroundColor: "white",
+                width: '90%',
+                backgroundColor: 'white',
                 borderRadius: 10,
-                shadowColor: "#000",
+                shadowColor: '#000',
                 shadowOffset: {
                   width: 0,
                   height: 2,
@@ -175,16 +175,20 @@ const TeamCreateScreen = () => {
                   value={teamData.name}
                   onChangeText={(text) => {
                     if (text.length <= 10) {
-                      setTeamData({ ...teamData, name: text });
+                      setTeamData({ ...teamData, name: text })
                     } else {
-                      alert("팀 이름은 최대 10자까지 가능합니다.");
+                      Toast.show({
+                        type: 'error',
+                        text1: '팀 이름은 최대 10자까지 가능합니다.',
+                        visibilityTime: 2000,
+                      })
                     }
                   }}
                   style={{
                     borderRadius: 10,
                     paddingHorizontal: 10,
                     height: 50,
-                    width: "100%",
+                    width: '100%',
                     backgroundColor: theme.colors.gray200,
                   }}
                 />
@@ -193,10 +197,10 @@ const TeamCreateScreen = () => {
             <Box height={20} />
             <Box
               style={{
-                width: "90%",
-                backgroundColor: "white",
+                width: '90%',
+                backgroundColor: 'white',
                 borderRadius: 10,
-                shadowColor: "#000",
+                shadowColor: '#000',
                 shadowOffset: {
                   width: 0,
                   height: 2,
@@ -229,7 +233,7 @@ const TeamCreateScreen = () => {
         </ScrollView>
       )}
     </>
-  );
-};
+  )
+}
 
-export default TeamCreateScreen;
+export default TeamCreateScreen

@@ -1,11 +1,11 @@
-import theme, { Box, Text } from "@/utils/theme";
-import React from "react";
-import { TouchableOpacity } from "react-native";
+import theme, { Box, Text } from '@/utils/theme'
+import React from 'react'
+import { TouchableOpacity } from 'react-native'
 
 type ButtonProps = {
-  label: string;
-  onPress: () => void;
-};
+  label: string
+  onPress: () => void
+}
 
 const Button = ({ label, onPress }: ButtonProps) => {
   return (
@@ -16,9 +16,9 @@ const Button = ({ label, onPress }: ButtonProps) => {
         borderRadius: 10,
         padding: 5,
         marginHorizontal: 16,
-        alignItems: "center",
-        backgroundColor: theme.colors.green700,
-        shadowColor: "#000",
+        alignItems: 'center',
+        backgroundColor: theme.colors.green600,
+        shadowColor: '#000',
         shadowOffset: {
           width: 0,
           height: 2,
@@ -32,13 +32,13 @@ const Button = ({ label, onPress }: ButtonProps) => {
         variant="text2Xl"
         fontWeight="700"
         style={{
-          color: "white",
+          color: 'white',
         }}
       >
         {label}
       </Text>
     </TouchableOpacity>
-  );
-};
+  )
+}
 
-export default Button;
+export default Button

@@ -39,7 +39,7 @@ const AppNavigation = () => {
   return (
     <Tab.Navigator
       screenOptions={{
-        tabBarActiveTintColor: theme.colors.green700,
+        tabBarActiveTintColor: theme.colors.green600,
         tabBarInactiveTintColor: theme.colors.gray550,
         tabBarHideOnKeyboard: true,
         tabBarStyle: {

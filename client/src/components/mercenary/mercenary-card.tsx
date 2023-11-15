@@ -9,10 +9,12 @@ const MercenaryCard = ({ V }: any) => {
     let minutes = time % 1 > 0 ? '30' : '00'
     return `${hours}:${minutes}`
   }
+
   return (
     <TouchableOpacity
       style={{
         alignItems: 'center',
+        marginHorizontal: 20,
       }}
     >
       <Box
@@ -22,7 +24,7 @@ const MercenaryCard = ({ V }: any) => {
         flexDirection="row"
         alignItems="center"
         style={{
-          width: '90%',
+          width: '100%',
           height: 50,
           backgroundColor: 'white',
           borderRadius: 10,
@@ -36,7 +38,7 @@ const MercenaryCard = ({ V }: any) => {
           elevation: 5,
         }}
       >
-        <Box width={'20%'}>
+        <Box width={'10%'}>
           <Image
             source={{ uri: V.thumb }}
             width={35}
@@ -45,26 +47,31 @@ const MercenaryCard = ({ V }: any) => {
           />
         </Box>
         <Box
-          width={'40%'}
+          width={'20%'}
           alignItems="center"
           flexDirection="row"
           style={{ gap: 5 }}
         >
-          <Icon name="person-circle-outline" color={'black'} size={30} />
-          <Text fontWeight="700" style={{ color: 'black' }}>
-            {V.name}
+          <Text fontWeight="700">{V.name}</Text>
+        </Box>
+        <Box
+          width={'50%'}
+          alignItems="center"
+          flexDirection="row"
+          style={{ gap: 5 }}
+        >
+          <Text fontWeight="700">
+            가능한 시간 : {formatTime(V.times[0][0])} ~{' '}
+            {formatTime(V.times[1][1])}
           </Text>
         </Box>
         <Box
-          width={'40%'}
+          width={'20%'}
           alignItems="center"
           flexDirection="row"
           style={{ gap: 5 }}
         >
-          <Icon name="time-outline" color={'black'} size={30} />
-          <Text fontWeight="700" style={{ color: 'black' }}>
-            {formatTime(V.times[0][0])} ~ {formatTime(V.times[1][1])}
-          </Text>
+          <Text fontWeight="700">실력 : {V.level}</Text>
         </Box>
       </Box>
     </TouchableOpacity>

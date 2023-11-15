@@ -87,7 +87,6 @@ const MercenaryTimePicker = ({
           <Text
             style={{
               fontSize: 20,
-              color: 'black',
               fontWeight: 'bold',
             }}
           >
@@ -118,7 +117,7 @@ const MercenaryTimePicker = ({
                       width={60}
                       style={{
                         backgroundColor: isSelected
-                          ? theme.colors.green700
+                          ? theme.colors.green600
                           : theme.colors.gray200,
                         borderLeftWidth: 1,
                         borderColor: 'white',
@@ -139,19 +138,15 @@ const MercenaryTimePicker = ({
                   >
                     {index === times.length - 1 && (
                       <Box justifyContent="space-between" flexDirection="row">
-                        <Text style={{ color: 'black' }}>
-                          {formatTime(time[0])}
-                        </Text>
-                        <Text style={{ color: 'black' }}>{time[1]}</Text>
+                        <Text>{formatTime(time[0])}</Text>
+                        <Text>{time[1]}</Text>
                       </Box>
                     )}
                     {index !== 0 && index !== times.length - 1 && (
-                      <Text style={{ color: 'black' }}>
-                        {formatTime(time[0])}
-                      </Text>
+                      <Text>{formatTime(time[0])}</Text>
                     )}
                     {index === 0 && (
-                      <Text style={{ marginLeft: 17, color: 'black' }}>
+                      <Text style={{ marginLeft: 17 }}>
                         {formatTime(time[0])}
                       </Text>
                     )}

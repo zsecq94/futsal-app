@@ -115,7 +115,7 @@ const TeamScreen = () => {
             variant="text2Xl"
             fontWeight="700"
             style={{
-              color: theme.colors.green700,
+              color: theme.colors.green600,
             }}
           >
             팀 찾기
@@ -133,7 +133,7 @@ const TeamScreen = () => {
                 backgroundColor:
                   user?.team === null
                     ? theme.colors.gray200
-                    : theme.colors.green700,
+                    : theme.colors.green600,
                 color: 'white',
               }}
             >
@@ -183,7 +183,7 @@ const TeamScreen = () => {
               position: 'absolute',
               right: 15,
               bottom: 15,
-              backgroundColor: theme.colors.green700,
+              backgroundColor: theme.colors.green600,
               borderRadius: 25, // this will make it round
               width: 50,
               height: 50,

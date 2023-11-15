@@ -64,8 +64,8 @@ const MatchMervenarySignInScreen = () => {
             width: '50%',
             justifyContent: 'center',
             alignItems: 'center',
-            borderBottomWidth: category === 0 ? 2 : 0,
-            borderBottomColor: category === 0 ? theme.colors.green700 : 'black',
+            backgroundColor:
+              category === 0 ? 'transparent' : theme.colors.gray300,
           }}
         >
           <Text
@@ -73,7 +73,7 @@ const MatchMervenarySignInScreen = () => {
             fontWeight="700"
             p="3"
             style={{
-              color: category === 0 ? theme.colors.green700 : 'black',
+              color: category === 0 ? theme.colors.green600 : 'grey',
             }}
           >
             용병 신청
@@ -85,15 +85,15 @@ const MatchMervenarySignInScreen = () => {
             width: '50%',
             justifyContent: 'center',
             alignItems: 'center',
-            borderBottomWidth: category === 1 ? 2 : 0,
-            borderBottomColor: category === 1 ? theme.colors.green700 : 'black',
+            backgroundColor:
+              category === 1 ? 'transparent' : theme.colors.gray300,
           }}
         >
           <Text
             variant="textLg"
             fontWeight="700"
             p="3"
-            style={{ color: category === 1 ? theme.colors.green700 : 'black' }}
+            style={{ color: category === 1 ? theme.colors.green600 : 'grey' }}
           >
             용병 모집
           </Text>
@@ -116,7 +116,7 @@ const MatchMervenarySignInScreen = () => {
           bottom: 0,
           width: '100%',
           justifyContent: 'center',
-          backgroundColor: validCheck ? theme.colors.green700 : 'grey',
+          backgroundColor: validCheck ? theme.colors.green600 : 'grey',
         }}
       >
         <Text

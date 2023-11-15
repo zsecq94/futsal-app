@@ -11,34 +11,24 @@ import useSWR from 'swr'
 const MatchMercenaryScreen = ({ setSelectedDate, selectedDate }: any) => {
   const {
     data: mercenaryData,
-    isLoading,
-    mutate,
+    isLoading: mercenaryIsLoading,
+    mutate: mercenaryMutate,
   } = useSWR(`mercenary/get-one-day/${selectedDate}`, fetcher)
   return (
-    <ScrollView
-      showsVerticalScrollIndicator={false}
-      style={{
-        padding: 8,
-      }}
-    >
+    <ScrollView showsVerticalScrollIndicator={false}>
       <Calendar setSelectedDate={setSelectedDate} selectedDate={selectedDate} />
-      <HrTag />
-      {isLoading || !mercenaryData ? (
+
+      {mercenaryIsLoading || !mercenaryData ? (
         <Loader />
       ) : (
         <>
-          <Box height={10} />
           <Text
-            ml="5"
-            variant="text2Xl"
+            variant="textBase"
             fontWeight="700"
-            style={{
-              color: theme.colors.green700,
-            }}
+            style={{ textAlign: 'center', color: 'grey' }}
           >
-            용병 대기중...
+            대기중인 용병...
           </Text>
-          <HrTag />
           {mercenaryData.length > 0 ? (
             mercenaryData.map((V: any, index: number) => (
               <MercenaryCard V={V} key={index} />
@@ -54,17 +44,6 @@ const MatchMercenaryScreen = ({ setSelectedDate, selectedDate }: any) => {
             </Text>
           )}
           <Box height={30} />
-          <Text
-            ml="5"
-            variant="text2Xl"
-            fontWeight="700"
-            style={{
-              color: theme.colors.green700,
-            }}
-          >
-            용병 모집중...
-          </Text>
-          <HrTag />
         </>
       )}
     </ScrollView>

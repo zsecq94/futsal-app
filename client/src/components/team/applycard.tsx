@@ -36,7 +36,7 @@ const ApplyCard = ({ user, onPress }: any) => {
         <TouchableOpacity
           onPress={() => onPress({ state: true, id: user.id })}
           style={{
-            backgroundColor: theme.colors.green700,
+            backgroundColor: theme.colors.green600,
             padding: 5,
             borderRadius: 10,
           }}

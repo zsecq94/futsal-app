@@ -62,29 +62,29 @@ const MatchScreen = () => {
       </Box>
       {check === 0 && <MatchMatchingScreen />}
       {check === 1 && (
-        <MatchMercenaryScreen
-          selectedDate={selectedDate}
-          setSelectedDate={setSelectedDate}
-        />
-      )}
-      {check === 1 && (
-        <TouchableOpacity
-          onPress={signInMercenary}
-          style={{
-            zIndex: 9,
-            position: 'absolute',
-            right: 15,
-            bottom: 15,
-            backgroundColor: theme.colors.green700,
-            borderRadius: 25,
-            width: 50,
-            height: 50,
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-        >
-          <Icon name="add-sharp" size={30} color={'white'} />
-        </TouchableOpacity>
+        <>
+          <MatchMercenaryScreen
+            selectedDate={selectedDate}
+            setSelectedDate={setSelectedDate}
+          />
+          <TouchableOpacity
+            onPress={signInMercenary}
+            style={{
+              zIndex: 9,
+              position: 'absolute',
+              right: 15,
+              bottom: 15,
+              backgroundColor: theme.colors.green600,
+              borderRadius: 25,
+              width: 50,
+              height: 50,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            <Icon name="add-sharp" size={30} color={'white'} />
+          </TouchableOpacity>
+        </>
       )}
     </Box>
   )
