@@ -4,7 +4,7 @@ const mercenarySchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: true,
+      requiredd: true,
     },
     thumb: {
       type: String,
@@ -12,15 +12,20 @@ const mercenarySchema = new mongoose.Schema(
     },
     level: {
       type: String,
-      require: true,
+      required: true,
     },
     date: {
       type: String,
-      require: true,
+      required: true,
     },
     times: {
       type: [],
-      require: true,
+      required: true,
+    },
+    state: {
+      type: Boolean,
+      default: false,
+      required: true,
     },
   },
   {

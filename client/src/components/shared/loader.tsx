@@ -1,21 +1,13 @@
-import React from "react";
-import SafeAreaWrapper from "./safe-area-wrapper";
-import { Box } from "@/utils/theme";
-import { ActivityIndicator } from "react-native";
+import { Box } from '@/utils/theme'
+import React from 'react'
+import { ActivityIndicator } from 'react-native'
 
 const Loader = () => {
   return (
-    <SafeAreaWrapper>
-      <Box
-        flex={1}
-        alignItems="center"
-        justifyContent="center"
-        backgroundColor="transparent"
-      >
-        <ActivityIndicator />
-      </Box>
-    </SafeAreaWrapper>
-  );
-};
+    <Box flex={1} alignItems="center" justifyContent="center">
+      <ActivityIndicator size="large" color="#00ff00" />
+    </Box>
+  )
+}
 
-export default Loader;
+export default Loader

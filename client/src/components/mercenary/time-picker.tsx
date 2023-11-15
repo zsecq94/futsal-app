@@ -1,12 +1,7 @@
 import theme, { Box, Text } from '@/utils/theme'
-import React, { useContext, useEffect } from 'react'
-import Toast from 'react-native-toast-message'
+import React from 'react'
 
-import { fetcher } from '@/services/config'
 import { ScrollView, TouchableOpacity } from 'react-native'
-import useSWR from 'swr'
-import Loader from '../shared/loader'
-import { SocketContext } from '@/context/SocketContext'
 
 const MercenaryTimePicker = ({
   selectedDate,
@@ -14,8 +9,6 @@ const MercenaryTimePicker = ({
   setSelectedTimes,
   date,
 }: any) => {
-  const socket = useContext(SocketContext)
-
   // 선택 날짜가 오늘이면 현재시간부터 24시까지 아니면 6시부터 24시까지 times배열생성
   let currHour = 6
   if (date.todayDate === selectedDate) {
@@ -26,8 +19,6 @@ const MercenaryTimePicker = ({
       currHour = 6
     }
   }
-
-  // console.log(onePlaceData);
 
   // 시간 배열 생성
   const times = Array.from({ length: (23.5 - currHour) * 2 + 1 }, (_, i) => [
@@ -42,36 +33,18 @@ const MercenaryTimePicker = ({
     return `${hours}:${minutes}`
   }
 
-  const ToastOption1 = {
-    type: 'error',
-    text1: '최대 신청 시간은 3시간 입니다 ❗',
-    visibilityTime: 3000,
-  }
-  const ToastOption2 = {
-    type: 'error',
-    text1: '시간을 다시 선택해주세요 ❗',
-    visibilityTime: 3000,
-  }
-
   // 시간 상태 관리
   const handlePress = (time: any) => {
     if (selectedTimes.length < 2) {
       if (selectedTimes.length === 1) {
-        const duration = Math.abs(time[0] - selectedTimes[0][0])
-
-        if (duration >= 3) {
-          Toast.show(ToastOption1)
+        if (time[0] === selectedTimes[0][0]) {
           setSelectedTimes([])
+          return
+        }
+        if (time[0] < selectedTimes[0][0]) {
+          setSelectedTimes([time, ...selectedTimes])
         } else {
-          if (time[0] === selectedTimes[0][0]) {
-            setSelectedTimes([])
-            return
-          }
-          if (time[0] < selectedTimes[0][0]) {
-            setSelectedTimes([time, ...selectedTimes])
-          } else {
-            setSelectedTimes([...selectedTimes, time])
-          }
+          setSelectedTimes([...selectedTimes, time])
         }
       } else {
         setSelectedTimes([time])
@@ -118,7 +91,7 @@ const MercenaryTimePicker = ({
               fontWeight: 'bold',
             }}
           >
-            시간을 선택하세요!
+            운동 가능한 시간을 최대로 선택해주세요!
           </Text>
         )}
       </Box>

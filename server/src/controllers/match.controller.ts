@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import Match from "../models/match-model";
-import MatchData from "../models/matchdata.model";
+import MatchData from "../models/matchdata-model";
 import { Mutex } from "async-mutex";
 import { getSocketIo } from "../socket";
 import mongoose from "mongoose";

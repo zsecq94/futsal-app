@@ -1,4 +1,5 @@
 import Calendar from '@/components/match/calender'
+import MercenaryCard from '@/components/mercenary/mercenary-card'
 import HrTag from '@/components/shared/hrtag'
 import Loader from '@/components/shared/loader'
 import { fetcher } from '@/services/config'
@@ -8,17 +9,11 @@ import { ScrollView } from 'react-native'
 import useSWR from 'swr'
 
 const MatchMercenaryScreen = ({ setSelectedDate, selectedDate }: any) => {
-  const { data, isLoading, mutate } = useSWR(
-    `mercenary/get-one-day/${selectedDate}`,
-    fetcher,
-  )
-
-  console.log(data)
-
-  if (isLoading || !data) {
-    return <Loader />
-  }
-
+  const {
+    data: mercenaryData,
+    isLoading,
+    mutate,
+  } = useSWR(`mercenary/get-one-day/${selectedDate}`, fetcher)
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
@@ -27,33 +22,51 @@ const MatchMercenaryScreen = ({ setSelectedDate, selectedDate }: any) => {
       }}
     >
       <Calendar setSelectedDate={setSelectedDate} selectedDate={selectedDate} />
-      <Text
-        ml="5"
-        variant="text2Xl"
-        fontWeight="700"
-        style={{
-          color: theme.colors.green700,
-        }}
-      >
-        용병 대기중...
-      </Text>
       <HrTag />
-      <Box p="5">
-        {data.map((V: any, index: number) => (
-          <Text style={{ color: 'black' }}>{V.name}</Text>
-        ))}
-      </Box>
-      <Text
-        ml="5"
-        variant="text2Xl"
-        fontWeight="700"
-        style={{
-          color: theme.colors.green700,
-        }}
-      >
-        용병 모집중...
-      </Text>
-      <HrTag />
+      {isLoading || !mercenaryData ? (
+        <Loader />
+      ) : (
+        <>
+          <Box height={10} />
+          <Text
+            ml="5"
+            variant="text2Xl"
+            fontWeight="700"
+            style={{
+              color: theme.colors.green700,
+            }}
+          >
+            용병 대기중...
+          </Text>
+          <HrTag />
+          {mercenaryData.length > 0 ? (
+            mercenaryData.map((V: any, index: number) => (
+              <MercenaryCard V={V} key={index} />
+            ))
+          ) : (
+            <Text
+              p="4"
+              variant="textLg"
+              fontWeight="700"
+              style={{ textAlign: 'center' }}
+            >
+              용병 신청자가 없습니다!
+            </Text>
+          )}
+          <Box height={30} />
+          <Text
+            ml="5"
+            variant="text2Xl"
+            fontWeight="700"
+            style={{
+              color: theme.colors.green700,
+            }}
+          >
+            용병 모집중...
+          </Text>
+          <HrTag />
+        </>
+      )}
     </ScrollView>
   )
 }

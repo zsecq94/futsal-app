@@ -73,7 +73,8 @@ const MatchMatchingScreen = () => {
       }}
     >
       <Calendar setSelectedDate={setSelectedDate} selectedDate={selectedDate} />
-
+      <HrTag />
+      <Box height={10} />
       {matchDataIsLoading || !matchData || isLoadingTodayData || !todayData ? (
         <Loader />
       ) : (
@@ -142,12 +143,23 @@ const MatchMatchingScreen = () => {
             매칭 대기중...
           </Text>
           <HrTag />
-          {matchData?.map((V: any, index: number) => (
-            <Box key={index}>
-              <MatchCard data={V} onPress={() => toggleModal(V)} />
-              <Box height={10} />
-            </Box>
-          ))}
+          {matchData.length > 0 ? (
+            matchData?.map((V: any, index: number) => (
+              <Box key={index}>
+                <MatchCard data={V} onPress={() => toggleModal(V)} />
+                <Box height={10} />
+              </Box>
+            ))
+          ) : (
+            <Text
+              p="5"
+              variant="textLg"
+              fontWeight="700"
+              style={{ textAlign: 'center' }}
+            >
+              아직 매칭이 없어요!
+            </Text>
+          )}
           <Box height={80} />
           <Modal
             animationType="fade"

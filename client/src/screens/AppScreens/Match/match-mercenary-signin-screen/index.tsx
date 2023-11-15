@@ -30,7 +30,7 @@ const MatchMervenarySignInScreen = () => {
 
   useEffect(() => {
     setSelectedTimes([])
-  }, [selectedDate])
+  }, [selectedDate, category])
 
   const handleSubmit = async () => {
     if (category === 0) {
@@ -51,7 +51,6 @@ const MatchMervenarySignInScreen = () => {
       navigation.goBack()
     }
   }
-  console.log(selectedTimes.length)
 
   const validCheck =
     selectedTimes.length === 2 && userLevel.length > 0 && user !== null
