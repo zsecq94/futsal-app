@@ -1,12 +1,20 @@
-import { View, Text } from "react-native";
-import React from "react";
+import Button from '@/components/shared/button'
+import useUserGlobalStore from '@/store/useUserGlobalStore'
+import { Box } from '@/utils/theme'
+import React from 'react'
 
 const ProfileScreen = () => {
-  return (
-    <View>
-      <Text>ProfileScreen</Text>
-    </View>
-  );
-};
+  const { logoutUser } = useUserGlobalStore()
 
-export default ProfileScreen;
+  const logout = () => {
+    logoutUser()
+  }
+
+  return (
+    <Box>
+      <Button label="로그아웃" onPress={logout} />
+    </Box>
+  )
+}
+
+export default ProfileScreen

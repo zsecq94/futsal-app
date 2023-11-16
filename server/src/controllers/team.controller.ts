@@ -22,7 +22,7 @@ export const createTeam = async (req: Request, res: Response) => {
         img,
         level,
         leader: leader,
-        score: 1500,
+        score: 0,
         win: 0,
         draw: 0,
         lose: 0,

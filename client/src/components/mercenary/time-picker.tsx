@@ -114,7 +114,7 @@ const MercenaryTimePicker = ({
                   <TouchableOpacity onPress={() => handlePress(time)}>
                     <Box
                       height={30}
-                      width={60}
+                      width={40}
                       style={{
                         backgroundColor: isSelected
                           ? theme.colors.green600
@@ -138,15 +138,33 @@ const MercenaryTimePicker = ({
                   >
                     {index === times.length - 1 && (
                       <Box justifyContent="space-between" flexDirection="row">
-                        <Text>{formatTime(time[0])}</Text>
-                        <Text>{time[1]}</Text>
+                        <Text style={{ fontSize: 10, fontWeight: 'bold' }}>
+                          {formatTime(time[0])}
+                        </Text>
+                        <Text style={{ fontSize: 10, fontWeight: 'bold' }}>
+                          {time[1]}
+                        </Text>
                       </Box>
                     )}
                     {index !== 0 && index !== times.length - 1 && (
-                      <Text>{formatTime(time[0])}</Text>
+                      <Text
+                        style={{
+                          marginLeft: 4,
+                          fontSize: 10,
+                          fontWeight: 'bold',
+                        }}
+                      >
+                        {formatTime(time[0])}
+                      </Text>
                     )}
                     {index === 0 && (
-                      <Text style={{ marginLeft: 17 }}>
+                      <Text
+                        style={{
+                          marginLeft: 17,
+                          fontSize: 10,
+                          fontWeight: 'bold',
+                        }}
+                      >
                         {formatTime(time[0])}
                       </Text>
                     )}

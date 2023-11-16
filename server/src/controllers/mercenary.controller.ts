@@ -11,7 +11,7 @@ export const createMercenary = async (req: Request, res: Response) => {
     const duplication = await Mercenary.findOne({ name, date });
     if (duplication) {
       return res.send({
-        message: `${date}일의 용병신청을 이미 하셨습니다.`,
+        message: `${date} 일자 용병신청을 이미 하셨습니다.`,
         state: "error",
       });
     }

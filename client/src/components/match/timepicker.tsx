@@ -120,7 +120,10 @@ const TimePicker = ({
 
   const option1 = {
     type: 'error',
-    text1: '최대 신청 시간은 3시간 입니다 ❗',
+    text1:
+      categoryCheck === 0
+        ? '기본 매칭 신청 시간은 2시간 입니다 ❗'
+        : '예약 최대 신청 시간은 3시간 입니다 ❗',
     visibilityTime: 3000,
   }
   const option2 = {
@@ -134,8 +137,8 @@ const TimePicker = ({
     if (selectedTimes.length < 2) {
       if (selectedTimes.length === 1) {
         const duration = Math.abs(time[0] - selectedTimes[0][0])
-
-        if (duration > 2.5) {
+        console.log(duration)
+        if (categoryCheck === 0 ? duration !== 1.5 : duration > 2.5) {
           Toast.show(option1)
           setSelectedTimes([])
         } else {
@@ -376,7 +379,13 @@ const TimePicker = ({
                       </Box>
                     )}
                     {index !== 0 && index !== times.length - 1 && (
-                      <Text style={{ fontSize: 10, fontWeight: 'bold' }}>
+                      <Text
+                        style={{
+                          fontSize: 10,
+                          fontWeight: 'bold',
+                          marginLeft: 4,
+                        }}
+                      >
                         {formatTime(time[0])}
                       </Text>
                     )}

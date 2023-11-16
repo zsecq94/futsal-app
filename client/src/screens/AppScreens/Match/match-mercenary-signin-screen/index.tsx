@@ -100,14 +100,40 @@ const MatchMervenarySignInScreen = () => {
         </TouchableOpacity>
       </Box>
       <Calendar setSelectedDate={setSelectedDate} selectedDate={selectedDate} />
-      <HrTag />
-      <MercenaryTimePicker
-        selectedDate={selectedDate}
-        selectedTimes={selectedTimes}
-        setSelectedTimes={setSelectedTimes}
-        date={date}
-      />
-      <HrTag />
+      {category === 0 && (
+        <Box
+          mx="5"
+          style={{
+            backgroundColor: 'white',
+            borderRadius: 10,
+            shadowColor: '#000',
+            shadowOffset: {
+              width: 0,
+              height: 2,
+            },
+            shadowOpacity: 0.25,
+            shadowRadius: 3.84,
+            elevation: 5,
+          }}
+        >
+          <MercenaryTimePicker
+            selectedDate={selectedDate}
+            selectedTimes={selectedTimes}
+            setSelectedTimes={setSelectedTimes}
+            date={date}
+          />
+        </Box>
+      )}
+      {category === 1 && (
+        <Text
+          textAlign="center"
+          variant="textBase"
+          fontWeight="700"
+          color="grey"
+        >
+          항목이 비어있다면 팀 컨텐츠의 투표를 진행해주세요!
+        </Text>
+      )}
       <TouchableOpacity
         onPress={handleSubmit}
         disabled={!validCheck}

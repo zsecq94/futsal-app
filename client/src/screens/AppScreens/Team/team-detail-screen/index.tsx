@@ -1,34 +1,34 @@
-import Button from "@/components/shared/button";
-import { createApplyTeamRequest } from "@/services/api";
-import useUserGlobalStore from "@/store/useUserGlobalStore";
-import { Box, Text } from "@/utils/theme";
-import { useNavigation, useRoute } from "@react-navigation/native";
-import React from "react";
-import { Image } from "react-native";
-import Toast from "react-native-toast-message";
-import useSWRMutation from "swr/mutation";
+import Button from '@/components/shared/button'
+import { createApplyTeamRequest } from '@/services/api'
+import useUserGlobalStore from '@/store/useUserGlobalStore'
+import { Box, Text } from '@/utils/theme'
+import { useNavigation, useRoute } from '@react-navigation/native'
+import React from 'react'
+import { Image } from 'react-native'
+import Toast from 'react-native-toast-message'
+import useSWRMutation from 'swr/mutation'
 
 const TeamDetailScreen = () => {
-  const route = useRoute();
-  const navigation = useNavigation();
-  const { team }: any = route.params;
-  const { user } = useUserGlobalStore();
+  const route = useRoute()
+  const navigation = useNavigation()
+  const { team }: any = route.params
+  const { user } = useUserGlobalStore()
 
   const calculateWinRate = (team: any) => {
-    const { win, draw, lose } = team;
-    const totalGames = win + draw + lose;
+    const { win, draw, lose } = team
+    const totalGames = win + draw + lose
     if (totalGames === 0) {
-      return 0;
+      return 0
     }
-    const winRate = ((win + draw * 0.5) / totalGames) * 100;
-    return winRate;
-  };
-  const winRate = calculateWinRate(team);
+    const winRate = ((win + draw * 0.5) / totalGames) * 100
+    return winRate
+  }
+  const winRate = calculateWinRate(team)
 
   const { trigger, isMutating } = useSWRMutation(
-    "teams/update-team-apply",
-    createApplyTeamRequest
-  );
+    'teams/update-team-apply',
+    createApplyTeamRequest,
+  )
 
   const applyTeam = async () => {
     try {
@@ -36,30 +36,30 @@ const TeamDetailScreen = () => {
         user,
         team,
         state: true,
-      };
+      }
       const res = await trigger({
         ...data,
-      });
+      })
       if (res.state) {
         Toast.show({
-          type: "success",
+          type: 'success',
           text1: res.message,
           visibilityTime: 2000,
-        });
-        navigation.goBack();
+        })
+        navigation.goBack()
       } else {
         Toast.show({
-          type: "error",
+          type: 'error',
           text1: res.message,
           visibilityTime: 2000,
-        });
-        navigation.goBack();
+        })
+        navigation.goBack()
       }
     } catch (error) {
-      console.log("error in applyTeam", error);
-      throw error;
+      console.log('error in applyTeam', error)
+      throw error
     }
-  };
+  }
   return (
     <Box flex={1} justifyContent="center">
       <Box
@@ -69,8 +69,8 @@ const TeamDetailScreen = () => {
         style={{
           borderRadius: 20,
           gap: 10,
-          backgroundColor: "white",
-          shadowColor: "#000",
+          backgroundColor: 'white',
+          shadowColor: '#000',
           shadowOffset: {
             width: 0,
             height: 2,
@@ -83,7 +83,7 @@ const TeamDetailScreen = () => {
         <Box
           p="1"
           style={{
-            backgroundColor: "white",
+            backgroundColor: 'white',
             borderRadius: 50,
           }}
         >
@@ -127,7 +127,7 @@ const TeamDetailScreen = () => {
             gap: 10,
           }}
         >
-          <Text variant="textBase">팀 레이팅</Text>
+          <Text variant="textBase">팀 점수</Text>
           <Text fontWeight="700" variant="textBase">
             {team.score}점
           </Text>
@@ -152,7 +152,7 @@ const TeamDetailScreen = () => {
         </Box>
       )}
     </Box>
-  );
-};
+  )
+}
 
-export default TeamDetailScreen;
+export default TeamDetailScreen

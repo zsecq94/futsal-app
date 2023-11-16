@@ -34,14 +34,30 @@ const MatchMercenaryScreen = ({ setSelectedDate, selectedDate }: any) => {
               <MercenaryCard V={V} key={index} />
             ))
           ) : (
-            <Text
-              p="4"
-              variant="textLg"
-              fontWeight="700"
-              style={{ textAlign: 'center' }}
+            <Box
+              mx="5"
+              style={{
+                backgroundColor: 'white',
+                borderRadius: 10,
+                shadowColor: '#000',
+                shadowOffset: {
+                  width: 0,
+                  height: 2,
+                },
+                shadowOpacity: 0.25,
+                shadowRadius: 3.84,
+                elevation: 5,
+              }}
             >
-              용병 신청자가 없습니다!
-            </Text>
+              <Text
+                p="3"
+                variant="textBase"
+                fontWeight="700"
+                style={{ textAlign: 'center' }}
+              >
+                용병 신청자가 없습니다!
+              </Text>
+            </Box>
           )}
           <Box height={30} />
         </>
