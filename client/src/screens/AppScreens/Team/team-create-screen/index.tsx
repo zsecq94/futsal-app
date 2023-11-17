@@ -171,6 +171,7 @@ const TeamCreateScreen = () => {
                   팀 이름
                 </Text>
                 <TextInput
+                  placeholderTextColor="grey"
                   placeholder="클릭하여 작성..."
                   value={teamData.name}
                   onChangeText={(text) => {
@@ -214,7 +215,11 @@ const TeamCreateScreen = () => {
                 <Text variant="textXl" fontWeight="700">
                   팀 수준
                 </Text>
-                <Box flexDirection="row" justifyContent="space-between">
+                <Box
+                  flexDirection="row"
+                  justifyContent="space-between"
+                  style={{ gap: 20 }}
+                >
                   {levelData.map((V, index) => (
                     <Level
                       level={level}

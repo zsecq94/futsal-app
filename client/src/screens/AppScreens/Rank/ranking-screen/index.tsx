@@ -1,4 +1,5 @@
 import RankCard from '@/components/rank/rank-card'
+import Loader from '@/components/shared/loader'
 import { SocketContext } from '@/context/SocketContext'
 import { fetcher } from '@/services/config'
 import theme, { Box, Text } from '@/utils/theme'
@@ -10,7 +11,7 @@ const RankingScreen = () => {
   const [sortedTeams, setSortedTeams] = useState([])
   const {
     data: allTeams,
-    isLoading,
+    isLoading: allTeamsIsLoading,
     mutate: allTeamsMutate,
   } = useSWR('teams/get-all-team', fetcher)
 
@@ -39,7 +40,9 @@ const RankingScreen = () => {
     }
   }, [allTeams])
 
-  console.log(sortedTeams)
+  if (!allTeams || !sortedTeams || allTeamsIsLoading) {
+    return <Loader />
+  }
 
   return (
     <Box>

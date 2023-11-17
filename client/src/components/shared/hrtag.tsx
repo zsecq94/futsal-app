@@ -4,7 +4,7 @@ import React from 'react'
 const HrTag = () => {
   return (
     <Box
-      my="5"
+      my="3"
       mx="5"
       style={{ borderBottomColor: theme.colors.green600, borderBottomWidth: 2 }}
     />

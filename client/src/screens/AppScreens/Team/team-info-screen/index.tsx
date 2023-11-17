@@ -142,11 +142,14 @@ const TeamInfoScreen = () => {
     return <Loader />
   }
 
+  const managerCheck =
+    teamData?.manager?.includes(user?.id) || teamData.leader === user?.name
+
   return (
     <Box>
       <Box justifyContent="space-between" flexDirection="row" px="5" mt="5">
         <Text
-          variant="textXl"
+          variant="text2Xl"
           fontWeight="700"
           style={{
             textAlign: 'center',
@@ -171,18 +174,14 @@ const TeamInfoScreen = () => {
               color: 'white',
             }}
           >
-            {teamData?.manager?.includes(user?.id) ||
-            teamData.leader === user?.name
-              ? '팀원관리'
-              : '팀원보기'}
+            {managerCheck ? '팀원관리' : '팀원보기'}
           </Text>
         </TouchableOpacity>
       </Box>
       <Box>
         <HrTag />
       </Box>
-      {(teamData?.manager?.includes(user?.id) ||
-        teamData.leader === user?.name) && (
+      {managerCheck && (
         <Box>
           <Text
             variant="textXl"

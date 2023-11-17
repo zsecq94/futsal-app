@@ -127,7 +127,7 @@ const TeamScreen = () => {
             <Text
               variant="textBase"
               fontWeight="700"
-              p="1"
+              p="2"
               style={{
                 borderRadius: 10,
                 backgroundColor:
@@ -174,7 +174,7 @@ const TeamScreen = () => {
             searchTeam={searchTeam}
           />
         </Box>
-        <HrTag />
+        <Box height={10} />
         {user?.team === null && (
           <TouchableOpacity
             onPress={() => goNavigation('TeamCreate')}
@@ -184,7 +184,7 @@ const TeamScreen = () => {
               right: 15,
               bottom: 15,
               backgroundColor: theme.colors.green600,
-              borderRadius: 25, // this will make it round
+              borderRadius: 25,
               width: 50,
               height: 50,
               justifyContent: 'center',

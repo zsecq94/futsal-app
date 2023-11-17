@@ -6,6 +6,7 @@ import Mercenary from "../models/mercenary-model";
 const mutex = new Mutex();
 
 export const createMercenary = async (req: Request, res: Response) => {
+  const socket = getSocketIo();
   try {
     const { name, thumb, level, date, times } = req.body;
     const duplication = await Mercenary.findOne({ name, date });
@@ -22,6 +23,7 @@ export const createMercenary = async (req: Request, res: Response) => {
       date,
       times,
     });
+    socket.emit("mercenary-update");
     return res.send({ message: "용병신청 완료!", state: "success" });
   } catch (error) {
     console.log("error in 용병신청", error);

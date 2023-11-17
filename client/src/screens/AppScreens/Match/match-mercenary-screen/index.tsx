@@ -4,16 +4,31 @@ import HrTag from '@/components/shared/hrtag'
 import Loader from '@/components/shared/loader'
 import { fetcher } from '@/services/config'
 import theme, { Box, Text } from '@/utils/theme'
-import React from 'react'
+import React, { useContext, useEffect } from 'react'
 import { ScrollView } from 'react-native'
 import useSWR from 'swr'
+import { SocketContext } from '@/context/SocketContext'
 
 const MatchMercenaryScreen = ({ setSelectedDate, selectedDate }: any) => {
+  const socket = useContext(SocketContext)
   const {
     data: mercenaryData,
     isLoading: mercenaryIsLoading,
     mutate: mercenaryMutate,
   } = useSWR(`mercenary/get-one-day/${selectedDate}`, fetcher)
+  useEffect(() => {
+    if (socket) {
+      socket.on('mercenary-update', async () => {
+        await mercenaryMutate()
+      })
+    }
+
+    return () => {
+      if (socket) {
+        socket.off('mercenary-update')
+      }
+    }
+  }, [socket, mercenaryData])
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <Calendar setSelectedDate={setSelectedDate} selectedDate={selectedDate} />
