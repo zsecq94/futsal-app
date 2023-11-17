@@ -18,16 +18,17 @@ import useSWRMutation from 'swr/mutation'
 import TeamMemberCard from './team-member-card'
 import TeamMemberDetail from './team-member-detail'
 import TeamOutModal from './team-out-modal'
+import useUserGlobalStore from '@/store/useUserGlobalStore'
 
 const TeamModal = ({
   teamMember,
-  user,
   memberListModal,
   setMemberListModal,
   setLoading,
   teamData,
   modalAnimatedValue,
 }: any) => {
+  const { user } = useUserGlobalStore()
   const { width, height } = Dimensions.get('window')
   const [deleteModal, setDeleteModal] = useState(false)
   const [memberDetailModal, setMemberDetailModal] = useState(false)

@@ -17,7 +17,7 @@ const TeamCreateScreen = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [level, setLevel] = useState('')
   const levelData = ['하', '중하', '중', '중상', '상']
-  const { user, updateUser } = useUserGlobalStore()
+  const { user, updateUser }: any = useUserGlobalStore()
 
   const [teamData, setTeamData] = useState({
     img: 'https://mycar.shinhancard.com/conts/images/mycar/bg_profile_basic.png',

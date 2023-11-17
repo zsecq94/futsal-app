@@ -35,7 +35,7 @@ const RankingScreen = () => {
   useEffect(() => {
     if (allTeams) {
       const teams: any = [...allTeams]
-      teams.sort((a, b) => b.score - a.score)
+      teams.sort((a: any, b: any) => b.score - a.score)
       setSortedTeams(teams)
     }
   }, [allTeams])
@@ -70,25 +70,25 @@ const RankingScreen = () => {
         랭킹은 6개월마다 초기화 됩니다...
       </Text>
       <Box flexDirection="row" justifyContent="space-between" p="3">
-        <Text fontWeight="700" style={{ width: '14%', textAlign: 'center' }}>
+        <Text fontWeight="700" style={{ width: '13%', textAlign: 'center' }}>
           순위
         </Text>
-        <Text fontWeight="700" style={{ width: '14%', textAlign: 'center' }}>
+        <Text fontWeight="700" style={{ width: '32%', textAlign: 'center' }}>
           팀명
         </Text>
-        <Text fontWeight="700" style={{ width: '14%', textAlign: 'center' }}>
-          경기 수
+        <Text fontWeight="700" style={{ width: '10%', textAlign: 'center' }}>
+          경기수
         </Text>
-        <Text fontWeight="700" style={{ width: '14%', textAlign: 'center' }}>
+        <Text fontWeight="700" style={{ width: '10%', textAlign: 'center' }}>
           승
         </Text>
-        <Text fontWeight="700" style={{ width: '14%', textAlign: 'center' }}>
+        <Text fontWeight="700" style={{ width: '10%', textAlign: 'center' }}>
           무
         </Text>
-        <Text fontWeight="700" style={{ width: '14%', textAlign: 'center' }}>
+        <Text fontWeight="700" style={{ width: '10%', textAlign: 'center' }}>
           패
         </Text>
-        <Text fontWeight="700" style={{ width: '14%', textAlign: 'center' }}>
+        <Text fontWeight="700" style={{ width: '13%', textAlign: 'center' }}>
           점수
         </Text>
       </Box>

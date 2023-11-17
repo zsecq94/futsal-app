@@ -53,6 +53,20 @@ export const createMatch = async (req: Request, res: Response) => {
 
   try {
     const { team, place, date, time, level, state } = req.body;
+    // 오늘 이미 신청한 기록이 있을때
+    // const existingMatch = await Match.findOne({
+    //   team1: team,
+    //   date,
+    //   state: false,
+    // });
+    // if (existingMatch) {
+    //   return res.send({
+    //     message: "오늘 이미 매치를 신청하셨습니다.",
+    //     state: false,
+    //     type: "error",
+    //   });
+    // }
+
     const newDateList = fillGapsInTimes(time, state);
     let matchData = await MatchData.findOne({ id: date });
 
@@ -106,6 +120,7 @@ export const createMatch = async (req: Request, res: Response) => {
     await session.commitTransaction();
 
     socket.emit("update-match");
+    socket.emit(`${team}-match-data-update`);
     socket.emit("timepicker-update");
 
     return res.send({ message: "신청 완료", state: true, type: "success" });
@@ -226,5 +241,20 @@ export const updateMatchState = async (req: Request, res: Response) => {
   } finally {
     session.endSession();
     release();
+  }
+};
+
+export const getTeamMatchData = async (req: Request, res: Response) => {
+  try {
+    const { name, date } = req.params;
+    const newDate = new Date(date);
+    const matchData = await Match.find({
+      $or: [{ team1: name }, { team2: name }],
+      date: { $gte: newDate },
+    });
+    return res.send(matchData);
+  } catch (error) {
+    console.log("error in getTeamMatchData", error);
+    throw error;
   }
 };

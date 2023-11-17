@@ -1,5 +1,6 @@
 import HrTag from '@/components/shared/hrtag'
 import Loader from '@/components/shared/loader'
+import Apply from '@/components/team/apply'
 import ApplyCard from '@/components/team/applycard'
 import TeamModal from '@/components/team/team-modal'
 import { SocketContext } from '@/context/SocketContext'
@@ -8,6 +9,7 @@ import { fetcher } from '@/services/config'
 import useUserGlobalStore from '@/store/useUserGlobalStore'
 import theme, { Box, Text } from '@/utils/theme'
 import { useNavigation } from '@react-navigation/native'
+import moment from 'moment'
 import React, { useContext, useEffect, useState } from 'react'
 import { Animated, TouchableOpacity } from 'react-native'
 import Toast from 'react-native-toast-message'
@@ -15,6 +17,7 @@ import useSWR from 'swr'
 import useSWRMutation from 'swr/mutation'
 
 const TeamInfoScreen = () => {
+  const todayDate = moment().format('YYYY-MM-DD')
   const { user, updateUser } = useUserGlobalStore()
   const [loading, setLoading] = useState(false)
   const navigation = useNavigation<any>()
@@ -29,6 +32,17 @@ const TeamInfoScreen = () => {
     isLoading: teamDataIsLoading,
     mutate: teamDataMutate,
   } = useSWR(`teams/get-team/${user?.team}`, fetcher)
+
+  const {
+    data: teamMatchData,
+    isLoading: teamMatchDataIsLoading,
+    mutate: teamMatchDataMutate,
+  } = useSWR(
+    `matchs/get-team-match-data/${teamData?.name}/${todayDate}`,
+    fetcher,
+  )
+
+  console.log(teamMatchData)
 
   const {
     data: teamMember,
@@ -78,6 +92,9 @@ const TeamInfoScreen = () => {
         await teamDataMutate()
         await teamMemberMutate()
       })
+      socket.on(`${teamData?.name}-match-data-update`, async () => {
+        await teamMatchDataMutate()
+      })
     }
 
     return () => {
@@ -86,6 +103,7 @@ const TeamInfoScreen = () => {
         socket.off(`${teamData?.name}-manager`)
         socket.off(`${user?.id}-apply-update`)
         socket.off(`${teamData?.name}-update`)
+        socket.off(`${teamData?.name}-match-data-update`)
       }
     }
   }, [socket, user, teamData])
@@ -178,35 +196,14 @@ const TeamInfoScreen = () => {
           </Text>
         </TouchableOpacity>
       </Box>
-      <Box>
-        <HrTag />
+      <HrTag />
+      <Box mx="5">
+        <Text>Hi</Text>
       </Box>
-      {managerCheck && (
-        <Box>
-          <Text
-            variant="textXl"
-            fontWeight="700"
-            style={{
-              textAlign: 'center',
-              color: theme.colors.green600,
-            }}
-          >
-            팀 신청 목록
-          </Text>
-          <Box px="5">
-            <HrTag />
-          </Box>
-          <Box alignItems="center" style={{ gap: 10 }}>
-            {teamData?.apply.map((user: any, idx: number) => {
-              return <ApplyCard key={idx} onPress={handleApply} user={user} />
-            })}
-          </Box>
-        </Box>
-      )}
+      {managerCheck && <Apply teamData={teamData} handleApply={handleApply} />}
       <TeamModal
         teamData={teamData}
         teamMember={teamMember}
-        user={user}
         memberListModal={memberListModal}
         setMemberListModal={setMemberListModal}
         setLoading={setLoading}
