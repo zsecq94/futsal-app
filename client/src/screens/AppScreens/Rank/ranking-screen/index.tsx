@@ -73,10 +73,10 @@ const RankingScreen = () => {
         <Text fontWeight="700" style={{ width: '13%', textAlign: 'center' }}>
           순위
         </Text>
-        <Text fontWeight="700" style={{ width: '32%', textAlign: 'center' }}>
+        <Text fontWeight="700" style={{ width: '28%', textAlign: 'center' }}>
           팀명
         </Text>
-        <Text fontWeight="700" style={{ width: '10%', textAlign: 'center' }}>
+        <Text fontWeight="700" style={{ width: '14%', textAlign: 'center' }}>
           경기수
         </Text>
         <Text fontWeight="700" style={{ width: '10%', textAlign: 'center' }}>

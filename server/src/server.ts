@@ -9,7 +9,7 @@ import { initializeSocketIo } from "./socket";
 
 const app = express();
 app.use(express.json());
-const PORT = 1337;
+const PORT = 3000;
 
 // 데이터베이스 연결
 connectToDatabase();

@@ -14,10 +14,10 @@ const RankCard = ({ team, idx }: any) => {
       <Text fontWeight="400" style={{ width: '13%', textAlign: 'center' }}>
         {idx + 1}
       </Text>
-      <Text fontWeight="400" style={{ width: '32%', textAlign: 'center' }}>
+      <Text fontWeight="400" style={{ width: '28%', textAlign: 'center' }}>
         {team.name}
       </Text>
-      <Text fontWeight="400" style={{ width: '10%', textAlign: 'center' }}>
+      <Text fontWeight="400" style={{ width: '14%', textAlign: 'center' }}>
         {team.win + team.draw + team.lose}
       </Text>
       <Text fontWeight="400" style={{ width: '10%', textAlign: 'center' }}>

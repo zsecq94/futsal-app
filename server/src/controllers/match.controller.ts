@@ -7,6 +7,11 @@ import mongoose from "mongoose";
 
 const mutex = new Mutex();
 
+// 현재 시간을 기반으로 매칭 기록을 리턴하기 위해
+const now = new Date();
+const currentTime = new Date(now.getTime() + 9 * 60 * 60 * 1000);
+// const  = koreaTime.toISOString();
+
 // 겹치는 매치 찾기
 const findOverlappingMatches = async (date, place, time, state) => {
   if (!state) return [];
@@ -43,6 +48,19 @@ const fillGapsInTimes = (times, state) => {
     }
   }
   return filledTimes;
+};
+
+const convertToTimeFormat = (time) => {
+  let hour = Math.floor(time).toString().padStart(2, "0");
+  let minute = time % 1 > 0 ? "30" : "00";
+  let second = "00";
+  let millisecond = "000";
+  return `${hour}:${minute}:${second}.${millisecond}`;
+};
+
+const combineDateTime = (date, time) => {
+  let timeFormat = convertToTimeFormat(time);
+  return `${date}T${timeFormat}Z`;
 };
 
 export const createMatch = async (req: Request, res: Response) => {
@@ -109,7 +127,7 @@ export const createMatch = async (req: Request, res: Response) => {
           team1: team,
           place,
           level: state ? "예약" : level,
-          date,
+          date: combineDateTime(date, time[0][0]),
           time,
           state,
         },
@@ -139,10 +157,35 @@ export const createMatch = async (req: Request, res: Response) => {
 export const getFalseMatch = async (req: Request, res: Response) => {
   try {
     const { date } = req.params;
+
+    // currentTime의 년-월-일 추출
+    const currentYear = currentTime.getFullYear();
+    const currentMonth = currentTime.getMonth();
+    const currentDay = currentTime.getDate();
+
+    // date의 년-월-일 추출
+    const [dateYear, dateMonth, dateDay] = date.split("-").map(Number);
+    let searchDate;
+
+    // 년-월-일 비교
+    if (
+      currentYear === dateYear &&
+      currentMonth + 1 === dateMonth &&
+      currentDay - 1 === dateDay
+    ) {
+      // JavaScript의 getMonth()는 0부터 시작합니다.
+      searchDate = currentTime;
+    } else {
+      // date를 2023-11-18T00:00:00.000Z 형식으로 변환
+      searchDate = new Date(Date.UTC(dateYear, dateMonth, dateDay));
+    }
+    // console.log(searchDate);
+
     const response = await Match.find({
-      date,
+      date: { $gte: searchDate },
       state: false,
     });
+
     if (response) {
       return res.send(response);
     } else {
@@ -250,7 +293,7 @@ export const getTeamMatchData = async (req: Request, res: Response) => {
     const newDate = new Date(date);
     const matchData = await Match.find({
       $or: [{ team1: name }, { team2: name }],
-      date: { $gte: newDate },
+      date: { $gte: currentTime },
     });
     return res.send(matchData);
   } catch (error) {
