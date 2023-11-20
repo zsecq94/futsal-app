@@ -17,12 +17,12 @@ const TimePicker = ({
   categoryCheck,
 }: any) => {
   const socket = useContext(SocketContext)
-  const id = selectedDate
+
   const {
     data: onePlaceData,
     isLoading: onePlaceIsLoading,
     mutate: onePlaceMutate,
-  } = useSWR(`matchs/get-one-place/${id}/${name}`, fetcher)
+  } = useSWR(`matchs/get-one-place/${selectedDate}/${name}`, fetcher)
 
   useEffect(() => {
     if (socket) {
@@ -304,106 +304,107 @@ const TimePicker = ({
         )}
       </Box>
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        {times.length < 3
-          ? null
-          : times.map((time, index) => {
-              let isSelected = false
-              if (selectedTimes.length === 2) {
-                const start = Math.min(selectedTimes[0][0], selectedTimes[1][0])
-                const end = Math.max(selectedTimes[0][0], selectedTimes[1][0])
-                isSelected = time[0] >= start && time[0] <= end
-              } else {
-                isSelected = selectedTimes.some(
-                  (selectedTime: number[]) => selectedTime[0] === time[0],
-                )
-              }
+        {times.length < 4 ? (
+          <Text fontWeight="700">오늘 신청은 마감되었습니다!!!</Text>
+        ) : (
+          times.map((time, index) => {
+            let isSelected = false
+            if (selectedTimes.length === 2) {
+              const start = Math.min(selectedTimes[0][0], selectedTimes[1][0])
+              const end = Math.max(selectedTimes[0][0], selectedTimes[1][0])
+              isSelected = time[0] >= start && time[0] <= end
+            } else {
+              isSelected = selectedTimes.some(
+                (selectedTime: number[]) => selectedTime[0] === time[0],
+              )
+            }
 
-              return (
-                <Box key={index}>
-                  <TouchableOpacity
-                    onPress={() => handlePress(time)}
-                    disabled={
-                      categoryCheck === 1
-                        ? onePlaceData?.some(
+            return (
+              <Box key={index}>
+                <TouchableOpacity
+                  onPress={() => handlePress(time)}
+                  disabled={
+                    categoryCheck === 1
+                      ? onePlaceData?.some(
+                          (d: any) => d[0] === time[0] && d[2] === true,
+                        )
+                      : onePlaceData?.some((d: any) => d[0] === time[0])
+                  }
+                >
+                  <Box
+                    height={30}
+                    width={40}
+                    style={{
+                      backgroundColor: isSelected
+                        ? theme.colors.green600
+                        : categoryCheck === 0 &&
+                          onePlaceData?.some((d: any) => d[0] === time[0])
+                        ? 'grey'
+                        : categoryCheck === 1 &&
+                          onePlaceData?.some(
                             (d: any) => d[0] === time[0] && d[2] === true,
                           )
-                        : onePlaceData?.some((d: any) => d[0] === time[0])
-                    }
-                  >
-                    <Box
-                      height={30}
-                      width={40}
-                      style={{
-                        backgroundColor: isSelected
-                          ? theme.colors.green600
-                          : categoryCheck === 0 &&
-                            onePlaceData?.some((d: any) => d[0] === time[0])
-                          ? 'grey'
-                          : categoryCheck === 1 &&
-                            onePlaceData?.some(
-                              (d: any) => d[0] === time[0] && d[2] === true,
-                            )
-                          ? 'grey'
-                          : categoryCheck === 1 &&
-                            onePlaceData?.some(
-                              (d: any) => d[0] === time[0] && d[2] === false,
-                            )
-                          ? theme.colors.primary
-                          : theme.colors.gray200,
+                        ? 'grey'
+                        : categoryCheck === 1 &&
+                          onePlaceData?.some(
+                            (d: any) => d[0] === time[0] && d[2] === false,
+                          )
+                        ? theme.colors.primary
+                        : theme.colors.gray200,
 
-                        borderLeftWidth: 1,
-                        borderColor: 'white',
-                        borderTopLeftRadius: index === 0 ? 10 : 0,
-                        borderBottomLeftRadius: index === 0 ? 10 : 0,
-                        borderTopRightRadius:
-                          index === times.length - 1 ? 10 : 0,
-                        borderBottomRightRadius:
-                          index === times.length - 1 ? 10 : 0,
-                      }}
-                    />
-                  </TouchableOpacity>
-                  <Box height={10} />
-                  <Box
-                    style={{
-                      marginLeft: -17,
+                      borderLeftWidth: 1,
+                      borderColor: 'white',
+                      borderTopLeftRadius: index === 0 ? 10 : 0,
+                      borderBottomLeftRadius: index === 0 ? 10 : 0,
+                      borderTopRightRadius: index === times.length - 1 ? 10 : 0,
+                      borderBottomRightRadius:
+                        index === times.length - 1 ? 10 : 0,
                     }}
-                  >
-                    {index === times.length - 1 && (
-                      <Box justifyContent="space-between" flexDirection="row">
-                        <Text style={{ fontSize: 10, fontWeight: 'bold' }}>
-                          {formatTime(time[0])}
-                        </Text>
-                        <Text style={{ fontSize: 10, fontWeight: 'bold' }}>
-                          {time[1]}
-                        </Text>
-                      </Box>
-                    )}
-                    {index !== 0 && index !== times.length - 1 && (
-                      <Text
-                        style={{
-                          fontSize: 10,
-                          fontWeight: 'bold',
-                          marginLeft: 4,
-                        }}
-                      >
+                  />
+                </TouchableOpacity>
+                <Box height={10} />
+                <Box
+                  style={{
+                    marginLeft: -17,
+                  }}
+                >
+                  {index === times.length - 1 && (
+                    <Box justifyContent="space-between" flexDirection="row">
+                      <Text style={{ fontSize: 10, fontWeight: 'bold' }}>
                         {formatTime(time[0])}
                       </Text>
-                    )}
-                    {index === 0 && (
-                      <Text
-                        style={{
-                          fontSize: 10,
-                          marginLeft: 17,
-                          fontWeight: 'bold',
-                        }}
-                      >
-                        {formatTime(time[0])}
+                      <Text style={{ fontSize: 10, fontWeight: 'bold' }}>
+                        {time[1]}
                       </Text>
-                    )}
-                  </Box>
+                    </Box>
+                  )}
+                  {index !== 0 && index !== times.length - 1 && (
+                    <Text
+                      style={{
+                        fontSize: 10,
+                        fontWeight: 'bold',
+                        marginLeft: 4,
+                      }}
+                    >
+                      {formatTime(time[0])}
+                    </Text>
+                  )}
+                  {index === 0 && (
+                    <Text
+                      style={{
+                        fontSize: 10,
+                        marginLeft: 17,
+                        fontWeight: 'bold',
+                      }}
+                    >
+                      {formatTime(time[0])}
+                    </Text>
+                  )}
                 </Box>
-              )
-            })}
+              </Box>
+            )
+          })
+        )}
       </ScrollView>
     </Box>
   )

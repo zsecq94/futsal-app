@@ -9,8 +9,8 @@ const mutex = new Mutex();
 
 // 현재 시간을 기반으로 매칭 기록을 리턴하기 위해
 const now = new Date();
-const currentTime = new Date(now.getTime() + 9 * 60 * 60 * 1000);
-// const  = koreaTime.toISOString();
+const koreaTime = new Date(now.getTime() + 9 * 60 * 60 * 1000);
+const koreaTimeStr = koreaTime.toISOString();
 
 // 겹치는 매치 찾기
 const findOverlappingMatches = async (date, place, time, state) => {
@@ -157,32 +157,23 @@ export const createMatch = async (req: Request, res: Response) => {
 export const getFalseMatch = async (req: Request, res: Response) => {
   try {
     const { date } = req.params;
+    const todayDate = koreaTimeStr.split("T")[0];
 
-    // currentTime의 년-월-일 추출
-    const currentYear = currentTime.getFullYear();
-    const currentMonth = currentTime.getMonth();
-    const currentDay = currentTime.getDate();
+    let startDate, endDate;
 
-    // date의 년-월-일 추출
-    const [dateYear, dateMonth, dateDay] = date.split("-").map(Number);
-    let searchDate;
-
-    // 년-월-일 비교
-    if (
-      currentYear === dateYear &&
-      currentMonth + 1 === dateMonth &&
-      currentDay - 1 === dateDay
-    ) {
-      // JavaScript의 getMonth()는 0부터 시작합니다.
-      searchDate = currentTime;
+    if (date === todayDate) {
+      startDate = new Date(koreaTime);
+      endDate = new Date(koreaTime);
     } else {
-      // date를 2023-11-18T00:00:00.000Z 형식으로 변환
-      searchDate = new Date(Date.UTC(dateYear, dateMonth, dateDay));
+      startDate = new Date(`${date}T00:00:00`);
+      endDate = new Date(`${date}T00:00:00`);
     }
-    // console.log(searchDate);
+    console.log(startDate, endDate);
+    // 다음 날로 날짜 설정
+    endDate.setDate(endDate.getDate() + 1);
 
     const response = await Match.find({
-      date: { $gte: searchDate },
+      date: { $gte: startDate, $lt: endDate },
       state: false,
     });
 
@@ -293,7 +284,7 @@ export const getTeamMatchData = async (req: Request, res: Response) => {
     const newDate = new Date(date);
     const matchData = await Match.find({
       $or: [{ team1: name }, { team2: name }],
-      date: { $gte: currentTime },
+      date: { $gte: koreaTime },
     });
     return res.send(matchData);
   } catch (error) {
