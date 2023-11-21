@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 // export const BASE_URL = "http://10.0.2.2:1337/";
-export const BASE_URL = 'http://192.168.219.102:3000/'
+export const BASE_URL = 'http://192.168.219.101:3000/'
 // export const BASE_URL =
 //   'https://port-0-fsapp-server-5mk12alp2zq8ng.sel5.cloudtype.app/'
 

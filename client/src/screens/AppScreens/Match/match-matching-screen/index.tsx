@@ -10,7 +10,7 @@ import theme, { Box, Text } from '@/utils/theme'
 import { useNavigation } from '@react-navigation/native'
 import moment from 'moment'
 import React, { useContext, useEffect, useState } from 'react'
-import { Modal, ScrollView } from 'react-native'
+import { Modal, ScrollView, TouchableOpacity } from 'react-native'
 import useSWR from 'swr'
 
 const MatchMatchingScreen = () => {
@@ -19,6 +19,8 @@ const MatchMatchingScreen = () => {
   const [selectedDate, setSelectedDate] = useState(todayDate)
   const [checkModal, setCheckModal] = useState(false)
   const [oneData, setOneData] = useState([])
+  const [matchCategory, setMatchCategory] = useState('')
+  const [filteredData, setFilteredData] = useState([])
   const socket = useContext(SocketContext)
 
   const {
@@ -33,11 +35,13 @@ const MatchMatchingScreen = () => {
     mutate: todayDataMutate,
   } = useSWR(`matchs/get-today-date/${selectedDate}`, fetcher)
 
+  const getMatch = async () => {
+    await matchDataMutate()
+    await todayDataMutate()
+  }
+
   useEffect(() => {
-    const getMatch = async () => {
-      await matchDataMutate()
-      await todayDataMutate()
-    }
+    setMatchCategory('')
     getMatch()
   }, [selectedDate])
 
@@ -56,6 +60,16 @@ const MatchMatchingScreen = () => {
     }
   }, [socket, matchData, todayData])
 
+  useEffect(() => {
+    if (matchCategory) {
+      setFilteredData(
+        matchData.filter((match: any) => match.place === matchCategory),
+      )
+    } else {
+      setFilteredData(matchData)
+    }
+  }, [matchCategory, matchData])
+
   const goSignIn = ({ name }: any) => {
     navigate.navigate('SignIn', { name, selected: selectedDate })
   }
@@ -63,6 +77,14 @@ const MatchMatchingScreen = () => {
   const toggleModal = (V: any) => {
     setOneData(V)
     setCheckModal(!checkModal)
+  }
+
+  const matchCategoryHandle = (place: string) => {
+    if (matchCategory === place) {
+      setMatchCategory('')
+    } else {
+      setMatchCategory(place)
+    }
   }
 
   return (
@@ -117,14 +139,85 @@ const MatchMatchingScreen = () => {
           <HrTag />
           {matchData.length > 0 ? (
             <Box mx="5">
-              <Text
-                variant="textBase"
-                fontWeight="700"
-                style={{ color: theme.colors.gray500, textAlign: 'center' }}
+              <Box
+                flexDirection="row"
+                justifyContent="space-between"
+                alignItems="center"
               >
-                클릭하여 매칭을 신청해주세요!
-              </Text>
-              {matchData?.map((V: any, index: number) => (
+                <Box flexDirection="row" style={{ gap: 10 }}>
+                  <TouchableOpacity
+                    onPress={() => matchCategoryHandle('A')}
+                    style={{
+                      backgroundColor:
+                        matchCategory === 'A'
+                          ? theme.colors.green600
+                          : theme.colors.gray300,
+                      borderRadius: 10,
+                    }}
+                  >
+                    <Text
+                      p="2"
+                      fontWeight="700"
+                      style={{
+                        color: matchCategory === 'A' ? 'white' : 'black',
+                      }}
+                    >
+                      A구장
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => matchCategoryHandle('B')}
+                    style={{
+                      backgroundColor:
+                        matchCategory === 'B'
+                          ? theme.colors.green600
+                          : theme.colors.gray300,
+                      borderRadius: 10,
+                    }}
+                  >
+                    <Text
+                      p="2"
+                      fontWeight="700"
+                      style={{
+                        color: matchCategory === 'B' ? 'white' : 'black',
+                      }}
+                    >
+                      B구장
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => matchCategoryHandle('C')}
+                    style={{
+                      backgroundColor:
+                        matchCategory === 'C'
+                          ? theme.colors.green600
+                          : theme.colors.gray300,
+                      borderRadius: 10,
+                    }}
+                  >
+                    <Text
+                      p="2"
+                      fontWeight="700"
+                      style={{
+                        color: matchCategory === 'C' ? 'white' : 'black',
+                      }}
+                    >
+                      C구장
+                    </Text>
+                  </TouchableOpacity>
+                </Box>
+                <Text
+                  variant="textBase"
+                  fontWeight="700"
+                  style={{
+                    color: theme.colors.gray500,
+                    textAlign: 'center',
+                  }}
+                >
+                  클릭하여 매칭을 신청해주세요!
+                </Text>
+              </Box>
+              {filteredData?.map((V: any, index: number) => (
                 <Box key={index}>
                   <Box height={15} />
                   <MatchCard data={V} onPress={() => toggleModal(V)} />

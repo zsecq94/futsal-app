@@ -159,23 +159,15 @@ export const getFalseMatch = async (req: Request, res: Response) => {
     const { date } = req.params;
     const todayDate = koreaTimeStr.split("T")[0];
 
-    let startDate, endDate;
-
-    if (date === todayDate) {
-      startDate = new Date(koreaTime);
-      endDate = new Date(koreaTime);
-    } else {
-      startDate = new Date(`${date}T00:00:00`);
-      endDate = new Date(`${date}T00:00:00`);
-    }
-    console.log(startDate, endDate);
-    // 다음 날로 날짜 설정
+    const startDate =
+      date === todayDate ? new Date(koreaTime) : new Date(date + "T09:00:00");
+    const endDate = new Date(date + "T09:00:00");
     endDate.setDate(endDate.getDate() + 1);
 
     const response = await Match.find({
       date: { $gte: startDate, $lt: endDate },
       state: false,
-    });
+    }).sort({ date: 1 });
 
     if (response) {
       return res.send(response);
