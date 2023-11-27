@@ -1,6 +1,7 @@
 import { SocketContext } from '@/context/SocketContext'
+import HomeScreen from '@/screens/AppScreens/Home/home-screen'
 import MessageScreen from '@/screens/AppScreens/Message/message-screen'
-import RankingScreen from '@/screens/AppScreens/Rank/ranking-screen'
+import ProfileScreen from '@/screens/AppScreens/Profile/profiles-creen'
 import useUserGlobalStore from '@/store/useUserGlobalStore'
 import theme from '@/utils/theme'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
@@ -10,7 +11,6 @@ import Toast from 'react-native-toast-message'
 import Icon from 'react-native-vector-icons/Ionicons'
 import MatchNavigation from './matchnavigation'
 import TeamNavigation from './teamnavigation'
-import ProfileScreen from '@/screens/AppScreens/Profile/profiles-creen'
 
 const Tab = createBottomTabNavigator()
 const AppNavigation = () => {
@@ -49,6 +49,17 @@ const AppNavigation = () => {
       }}
     >
       <Tab.Screen
+        name="HomeStack"
+        component={HomeScreen}
+        options={{
+          headerShown: false,
+          title: '홈',
+          tabBarIcon: ({ color, size }) => (
+            <Icon name="grid" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
         name="MatchStack"
         component={MatchNavigation}
         options={{
@@ -59,17 +70,7 @@ const AppNavigation = () => {
           ),
         }}
       />
-      <Tab.Screen
-        name="RankStack"
-        component={RankingScreen}
-        options={{
-          headerShown: false,
-          title: '랭킹',
-          tabBarIcon: ({ color, size }) => (
-            <Icon name="trophy" size={size} color={color} />
-          ),
-        }}
-      />
+
       <Tab.Screen
         name="TeamStack"
         component={TeamNavigation}

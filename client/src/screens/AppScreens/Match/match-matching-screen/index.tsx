@@ -144,6 +144,7 @@ const MatchMatchingScreen = () => {
                 justifyContent="space-between"
                 alignItems="center"
               >
+                
                 <Box flexDirection="row" style={{ gap: 10 }}>
                   <TouchableOpacity
                     onPress={() => matchCategoryHandle('A')}
@@ -207,7 +208,7 @@ const MatchMatchingScreen = () => {
                   </TouchableOpacity>
                 </Box>
                 <Text
-                  variant="textBase"
+                  variant="textXs"
                   fontWeight="700"
                   style={{
                     color: theme.colors.gray500,
