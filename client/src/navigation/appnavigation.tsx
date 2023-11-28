@@ -63,7 +63,7 @@ const AppNavigation = () => {
         name="MatchStack"
         component={MatchNavigation}
         options={{
-          headerShown: false,
+          // headerShown: false,
           title: '매칭',
           tabBarIcon: ({ color, size }) => (
             <Icon name="flag" size={size} color={color} />

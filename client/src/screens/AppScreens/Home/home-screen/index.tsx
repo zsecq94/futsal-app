@@ -17,7 +17,7 @@ const HomeScreen = () => {
       flex={1}
       justifyContent="center"
       alignItems="center"
-      style={{ gap: 30 }}
+      style={{ gap: 20 }}
     >
       <Box>
         <Text fontWeight="700">반갑습니다 {user?.name}님</Text>
@@ -34,7 +34,7 @@ const HomeScreen = () => {
           onPress={() => handleStack('MatchStack')}
           style={styles.touchableStyle}
         >
-          <Icon name="flag" size={50} color={'green'} />
+          <Icon name="flag" size={60} color={'green'} />
           <Text fontWeight="700" variant="textXl">
             매칭
           </Text>
@@ -43,7 +43,7 @@ const HomeScreen = () => {
           onPress={() => handleStack('TeamStack')}
           style={styles.touchableStyle}
         >
-          <Icon name="people" size={50} color={'green'} />
+          <Icon name="people" size={60} color={'green'} />
           <Text fontWeight="700" variant="textXl">
             팀 찾기
           </Text>
@@ -54,7 +54,7 @@ const HomeScreen = () => {
           onPress={() => handleStack('MessageStack')}
           style={styles.touchableStyle}
         >
-          <Icon name="mail" size={50} color={'green'} />
+          <Icon name="mail" size={60} color={'green'} />
           <Text fontWeight="700" variant="textXl">
             메시지
           </Text>
@@ -63,7 +63,7 @@ const HomeScreen = () => {
           onPress={() => handleStack('ProfileStack')}
           style={styles.touchableStyle}
         >
-          <Icon name="person" size={50} color={'green'} />
+          <Icon name="person" size={60} color={'green'} />
           <Text fontWeight="700" variant="textXl">
             내 정보
           </Text>
@@ -80,6 +80,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
+    width: 200,
+    height: 200,
     backgroundColor: 'white',
     borderRadius: 10,
     shadowColor: '#000',
