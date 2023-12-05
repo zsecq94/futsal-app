@@ -1,13 +1,13 @@
 import useUserGlobalStore from '@/store/useUserGlobalStore'
 import { Box, Text } from '@/utils/theme'
-import { NavigationAction, useNavigation } from '@react-navigation/native'
+import { useNavigation } from '@react-navigation/native'
 import React from 'react'
-import { Image, StyleSheet, TouchableOpacity } from 'react-native'
+import { StyleSheet, TouchableOpacity } from 'react-native'
 import Icon from 'react-native-vector-icons/Ionicons'
 
 const HomeScreen = () => {
   const { user } = useUserGlobalStore()
-  const navigation = useNavigation()
+  const navigation = useNavigation<any>()
   const handleStack = (str: string) => {
     navigation.navigate(str)
   }
@@ -20,13 +20,17 @@ const HomeScreen = () => {
       style={{ gap: 20 }}
     >
       <Box>
-        <Text fontWeight="700">반갑습니다 {user?.name}님</Text>
+        <Text variant="textXl" fontWeight="700">
+          반갑습니다 {user?.name}님
+        </Text>
         {user?.team.length !== undefined ? (
-          <Text fontWeight="700">
+          <Text fontWeight="700" variant="textXl">
             {user.name}님의 팀은 {user?.team}입니다!
           </Text>
         ) : (
-          <Text fontWeight="700">{user?.name}님의 소속팀이 없습니다!</Text>
+          <Text fontWeight="700" variant="textXl">
+            {user?.name}님의 소속팀이 없습니다!
+          </Text>
         )}
       </Box>
       <Box flexDirection="row" style={{ gap: 20 }}>
@@ -34,8 +38,8 @@ const HomeScreen = () => {
           onPress={() => handleStack('MatchStack')}
           style={styles.touchableStyle}
         >
-          <Icon name="flag" size={60} color={'green'} />
-          <Text fontWeight="700" variant="textXl">
+          <Icon name="flag" size={40} color={'green'} />
+          <Text fontWeight="700" variant="textBase">
             매칭
           </Text>
         </TouchableOpacity>
@@ -43,8 +47,8 @@ const HomeScreen = () => {
           onPress={() => handleStack('TeamStack')}
           style={styles.touchableStyle}
         >
-          <Icon name="people" size={60} color={'green'} />
-          <Text fontWeight="700" variant="textXl">
+          <Icon name="people" size={40} color={'green'} />
+          <Text fontWeight="700" variant="textBase">
             팀 찾기
           </Text>
         </TouchableOpacity>
@@ -54,8 +58,8 @@ const HomeScreen = () => {
           onPress={() => handleStack('MessageStack')}
           style={styles.touchableStyle}
         >
-          <Icon name="mail" size={60} color={'green'} />
-          <Text fontWeight="700" variant="textXl">
+          <Icon name="mail" size={40} color={'green'} />
+          <Text fontWeight="700" variant="textBase">
             메시지
           </Text>
         </TouchableOpacity>
@@ -63,8 +67,8 @@ const HomeScreen = () => {
           onPress={() => handleStack('ProfileStack')}
           style={styles.touchableStyle}
         >
-          <Icon name="person" size={60} color={'green'} />
-          <Text fontWeight="700" variant="textXl">
+          <Icon name="person" size={40} color={'green'} />
+          <Text fontWeight="700" variant="textBase">
             내 정보
           </Text>
         </TouchableOpacity>
@@ -79,9 +83,10 @@ const styles = StyleSheet.create({
   touchableStyle: {
     justifyContent: 'center',
     alignItems: 'center',
+    gap: 10,
     padding: 20,
-    width: 200,
-    height: 200,
+    width: 150,
+    height: 150,
     backgroundColor: 'white',
     borderRadius: 10,
     shadowColor: '#000',

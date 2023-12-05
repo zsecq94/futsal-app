@@ -70,8 +70,8 @@ const MatchMatchingScreen = () => {
     }
   }, [matchCategory, matchData])
 
-  const goSignIn = ({ name }: any) => {
-    navigate.navigate('SignIn', { name, selected: selectedDate })
+  const goMatchSignIn = ({ name }: any) => {
+    navigate.navigate('MatchSignIn', { name, selected: selectedDate })
   }
 
   const toggleModal = (V: any) => {
@@ -131,7 +131,7 @@ const MatchMatchingScreen = () => {
           </Box>
           {todayData?.map((data: any, index: number) => (
             <Box key={index}>
-              <Card data={data} idx={index} onPress={goSignIn} />
+              <Card data={data} idx={index} onPress={goMatchSignIn} />
               <Box height={10} />
             </Box>
           ))}
@@ -144,7 +144,6 @@ const MatchMatchingScreen = () => {
                 justifyContent="space-between"
                 alignItems="center"
               >
-                
                 <Box flexDirection="row" style={{ gap: 10 }}>
                   <TouchableOpacity
                     onPress={() => matchCategoryHandle('A')}

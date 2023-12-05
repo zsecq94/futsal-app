@@ -158,18 +158,3 @@ export const updateMatchStateRequest = async (
     throw error
   }
 }
-
-export const createMercenaryRequest = async (
-  url: string,
-  { arg }: { arg: any },
-) => {
-  try {
-    const res = await axiosInstance.post(url, {
-      ...arg,
-    })
-    return res.data
-  } catch (error) {
-    console.log('error in updateMatchStateRequest', error)
-    throw error
-  }
-}
